@@ -10,7 +10,8 @@ html,body{margin:0;height:100%;background:#07070d;overflow:hidden;color:#fff;fon
 #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 #c{image-rendering:pixelated;image-rendering:crisp-edges;background:#000;display:block;flex:none}
 #pad{display:none;width:100%;max-width:520px;height:150px;position:relative;flex:none}
-body.touch #pad{display:block}
+body.touch #pad{display:block;margin-top:auto;margin-bottom:max(12px,env(safe-area-inset-bottom))}
+body.touch #app{justify-content:flex-start;padding-top:env(safe-area-inset-top)}
 .b{position:absolute;border-radius:50%;background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.35);color:#fff;font:bold 18px monospace;display:flex;align-items:center;justify-content:center;touch-action:none}
 .b.on{background:rgba(255,255,255,.4)}
 </style>
@@ -415,80 +416,80 @@ joan:{name:'Joan',cls:'Quiet Revolutionary',an:'Paper Cut',look:lk('#3a4a8a','ta
 ken:{name:'Ken',cls:'Dudebro Ally',an:'Bro Punch',look:lk('#e8c040','spiky','#ff8a3a','#ffffff','#3a5a9a','#f0c090',{acc:'shadesup',wp:'foam',det:'ken'}),b:{hp:80,mp:14,atk:11,def:9,mag:6,spd:6},g:{hp:13,mp:2.5,atk:2,def:2.2,mag:1.1,spd:.8},sk:['fistbump','goodvibes','brolidarity'],str:['EQUAL','VOICE'],ral:28},
 marl:{name:'Marl',cls:'Veteran Bookkeeper',an:'Rubber Stamp',look:lk('#c8c8d2','bun','#b89468',null,'#3a3a4c','#6b4226',{skirt:1,acc:'glasses',wp:'stamp',det:'marl'}),b:{hp:74,mp:22,atk:9,def:11,mag:9,spd:5},g:{hp:12,mp:3,atk:1.7,def:2.1,mag:1.5,spd:.7},sk:['seniority','lifo','recall','notice'],str:['SECURITY','OPEN'],ral:22}};
 const INT={
-WAGES:{n:'WAGES',s:'WAGES',ic:'coin',pitch:'Fair WAGES for all',say:'A full-time job should pay a living wage. Pay has to keep up with the rent, and with the profit our work makes.',wrong:'Pay matters, sure. But that is not what keeps me up at night.',hint:'a fair wage'},
-SECURITY:{n:'JOB SECURITY',s:'SECURE',ic:'shield',pitch:'Job SECURITY',say:'Nobody should be fired without just cause. People need stable work to plan their lives. The layoff roulette has to end.',wrong:'Safe jobs would be nice. But that is not my real problem.',hint:'job security'},
-VOICE:{n:'INFLUENCE',s:'VOICE',ic:'mega',pitch:'Worker INFLUENCE',say:'Workers should have real influence over the decisions that shape their jobs. A seat at the table, not a suggestion box.',wrong:'Having a say is great. But that is not what I am stuck on.',hint:'a real say in decisions'},
-EQUAL:{n:'EQUALITY',s:'EQUAL',ic:'scale',pitch:'Equal OPPORTUNITY',say:'Equal opportunity means the same pay, the same promotions and the same chance for everyone, whatever their background.',wrong:'Fair chances matter. But that is not what I meant.',hint:'equal treatment and a fair shot'},
-OPEN:{n:'TRANSPARENCY',s:'OPEN',ic:'eye',pitch:'Employer TRANSPARENCY',say:'The company must be transparent: open pay bands, honest books and clear reasons behind every decision.',wrong:'Honesty from above would be nice. But that is not my point.',hint:'honesty from management'}};
+WAGES:{n:'WAGES',s:'WAGES',ic:'coin',pitch:'Fair WAGES for all',say:'A full-time job should pay a living wage. Pay has to keep up with the rent, and with the profit our work makes.',wrong:'Pay matters, sure. But that isn\'t what keeps me up at night.',hint:'a fair wage'},
+SECURITY:{n:'JOB SECURITY',s:'SECURE',ic:'shield',pitch:'Job SECURITY',say:'Nobody should be fired without just cause. People need stable work to plan their lives. The layoff roulette has to end.',wrong:'Safe jobs would be nice. But that isn\'t my real problem.',hint:'job security'},
+VOICE:{n:'INFLUENCE',s:'VOICE',ic:'mega',pitch:'Worker INFLUENCE',say:'Workers should have real influence over the decisions that shape their jobs. A seat at the table, not a suggestion box.',wrong:'Having a say is great. But that isn\'t what I\'m stuck on.',hint:'a real say in decisions'},
+EQUAL:{n:'EQUALITY',s:'EQUAL',ic:'scale',pitch:'Equal OPPORTUNITY',say:'Equal opportunity means the same pay, the same promotions and the same chance for everyone, whatever their background.',wrong:'Fair chances matter. But that isn\'t what I meant.',hint:'equal treatment and a fair shot'},
+OPEN:{n:'TRANSPARENCY',s:'OPEN',ic:'eye',pitch:'Employer TRANSPARENCY',say:'The company must be transparent: open pay bands, honest books and clear reasons behind every decision.',wrong:'Honesty from above would be nice. But that isn\'t my point.',hint:'honesty from management'}};
 const ARGS={
-kaj:{WAGES:['Look, the company posts record profits while the people who built it count coins. A living wage is not charity. It is just fair math.','I compared my rent to my salary. It does not compile. We deserve pay that keeps up.'],
+kaj:{WAGES:['Look, the company posts record profits while the people who built it count coins. A living wage isn\'t charity. It\'s just fair math.','I compared my rent to my salary. It doesn\'t compile. We deserve pay that keeps up.'],
  SECURITY:['Nobody does good work while waiting for a layoff email. Stable jobs mean better work and better lives.','Firing people without cause is a bug in the system. A union is the patch.'],
- VOICE:['The people who do the work know how it should be done. Give us a real say, not a suggestion box nobody reads.','Good systems listen to their users. We are the users. Let us help decide how this place runs.'],
+ VOICE:['The people who do the work know how it should be done. Give us a real say, not a suggestion box nobody reads.','Good systems listen to their users. We\'re the users. Let\'s help decide how this place runs.'],
  EQUAL:['Same work, same pay, same shot at a promotion. That should be the default setting, not a feature request.','Talent is everywhere. Opportunity should be too, whoever you are.'],
  OPEN:['If the company is open about pay and decisions, nobody has to guess. Transparency is just good documentation.','We can all read the code. We should be able to read the books too.']},
-clementine:{WAGES:['Let us put it on the board: our pay has not moved but our workload has. That is a blocker. Fair wages unblock everything!','Retro time! What went wrong? Wages. What should we start doing? Paying people properly!'],
+clementine:{WAGES:['Let\'s put it on the board: our pay hasn\'t moved but our workload has. That\'s a blocker. Fair wages unblock everything!','Retro time! What went wrong? Wages. What should we start doing? Paying people properly!'],
  SECURITY:['Story points mean nothing if the whole team gets cut next sprint. Job security lets us plan ahead, together!','How can anyone commit to a roadmap when their own job has no roadmap? Stability first, please!'],
- VOICE:['Great teams decide together. Workers need a real seat at the table, like a permanent stand-up where management actually listens.','Every voice on the team counts. Let us build the process together instead of receiving it by memo.'],
- EQUAL:['Everyone on the board gets the same chance at the next ticket. Equal opportunity means nobody rots in the backlog.','Fair promotions, fair pay, fair shot. That is just good facilitation!'],
- OPEN:['Transparency is the first value of any healthy team. Open pay bands, open budgets, open reasons. No hidden backlog!','If it is not on the board, it does not exist. The company should show us its board!']},
-henrietta:{WAGES:['I clean up after executives who earn in an hour what I make in a month. I know exactly what is in their bins. Pay people fairly.','Mopping floors is cheap work, huh? Nobody notices until it stops. Pay people what the work is worth.'],
- SECURITY:['I have mopped under every desk that got emptied on a Friday. Too many. Nobody should fear that cardboard box.','Twenty years here and a manager could still walk me out tomorrow. That is wrong. We need protection.'],
+ VOICE:['Great teams decide together. Workers need a real seat at the table, like a permanent stand-up where management actually listens.','Every voice on the team counts. Let\'s build the process together instead of receiving it by memo.'],
+ EQUAL:['Everyone on the board gets the same chance at the next ticket. Equal opportunity means nobody rots in the backlog.','Fair promotions, fair pay, fair shot. That\'s just good facilitation!'],
+ OPEN:['Transparency is the first value of any healthy team. Open pay bands, open budgets, open reasons. No hidden backlog!','If it isn\'t on the board, it doesn\'t exist. The company should show us its board!']},
+henrietta:{WAGES:['I clean up after executives who earn in an hour what I make in a month. I know exactly what\'s in their bins. Pay people fairly.','Mopping floors is cheap work, huh? Nobody notices until it stops. Pay people what the work is worth.'],
+ SECURITY:['I\'ve mopped under every desk that got emptied on a Friday. Too many. Nobody should fear that cardboard box.','Twenty years here and a manager could still walk me out tomorrow. That\'s wrong. We need protection.'],
  VOICE:['Nobody asks the janitor. I see everything, hear everything, and get asked nothing. Workers deserve a say, top floor to basement.','I know where the leaks are, literally and otherwise. Ask the people who do the work.'],
  EQUAL:['The shiny ones get promoted. The invisible ones keep the lights on. Same effort, same respect, same shot.','I have a mop. They have a title. Neither makes a person worth more.'],
- OPEN:['I find the shredded paper at night. They hide plenty. We have a right to know where the money goes.','If the company is so proud of its books, it should not mind us reading them.']},
-joan:{WAGES:['Wages have trailed productivity for decades. The surplus exists. It simply goes elsewhere. Collective bargaining redirects it.','Redistribute v1.0 is not finished. Until then, a union is the stable release. Fair wages. Quietly. Then loudly.'],
- SECURITY:['Employment at will means employment at their whim. Collective agreements require just cause. I have read the statutes. Twice.','A just-cause clause is the only form of job security that is actually enforceable.'],
+ OPEN:['I find the shredded paper at night. They hide plenty. We have a right to know where the money goes.','If the company is so proud of its books, it shouldn\'t mind us reading them.']},
+joan:{WAGES:['Wages have trailed productivity for decades. The surplus exists. It simply goes elsewhere. Collective bargaining redirects it.','Redistribute v1.0 isn\'t finished. Until then, a union is the stable release. Fair wages. Quietly. Then loudly.'],
+ SECURITY:['Employment at will means employment at their whim. Collective agreements require just cause. I\'ve read the statutes. Twice.','A just-cause clause is the only form of job security that\'s actually enforceable.'],
  VOICE:['Power sits wherever decisions are made. Without a voice there, workers hold none. Join, and we sit at the table by law.','Quietly: the law protects collective voice. Loudly: so use it.'],
  EQUAL:['Equal opportunity is written into every statute and ignored by every manager. A union is how it gets enforced.','Pay gaps hide in the details. A bargained pay scale removes the details.'],
- OPEN:['The employer holds the data. We hold the right to ask for it. Disclosure rules are a tool. Let us use them.','Opacity is how inequality survives. Publish the numbers and watch the excuses vanish.']},
-ken:{WAGES:['Bro. Bro! Pay people fairly and everybody wins! I barely do anything here and even I think you deserve more.','Dude, you work SO hard and your paycheck is a joke. That is not okay. Let us fix it together!'],
- SECURITY:['Bro, nobody should worry about getting fired for no reason! Stability is the foundation of a good life. Union it up!','Imagine leaving on Friday and KNOWING you have a job Monday. That is the dream, dude!'],
- VOICE:['Dude, you should totally have a say in how stuff works. It is YOUR job! A union is like a group chat that actually gets answers!','Bro, everyone gets a vote! Equal power in the room! That is the most rad thing ever.'],
- EQUAL:['Equality for EVERYBODY, bro! Same chance, same pay, same respect. No exceptions. That is the whole vibe!','I used to not get it, bro. Now I do: nobody gets a head start just because of who they are. Let us level the field!'],
+ OPEN:['The employer holds the data. We hold the right to ask for it. Disclosure rules are a tool. Let\'s use them.','Opacity is how inequality survives. Publish the numbers and watch the excuses vanish.']},
+ken:{WAGES:['Bro. Bro! Pay people fairly and everybody wins! I barely do anything here and even I think you deserve more.','Dude, you work SO hard and your paycheck is a joke. That isn\'t okay. Let\'s fix it together!'],
+ SECURITY:['Bro, nobody should worry about getting fired for no reason! Stability is the foundation of a good life. Union it up!','Imagine leaving on Friday and KNOWING you have a job Monday. That\'s the dream, dude!'],
+ VOICE:['Dude, you should totally have a say in how stuff works. It\'s YOUR job! A union is like a group chat that actually gets answers!','Bro, everyone gets a vote! Equal power in the room! That\'s the most rad thing ever.'],
+ EQUAL:['Equality for EVERYBODY, bro! Same chance, same pay, same respect. No exceptions. That\'s the whole vibe!','I used to not get it, bro. Now I do: nobody gets a head start just because of who they are. Let\'s level the field!'],
  OPEN:['Bro, why is the pay a secret? If everything is fair, who cares if people see it? Transparency, dude!','Open books, open doors, open minds! Okay, that last one is a stretch. But still, bro. Open books.']}};
-const CLOSE={kaj:['Welcome aboard. We will make this place better, one commit at a time.','Glad to have you. Let us build something that lasts.'],clementine:['Welcome to the team! First action item: coffee. Second: solidarity!','Yay! Another voice on the board! Welcome!'],henrietta:['Good. Now go tell the others. People listen to one of their own.','About time somebody listened. Welcome in.'],joan:['Noted. Membership recorded. ...Welcome.','Good. One more of us. Quietly, then loudly.'],ken:['YES! Bro! High five! Welcome to the squad!','Dude, welcome! This is so rad!']};
+const CLOSE={kaj:['Welcome aboard. We\'ll make this place better, one commit at a time.','Glad to have you. Let\'s build something that lasts.'],clementine:['Welcome to the team! First action item: coffee. Second: solidarity!','Yay! Another voice on the board! Welcome!'],henrietta:['Good. Now go tell the others. They\'ll listen to you more than to us.','About time somebody listened. Welcome in.'],joan:['Noted. Membership recorded. ...Welcome.','Good. One more of us. Quietly, then loudly.'],ken:['YES! Bro! High five! Welcome to the squad!','Dude, welcome! This is so rad!']};
 const argOf=(m,k)=>pick(ARGS[m.id][k]);
 /* ---- Marl Bjorn, the roster and the three-person party ---- */
 ARGS.marl={
-WAGES:['I kept the books for thirty-one years. I know what this company earns and I know what it pays. The gap is no accident.','A wage is not a favour. It is what the work is worth. Somebody should say so out loud and then sign it into an agreement.'],
-SECURITY:['They let me go for lack of work and filled my desk a month later. Job security is not a luxury. It lets you plan your life.','The law says seniority counts and the first call back goes to those sent away. Without a union, nobody checks that they follow it.'],
-VOICE:['In thirty-one years nobody asked the people at the desks how the work should be done. A real seat at the table is overdue.','Before a big change the employer must negotiate with us. Not after, and not by memo. We are here to hold them to it.'],
-EQUAL:['Experience should count. Age should never be a reason to be passed over, and neither should anything else. Equal chances for everybody.','I trained half the people who were promoted past me. A fair shot at the next step is not too much to ask.'],
-OPEN:['I have read every ledger in this building. People deserve to know where the money goes and why decisions are made. Daylight is the cheapest audit.','Nobody explained why I was the one chosen. People deserve straight answers, in plain words and in writing.']};
-CLOSE.marl=['Good. You will not regret it. Come, I know where they keep the files.','Thank you. I will keep the record. Someone should.'];
-const MARL_JOIN=[['Marl','Thirty-one years in Accounts. They gave me a card, a cake and a cardboard box.'],['Clem','Marl Bjorn? You are the one who kept the ledgers?'],['Marl','I was. "Lack of work", they said. Last in, first out, they said. The juniors stayed. A month later a consultant sat at my desk.'],['Kaj','That cannot be legal.'],['Marl','For a year I thought the fault was mine. Then I read the law. LAS 22 §: the longest-serving keep their jobs. LAS 25 §: if work comes back, those sent away are asked first. Nobody ever called me.'],['Marl','I kept copies of everything. I know where the money goes. Take me with you. I will be your memory.'],['Clem','You are in, Marl. Welcome to the team.']];
+WAGES:['I kept the books for thirty-one years. I know what this company earns and I know what it pays. The gap is no accident.','A wage isn\'t a favour. It\'s what the work is worth. Somebody should say so out loud and then sign it into an agreement.'],
+SECURITY:['They let me go for lack of work and filled my desk a month later. Job security isn\'t a luxury. It lets you plan your life.','The law says seniority counts and the first call back goes to those sent away. Without a union, nobody checks that they follow it.'],
+VOICE:['In thirty-one years nobody asked the people at the desks how the work should be done. A real seat at the table is overdue.','Before a big change the employer must negotiate with us. Not after, and not by memo. We\'re here to hold them to it.'],
+EQUAL:['Experience should count. Age should never be a reason to be passed over, and neither should anything else. Equal chances for everybody.','I trained half the people who were promoted past me. A fair shot at the next step isn\'t too much to ask.'],
+OPEN:['I\'ve read every ledger in this building. People deserve to know where the money goes and why decisions are made. Daylight is the cheapest audit.','Nobody explained why I was the one chosen. People deserve straight answers, in plain words and in writing.']};
+CLOSE.marl=['Good. You won\'t regret it. Come, I know where they keep the files.','Thank you. I\'ll keep the record. Someone should.'];
+const MARL_JOIN=[['Marl','Thirty-one years in Accounts. They gave me a card, a cake and a cardboard box.'],['Clem','Marl Bjorn? You\'re the one who kept the ledgers?'],['Marl','I was. "Lack of work", they said. Last in, first out, they said. The juniors stayed. A month later a consultant sat at my desk.'],['Kaj','That doesn\'t compile. That can\'t be legal.'],['Marl','For a year I thought it was my fault, you know? Then I read the law. LAS 22 §: the longest-serving keep their jobs. LAS 25 §: if work comes back, those sent away are asked first. Nobody ever called me.'],['Marl','Then last week an agency called. Temp work, here, training the consultant who took my desk. At half the rate.'],['Marl','I kept copies. Of everything. I know where the money goes. Take me with you, I\'ll... I\'ll be your memory.'],['Clem','You\'re in, Marl. Welcome to the team.'],['Marl','And you, Kaj. You look like someone who carries the whole ledger alone. Delegate. I\'ve seen where that road ends.']];
 /* ---- character wounds: flashbacks, personal paragraphs, case files ---- */
 const WOUND={
 kaj:{title:'The Release',floor:5,laws:['atl13','atl14','atl8','osa'],own:['atl5','atl8','atl8a','atl13','atl14','osa'],
  sum:'Kaj shipped a product on 14-hour days. The company thanked "leadership" and cut half his team a week later. He still checks Slack in his sleep.',
- cite:'That one is mine. Rest is not a perk. It is the law.',
- scene:[['','KAJ: THE RELEASE'],['','Three years ago. Release night. 3 a.m. The office smells of cold pizza.'],['Manager','Great work, team. One last push. Just until Monday.'],['Kaj','It is Sunday. I have not been home since Thursday.'],['Manager','Think of the equity!'],['','The product shipped. The all-hands email thanked leadership. A week later, half of the team got a different email.'],['Kaj','I still wake up at night and check Slack. Just in case.'],['Kaj','Eleven hours of rest every day. Thirty-six every week. It is in the law. Why did nobody ever tell us?']],
- conf:{1:[['Kaj','Vance, I know your type. You promised equity and delivered a pizza party.'],['Kaj','Eleven hours of rest, thirty-six every week. ATL 13 and 14. You do not own my nights.']],3:[['Kaj','Rest is not a perk, Alis. It is a right.']]}},
+ cite:'That one is mine. Rest isn\'t a perk. It\'s the law.',
+ scene:[['','KAJ: THE RELEASE'],['','Three years ago. Release night. 3 a.m. The office smells of cold pizza.'],['Manager','Great work, team. One last push. Just until Monday.'],['Kaj','It\'s Sunday. I haven\'t been home since Thursday.'],['Manager','Think of the equity!'],['','The product shipped. The all-hands email thanked leadership. A week later, half of the team got a different email.'],['Kaj','I still wake up at night and check Slack. Just in case.'],['Kaj','Eleven hours of rest every day. Thirty-six every week. It\'s in the law. Why did nobody ever tell us?']],
+ conf:{1:[['Kaj','Vance, I know your type. You promised equity and delivered a pizza party.'],['Kaj','Eleven hours of rest, thirty-six every week. ATL 13 and 14. You don\'t own my nights.']],3:[['Kaj','Rest isn\'t a perk, Alis. It\'s a right.']]}},
 clementine:{title:'The Reorganization',floor:4,laws:['mbl11','mbl19','mbl15'],own:['mbl11','mbl15','mbl19','mbl19a'],
  sum:'Clem ran stand-ups for two years. Her team was "reorganized" by a single email at 4:58 on a Friday. Nobody was asked. She ran the last retro anyway.',
  cite:'My paragraph. They have to negotiate BEFORE the change. Not after.',
  scene:[['','CLEM: THE REORGANIZATION'],['','Last spring. A Friday, 4:58 p.m. One email, forty recipients.'],['Email','Subject: Exciting changes! Your team is now part of a new, more agile structure.'],['Clem','I read it twice. My team was gone. The retrospective was on Monday. I ran it anyway.'],['Clem','Nobody asked us. Not one question.'],['','Somewhere in a binder, a rule says the employer must negotiate with the union before a major change. Nobody had opened that binder.'],['Clem','MBL 11 §. Negotiate first. I should have known.']],
- conf:{1:[['Clem','Your efficiency program reorganized forty people by email. Did anyone ask them?'],['Clem','MBL 11 §. Negotiate first. We are here to do it properly.']],3:[['Clem','You moved my whole team by email. Today we do it at the table.']]}},
+ conf:{1:[['Clem','Your efficiency program reorganized forty people by email. Did anyone ask them?'],['Clem','MBL 11 §. Negotiate first. We\'re here to do it properly.']],3:[['Clem','You moved my whole team by email. Today we do it at the table.']]}},
 henrietta:{title:'The Ladder',floor:7,laws:['aml3_2','aml6_2','aml6_6a','aml6_7'],own:['aml3_2','aml6_2','aml6_6a','aml6_7','aml3_3'],
  sum:'Henrietta cleaned at night for a contractor. Her friend Marit fell from a borrowed ladder with no harness. The contractor and the company blamed each other. Henrietta had asked for the harness twice.',
- cite:'That is why I am the safety rep now. Nobody else slips.',
+ cite:'That\'s why I\'m the safety rep now. Nobody else slips.',
  scene:[['','HENRIETTA: THE LADDER'],['','Night shift. The atrium glass, six floors of it. The ladder is borrowed. The harness is "on order".'],['Marit','Hold it steady, Hen. Two more minutes.'],['Henrietta','I asked for the harness twice.'],['','The ladder slipped. Henrietta heard it before she saw it.'],['','The contractor said the company was responsible. The company said the contractor was. On a form, Marit became "personal reasons".'],['Henrietta','Nobody asked for a safety rep. Nobody ever does. So I mop every floor myself.'],['Henrietta','AML 6 kap. A safety rep can stop dangerous work. Marit needed that, and nobody had it.']],
- conf:{2:[['Henrietta','Great benefits, you said. Marit would have liked a harness.'],['Henrietta','AML 6 kap. A safety rep can stop dangerous work. I am the safety rep now.']],3:[['Henrietta','Nobody falls on my shift again. Not one more.']]}},
+ conf:{2:[['Henrietta','Great benefits, you said. Marit would have liked a harness.'],['Henrietta','AML 6 kap. A safety rep can stop dangerous work. I\'m the safety rep now.'],['','Nobody says anything for a moment. Not even the Garglr.']],3:[['Henrietta','Nobody falls on my shift again. Not one more.']]}},
 joan:{title:'The Clause',floor:9,laws:['mbl7','mbl8','mbl23'],own:['mbl7','mbl8','mbl23','mbl10'],
- sum:'Joan spotted a clause that did not add up and asked about it in writing. Three weeks later she was "restructured" out. She was right, but alone, and she signed what they put in front of her.',
+ sum:'Joan spotted a clause that didn\'t add up and asked about it in writing. Three weeks later she was "restructured" out. She was right, but alone, and she signed what they put in front of her.',
  cite:'A right is only as strong as the people standing behind it.',
- scene:[['','JOAN: THE CLAUSE'],['','Two years ago. The contracts desk. Joan finds a clause that does not look right and asks about it in writing.'],['Joan','Excuse me, section 9 seems to contradict the agreement. Is that intentional?'],['Manager','Interesting question! Let us talk in my office.'],['','Three weeks later: "restructuring". A cardboard box. A cake nobody ate.'],['Joan','I was right. Every line of it. And it did not matter, because I was alone.'],['Joan','I did not know the law. I signed what they put in front of me. So I read it all. Every night.'],['Joan','MBL 7 §. MBL 8 §. A right is only as strong as the people standing behind it.']],
- conf:{0:[['Joan','Mr Mahl. Section nine, subsection four. I was right then. I am right now.'],['Joan','And this time I am not alone.']],3:[['Joan','Quietly, then loudly. This is the loud part.']]}},
+ scene:[['','JOAN: THE CLAUSE'],['','Two years ago. The contracts desk. Joan finds a clause that doesn\'t look right and asks about it in writing.'],['Joan','Excuse me, section 9 seems to contradict the agreement. Is that intentional?'],['Manager','Interesting question! Let\'s talk in my office.'],['','Three weeks later: "restructuring". A cardboard box. A cake nobody ate.'],['Joan','I was right. Every line of it. And it didn\'t matter, because I was alone.'],['Joan','I didn\'t know the law. I signed what they put in front of me. So I read it all. Every night.'],['Joan','MBL 7 §. MBL 8 §. A right is only as strong as the people standing behind it.']],
+ conf:{0:[['Joan','Mr Maul. Section nine, subsection four. I was right then. I\'m right now.'],['Joan','And this time I\'m not alone.']],3:[['Joan','Quietly, then loudly. This is the loud part.']]}},
 ken:{title:'The Fine Day',floor:14,laws:['dl1_4','dl2_1','dl3','dl1_5'],own:['dl1_4','dl1_5','dl2_1','dl3'],
- sum:'Ken has never been passed over, and never wondered why. Slowly he realised that his coworkers got different treatment in the same room. He decided that being nice is not enough: he has to see it, and say it.',
- cite:'Bro. It is not enough to be nice. You have to SEE it.',
- scene:[['','KEN: THE FINE DAY'],['','Ken has never been passed over. It never occurred to him to ask why.'],['Ken','Meeting day, dudes. Priya says the manager always asks her to take the notes. Weird, right?'],['Ken','Then Tom told me he got the same feedback twice, in the exact same words. And Mei just did not say anything at all.'],['Ken','I was in the room for all of it. I thought it was vibes.'],['','The Discrimination Act does not need an angry person in the room. It asks the employer to look, and to act.'],['Ken','It is not enough to be nice. I have to SEE it. And say it out loud.']],
- conf:{0:[['Ken','Mr Mahl, I watched you in the last meeting. A different tone for Priya. Every time.'],['Ken','I am saying it out loud now. I saw it.']],3:[['Ken','I looked away for years, Alis. Not anymore, bro.']]}},
+ sum:'Ken has never been passed over, and never wondered why. Slowly he realised that his coworkers got different treatment in the same room. He decided that being nice isn\'t enough: he has to see it, and say it.',
+ cite:'Bro. It isn\'t enough to be nice. You have to SEE it.',
+ scene:[['','KEN: THE FINE DAY'],['','Ken has never been passed over. It never occurred to him to ask why.'],['Ken','Meeting day, dudes. Priya says the manager always asks her to take the notes. Weird, right?'],['Ken','Then Tom told me he got the same feedback twice, in the exact same words. And Mei just didn\'t say anything at all.'],['Ken','I was in the room for all of it. I thought it was vibes.'],['','The Discrimination Act doesn\'t need an angry person in the room. It asks the employer to look, and to act.'],['Ken','It isn\'t enough to be nice. I have to SEE it. And say it out loud.']],
+ conf:{1:[['Ken','Vance, eleven promotions. Priya trained you for three of them. She\'s still on the same grade.'],['Ken','I never asked why, bro. I\'m asking now. Out loud.']],3:[['Ken','I looked away for years, Alis. Not anymore, bro.']]}},
 marl:{title:'The Box',floor:22,laws:['las7','las22','las25','las11'],own:['las4','las7','las8','las11','las22','las25','las34','las38'],
  sum:'Marl spent 31 years in Accounts. She was made redundant "for lack of work" two years before retirement. A month later a consultant sat at her desk. Nobody ever called her back.',
  cite:'Last in, first out. And the first call back. I carried that card for a year.',
- scene:[['','MARL: THE BOX'],['','Thirty-one years in Accounts. A Tuesday, 10:15. A meeting room with one jug of water.'],['HR','Marl, your position has been identified as redundant. Lack of work.'],['Marl','Last in, first out? I am the longest in.'],['HR','We have taken that into account.'],['','A month later, a consultant sat at her desk. Nobody phoned her.'],['Marl','For a year I thought it was my fault. I did the sums every night.'],['Marl','LAS 22 §: the longest-serving stay. LAS 25 §: the ones sent away get the first call. I wrote both on a card and kept it in my wallet.']],
- conf:{2:[['Marl','Thirty-one years in this company. Your culture never once asked how I was, Mr Garglr.'],['Marl','LAS 22 §. LAS 25 §. I have brought the card.']],3:[['Marl','Thirty-one years, Alis. I know where every number went.']]}}};
+ scene:[['','MARL: THE BOX'],['','Thirty-one years in Accounts. A Tuesday, 10:15. A meeting room with one jug of water.'],['HR','Marl, your position has been identified as redundant. Lack of work.'],['Marl','Last in, first out? I\'m the longest in.'],['HR','We have taken that into account.'],['','A month later, a consultant sat at her desk. Nobody phoned her.'],['Marl','For a year I thought it was my fault. I did the sums every night.'],['Marl','LAS 22 §: the longest-serving stay. LAS 25 §: the ones sent away get the first call. I wrote both on a card and kept it in my wallet.']],
+ conf:{2:[['Marl','Thirty-one years in this company. Your culture never once asked how I was, Mr Garglr.'],['Marl','LAS 22 §. LAS 25 §. I\'ve brought the card.']],3:[['Marl','Thirty-one years, Alis. I know where every number went.']]}}};
 const woundG=()=>G.wound||(G.wound={});
 const woundOwn=(sp,le)=>!!(sp&&WOUND[sp.id]&&WOUND[sp.id].own.includes(le.id));
 async function ownLaw(sp,le){G.inv.coffee++;toast('PERSONAL PARAGRAPH: +1 COFFEE');sfx('sting');await say(sp.name,WOUND[sp.id].cite)}
@@ -501,6 +502,39 @@ async function woundScene(late){const wg=woundG(),fl=G.floor;
 async function confront(bi,TB){TB.conf=[];
  for(const m of roster()){const w=WOUND[m.id];if(!w||!w.conf[bi])continue;await talk(w.conf[bi]);TB.res=Math.min(100,TB.res+5);TB.conf.push(m.id);sfx('heal')}
  if(TB.conf.length)toast('CONVICTION: SOLIDARITY +'+TB.conf.length*5)}
+/* ---- midpoint: Clem is fired for organizing, the party wins her back ---- */
+const CLEMEV=[['las7','Under a pile of HR forms: Clem\'s performance review from last month. "Exceeds expectations. A natural facilitator." Signed by HR. There was no valid reason (LAS 7 §).'],
+ ['mbl8','A memo on HR letterhead: "Re: union activity. Remove the organizers before Q3. Start with the Scrum Master." Punishing someone for joining a union is a reprisal (MBL 8 §).'],
+ ['las34','A job ad, printed this morning: "Scrum Master wanted. Immediate start." Her role was never redundant. A dismissal like that can be declared void (LAS 34 §).']];
+const AFRAID=['(They glance at the door.) If they can fire Clem, they can fire me. Make it quick.','I heard about Clem. Fired by email. Is that what happens to union people?','Clem ran my onboarding. If she\'s gone, who\'s safe? ...Go on. I\'m listening.','(Whispering.) HR reads the badge logs. Don\'t stand too long at my desk.'];
+const clemOut=()=>!!(G.flags.fired&&!G.flags.rein);
+async function clemFired(){if(G.flags.fired||!roster().some(m=>m.id==='clementine'))return;
+ await talk([['','Friday, 4:58 p.m. Every phone in the party buzzes at once.'],['Email','From: Alis Neddis. Subject: Exciting changes! Clementine Piruetti\'s role has been made redundant, effective immediately. Thank you for your passion!'],['Clem','...Again. By email. At 4:58.'],['Kaj','Redundant? That isn\'t a reason. That\'s an error message. This is about the union.'],['Clem','Security\'s on the way up. I need to hand in my badge.'],['Kaj','Nobody may be punished for joining a union. MBL 8 §. And a dismissal needs a valid reason. LAS 7 §.'],['Clem','Then prove it. Find out why they really did it.'],['Clem','And tell people I\'m not scared. ...Tell them anyway.'],['','Clem leaves with a cardboard box. Behind her, the badge reader beeps red.'],['Kaj','This is my fault. I put her name on the sign-up sheet. I should have...'],['Henrietta','It\'s Alis\'s fault. And it\'s all of ours to fix. Not yours alone.']]);
+ const i=G.members.findIndex(m=>m.id==='clementine'),j=G.bench.findIndex(m=>m.id==='clementine'),m=i>=0?G.members.splice(i,1)[0]:G.bench.splice(j,1)[0];
+ if(i>=0&&G.bench.length)G.members.push(G.bench.shift());
+ G.flags.fired={lv:m.lv,pk:m.pk||{}};G.flags.ev=0;['mbl8','las7'].forEach(lawUnlock);sfx('sting');toast('CLEM WAS FIRED');
+ await say('','GOAL: get Clem reinstated. Search the furniture in HR for proof that she was fired for organizing, then raise it at the next table.')}
+async function clemEvidence(){if(!clemOut()||G.floor<20||(G.flags.ev||0)>=CLEMEV.length||G.flags['ev'+G.floor])return false;
+ G.flags['ev'+G.floor]=1;const [lid,txt]=CLEMEV[G.flags.ev++];lawUnlock(lid);sfx('lvl');await say('',txt);toast(`EVIDENCE FOR CLEM ${G.flags.ev}/${CLEMEV.length}`);return true}
+async function clemTable(TB){if(!clemOut())return;const n=G.flags.ev||0,w=lawWho();
+ const L=[['Garglr','Clementine? A restructuring! Very sad. Very cultural. We gave her a lovely card.'],[w,'Before anything else: Clem goes back to work. That\'s our first demand.']];
+ if(n>=1)L.push([w,'Her review last month: "Exceeds expectations." There was no valid reason. LAS 7 §.']);
+ if(n>=2)L.push([w,'Your own memo: "Remove the organizers. Start with the Scrum Master." That\'s a reprisal. MBL 8 §.']);
+ if(n>=3)L.push([w,'And this morning you advertised her job. It was never redundant. The dismissal is void. LAS 34 §.']);
+ if(!n)L.push(['Kaj','We know why she was fired. So do you. Every member in this tower knows.']);
+ L.push(['Garglr',n>=2?'...Where did you get that memo? That was in the culture drawer.':'Mm! I\'ll thoughtfully file that under Great Feedback.']);
+ await talk(L);if(n){TB.res=Math.min(100,TB.res+n*5);toast('EVIDENCE: SOLIDARITY +'+n*5)}}
+async function clemBack(){if(!clemOut())return;const d=G.flags.fired,RR=roster(),av=Math.max(1,Math.round(RR.reduce((s,m)=>s+m.lv,0)/RR.length));
+ await talk([['Garglr','...The dismissal is withdrawn. Clementine may have her badge back. Please ask her to tick Great.'],['','The elevator opens. Clem steps out, holding the cardboard box. She puts it down and takes out a pack of sticky notes.'],['Clem','Did somebody call a stand-up?'],['Kaj','Welcome back. I kept trying to hotfix this alone.'],['Clem','You never did. Look around.'],['Clem','They fired me by email. You brought me back with the law. ...And with everyone in this tower who wouldn\'t stop talking about it.']]);
+ const m=mkM('clementine',Math.max(d.lv,av));m.pk=d.pk||{};calc(m);m.hp=m.mhp;m.mp=m.mmp;addMember(m);G.flags.rein=1;sfx('lvl');toast('CLEM IS REINSTATED')}
+/* ---- Kaj's arc: from "I'll do it myself" to "Not me. Us." ---- */
+async function kajSeed(){const has=id=>roster().some(m=>m.id===id),w=has('henrietta')?'Henrietta':has('joan')?'Joan':'Clem';
+ await talk([['Kaj','Right. I\'ll go up first and scout the Citadel. Single-threaded, fastest way. You all rest.'],[w,'Kaj. Sit down.'],['Kaj','I\'m sitting.'],[w,'You\'re standing. You\'ve been standing since Tuesday.']])}
+const LEADL={henrietta:'I\'m the safety rep. I\'ll start with who gets hurt in this building, and how often.',clementine:'Agenda item one: everyone in this room gets heard. Including you, Alis.',joan:'I\'ve read every contract you ever issued. Let\'s start on page one.',ken:'Bro. Alis. Look around. We\'re all here. Every single one of us. Let\'s talk.',marl:'Thirty-one years of numbers. I\'ll start with what this company earns, and where it goes.'};
+async function kajLead(){const R=roster().filter(m=>m.id!=='kaj'&&LEADL[m.id]);if(!R.length)return;
+ await talk([['Alis','So! Mr Flack. The ringleader. Eleven minutes. Speak.'],['Kaj','...'],['Kaj','Not me. Us.']]);
+ const i=await choose(R.map(m=>({t:m.name})),{x:0,y:160,w:116,title:'Who speaks first?',cancel:false});const m=R[i];G.flags.leader=m.id;
+ await say(m.name,LEADL[m.id]);await say('Alis','...Oh. All of you, then. Lovely.')}
 function closeCases(TB){const wg=woundG();for(const id of (TB.conf||[])){wg[id]=Object.assign(wg[id]||{},{seen:1,res:1})}if(TB.conf&&TB.conf.length)toast('CASE CLOSED: '+TB.conf.map(i=>CH[i].name).join(', '))}
 async function bookCases(){const wg=woundG(),ids=['kaj','clementine','henrietta','joan','ken','marl'];
  await bookView({title:'CASE FILES: '+Object.keys(wg).filter(k=>wg[k].seen).length+'/'+ids.length,
@@ -512,7 +546,7 @@ async function bookCases(){const wg=woundG(),ids=['kaj','clementine','henrietta'
   if(LG()>1)bkChipL(st.res?'CASE CLOSED':'OPEN CASE: CONFRONT THE BOSS',x,y+6,w,st.res?'#6fe86f':'#ffb347');else if(st.res)bkChip(x,bot-24,'CASE CLOSED','#6fe86f');else bkChip(x,bot-24,'OPEN CASE: CONFRONT THE BOSS','#ffb347')}})}
 /* ---- quality of life: options, text speed, skip, key rebinding ---- */
 const OPTK='crunchtime-options';
-const OPT=(()=>{let o={};try{o=JSON.parse(localStorage.getItem(OPTK))||{}}catch(e){}return Object.assign({ts:1,keys:{},seen:{},rf:0,hc:0,lg:0,sr:0,vm:4,vf:4,cb:0},o)})();
+const OPT=(()=>{let o={};try{o=JSON.parse(localStorage.getItem(OPTK))||{}}catch(e){}return Object.assign({ts:1,keys:{},seen:{},rf:0,hc:0,lg:('ontouchstart' in window||navigator.maxTouchPoints>0)?1:0,sr:0,vm:4,vf:4,cb:0},o)})();
 const optSave=()=>{try{localStorage.setItem(OPTK,JSON.stringify(OPT))}catch(e){}};
 const TSP=[['Slow',.45],['Normal',.9],['Fast',2],['Instant',99]];
 const ACTS=[['up','Up'],['down','Down'],['left','Left'],['right','Right'],['ok','Confirm'],['cancel','Back / Menu'],['skip','Skip seen text']];
@@ -549,9 +583,10 @@ function drawFMap(){ctx.save();ctx.setTransform(1,0,0,1,0,0);R(0,0,W,H,'rgba(6,8
  const cb=OPT.cb?1:0,lg=[[FMK.V[cb],'Snacks','V'],[FMK.C[cb],'Couch','C'],[FMK.E[cb],'Elevator','E'],['#fff','Co-worker'],[cb?'#56B4E9':'#60ffff','New friend'],[cb?'#D55E00':'#ff4040','Boss']];let lx=12;for(const [c,n,pk] of lg){R(lx,H-14,6,6,c);if(cb&&pk)fmPat(pk,lx,H-14,6);T(n,lx+9,H-15,'#c8d0ff');lx+=n.length*6+22}
  ctx.restore()}
 async function floorMap(){markSeen();UI.fmap=1;try{for(;;){const k=await key();if(k==='cancel'||k==='ok')return}}finally{UI.fmap=0}}
-async function searchSpot(c,tx,ty){const k='s'+G.floor+':'+tx+','+ty;if(G.flags[k])return;if('fbdB'.indexOf(c)<0)return;G.flags[k]=1;const r=hh(G.floor,tx*31+ty,7);
+async function searchSpot(c,tx,ty){const k='s'+G.floor+':'+tx+','+ty;if(G.flags[k])return;if('fbdB'.indexOf(c)<0)return;G.flags[k]=1;{const fv=FAVS.find(v=>(favG()[v.id]||{}).st===1&&v.f+1===G.floor);if(fv){favG()[fv.id].st=2;sfx('lvl');await say('',`There it is: the ${fv.item}. Take it back down to ${fv.f+1}F.`);return}}if(await clemEvidence())return;const r=hh(G.floor,tx*31+ty,7);
  if(r<260){G.inv.coffee++;sfx('heal');await say('','You search it properly. A forgotten coffee, still lukewarm. (+1 Coffee)')}
  else if(r<450){G.inv.donut++;sfx('heal');await say('','Behind it: a donut in a napkin. Stale, but loved. (+1 Donut)')}
+ else if(r>=520&&r<640&&!G.flags['kit'+G.floor]&&(G.kits||[]).length<KIT.length){const k=KIT.find(x=>!(G.kits||[]).includes(x.id));G.kits=(G.kits||[]).concat(k.id);G.flags['kit'+G.floor]=1;sfx('lvl');await say('',`Under a pile of old memos: ${k.n}! (${perkTxt(k)}. Equip it in Menu > Kit.)`)}
  else if(r<520){const L=LAW.filter(e=>!lawG()[e.id]);if(L.length){const e=L[r%L.length];lawUnlock(e.id);sfx('lvl');await say('','Taped inside: a photocopied page of the law. '+e.ref+': '+e.t+'. (Added to the Lagboken)')}}}
 /* ---- dialogue portraits: bust at 36x36 grid, drawn at 2x ---- */
 const PTC={};
@@ -814,13 +849,20 @@ function TC(s,cx,y,c){const w=tW(s),x=clamp(Math.round(cx-w/2),2,W-w-2);LT(s,x,y
 /* ---- menus ---- */
 function drawMenus(){const K=LG();
  for(const m of UI.menus){
-  if(K===1){const vis=m.vis,n=m.items.length,hh=m.h||(vis*11+9+(m.foot?13:0)+(m.title?11:0));panel(m.x,m.y,m.w,hh);let oy=m.y+5;if(m.title){T(m.title,m.x+8,oy,'#ffd840');oy+=11}
+  if(K===1){const vis=m.vis,n=m.items.length,hh=m.h||(vis*11+9+(m.foot?13:0)+(m.title?11:0));
+   let w=m.w;for(const it of m.items){const rr=it.r!==undefined&&it.r!==''?String(it.r).length*6+12:0;w=Math.max(w,24+String(it.t).length*6+rr+(it.ic?it.ic.length*10:0))}if(m.title)w=Math.max(w,m.title.length*6+16);w=Math.min(444,w);
+   const x=w===m.w?m.x:Math.abs(m.x+m.w/2-224)<24?Math.round(224-w/2):m.x+m.w>=430?446-w:clamp(m.x,2,446-w);
+   panel(x,m.y,w,hh);let oy=m.y+5;if(m.title){T(m.title,x+8,oy,'#ffd840');oy+=11}
    const top=clamp(m.sel-(vis>>1),0,Math.max(0,n-vis));
-   for(let i=0;i<vis&&top+i<n;i++){const it=m.items[top+i],yy=oy+i*11,c=it.dis?'#7a7a9a':(it.col||'#fff');if(top+i===m.sel)hand(m.x+1+((G.t>>4)&1),yy);T(it.t,m.x+14,yy,c);
-    if(it.ic)it.ic.forEach((k,j)=>ico(k,m.x+m.w-11-j*10,yy));if(it.r!==undefined&&it.r!=='')T(String(it.r),m.x+m.w-6-String(it.r).length*6,yy,c)}
-   if(m.foot)T(m.foot(m.sel),m.x+8,m.y+hh-12,'#9fd8ff');continue}
+   for(let i=0;i<vis&&top+i<n;i++){const it=m.items[top+i],yy=oy+i*11,c=it.dis?'#7a7a9a':(it.col||'#fff');if(top+i===m.sel)hand(x+1+((G.t>>4)&1),yy);T(it.t,x+14,yy,c);
+    if(it.ic)it.ic.forEach((k,j)=>ico(k,x+w-11-j*10,yy));if(it.r!==undefined&&it.r!=='')T(String(it.r),x+w-6-String(it.r).length*6,yy,c)}
+   if(top>0){R(x+w-9,m.y+3,5,1,'#ffd840');R(x+w-8,m.y+2,3,1,'#ffd840')}if(top+vis<n){R(x+w-9,m.y+hh-4,5,1,'#ffd840');R(x+w-8,m.y+hh-3,3,1,'#ffd840')}
+   if(m.foot)T(m.foot(m.sel),x+8,m.y+hh-12,'#9fd8ff');continue}
+  if(m.cols){const cols=m.cols,RH=17,th=m.title?18:0,rows=Math.ceil(m.items.length/cols),hh=rows*RH+10+th,x=0,w=W,y=Math.min(160,250-hh),cw=Math.floor((w-8)/cols);
+   panel(x,y,w,252-y);let oy=y+5;if(m.title){LT(m.title,x+8,oy,'#ffd840');oy+=18}
+   m.items.forEach((it,i)=>{const cx=x+4+(i%cols)*cw,yy=oy+Math.floor(i/cols)*RH,c=it.dis?'#7a7a9a':(it.col||'#fff');if(i===m.sel)hand(cx+1+((G.t>>4)&1),yy+3);LT(it.t,cx+14,yy,c)});continue}
   const RH=17,n=m.items.length;let need=m.w;
-  for(const it of m.items){const rr=it.r!==undefined&&it.r!==''?tW(String(it.r))+12:0;need=Math.max(need,20+tW(it.t)+rr+(it.ic?it.ic.length*10:0))}
+  for(const it of m.items){const rr=it.r!==undefined&&it.r!==''?tW(String(it.r))+12:0;need=Math.max(need,32+tW(it.t)+rr+(it.ic?it.ic.length*10:0))}
   if(m.title)need=Math.max(need,tW(m.title)+16);
   const w=Math.min(444,need),ctr=Math.abs(m.x+m.w/2-224)<24,right=m.x+m.w>=430;
   const fl=m.foot?wrap(m.foot(m.sel),Math.floor((w-14)/12)):[],fh=fl.length?fl.length*16+4:0,th=m.title?18:0;
@@ -841,7 +883,7 @@ function drawDlg(){const d=UI.d,K=LG();if(d.who)drawPortrait(d);panel(4,180,440,
 async function say(who,text){if(SKIPNOW)return;const K=LG(),lines=wrap(text,K>1?34:68),hk=hs(who+'|'+text),was=!!OPT.seen[hk],per=K>1?3:99,pages=[];
  for(let i=0;i<lines.length;i+=per)pages.push(lines.slice(i,i+per));
  outer:for(let pi=0;pi<pages.length;pi++){const pl=pages[pi];UI.d={who,lines:pl,n:0,tot:pl.join('').length,skip:was,sr:pi===0?text:'',more:pi<pages.length-1};
-  for(;;){const k=await key();if(k==='skip'){if(was&&SKIPOK){SKIPNOW=true;break outer}}else if(k==='ok'||k==='cancel'){if(UI.d.n<UI.d.tot)UI.d.n=UI.d.tot;else break}}}
+  for(;;){const k=await key();if(k==='skip'){if(was&&SKIPOK){SKIPNOW=true;break outer}}else if(k==='ok'||k==='cancel'){if(!UI.d)break outer;if(UI.d.n<UI.d.tot)UI.d.n=UI.d.tot;else break}}}
  UI.d=null;if(!was){OPT.seen[hk]=1;SEEN_DIRTY=1}sfx('blip')}
 async function ask(who,text,opts){const K=LG();let lines=wrap(text,K>1?34:68);if(K>1&&lines.length>3){await say(who,lines.slice(0,lines.length-3).join(' '));lines=lines.slice(-3)}
  UI.d={who,lines,n:9999,tot:0,sr:text};const w=Math.max(...opts.map(o=>o.length))*6+26,h=opts.length*11+10;const i=await choose(opts.map(t=>({t})),{x:444-w,y:176-h,w,cancel:false,above:true});UI.d=null;return i}
@@ -948,7 +990,7 @@ function srLook(){if(G.mode!=='field'){SRM(SRS.last||'Nothing to look at here.')
  const B=srBfs(),T0=srTargets().map(t=>Object.assign(t,{d:Math.abs(t.x-pl.x)+Math.abs(t.y-pl.y)})).sort((a,b)=>a.d-b.d);
  const pick=T0.slice(0,7);const el=T0.find(t=>t.c==='E');if(el&&!pick.includes(el))pick.push(el);
  if(!pick.length){SRM('Nothing of interest found on this floor.');return}
- SRM('You are at column '+pl.x+', row '+pl.y+', facing '+DIRN[pl.dir]+'. '+pick.map(t=>t.n+': '+relDir(t.x-pl.x,t.y-pl.y)+'. To reach: '+srRoute(B,t.x,t.y)).join('. '))}
+ SRM('You\'re at column '+pl.x+', row '+pl.y+', facing '+DIRN[pl.dir]+'. '+pick.map(t=>t.n+': '+relDir(t.x-pl.x,t.y-pl.y)+'. To reach: '+srRoute(B,t.x,t.y)).join('. '))}
 function srStatus(){
  if(G.B){const B=G.B;SRM('Battle. '+G.members.map(m=>m.name+' '+m.hp+' of '+m.mhp+' health, '+m.mp+' of '+m.mmp+' MP'+stNames(m)).join('. ')+'. Solidarity meter '+Math.round(B.meter)+' percent. Enemies: '+aliveE().map(e=>(e.name||e.base)+' '+e.hp+' of '+e.mhp+stNames(e)).join(', '));return}
  if(G.mode==='table'&&G.TB){const TB=G.TB;SRM('Negotiation with '+TB.bd.name+'. Solidarity '+Math.round(TB.res)+' percent. Phase: '+TB.bd.ph[TB.ph].name+'. '+TB.ints.map(it=>it.hid?'hidden interest':INT[it.k].s+' '+it.p+' of '+TB.need+(it.p>=TB.need?' agreed':it.blk?' walled':'')).join(', ')+'. Last message: '+TB.msg);return}
@@ -1267,7 +1309,7 @@ const VIG=[
 ['note','Monitor note','A sticky note on a monitor: "PASSWORD: ask Dave." Dave left in March.'],
 ['box','Desk box','A box marked "MY STUFF". Someone packed their desk in a hurry. A framed photo of a cat is on top.','las8'],
 ['mug','Full mug','A mug of coffee, still full. Nobody here has had the time to drink it.'],
-['box','Grievance box','A banker\'s box: "GRIEVANCES 1987-2019". It is lighter than it should be.','mbl7'],
+['box','Grievance box','A banker\'s box: "GRIEVANCES 1987-2019". It\'s lighter than it should be.','mbl7'],
 ['chair','Overturned chair','An overturned chair, a nest of cables and a cold pizza. The server won this round.'],
 ['box','Stapler crates','Twelve cases of staplers. Zero cases of chairs. Procurement has its priorities.'],
 ['ladder','Borrowed ladder','A borrowed ladder against the glass. A harness hangs from the top rung with the tag still on it: "ON ORDER". Henrietta looks at it for a long time and says nothing.','aml3_2'],
@@ -1280,15 +1322,15 @@ const VIG=[
 ['sign','Bell notice','A sign on the big bell: "RING ONLY ON CLOSE." The clapper is wrapped in tape.'],
 ['box','Commission plans','A locked case marked "COMMISSION PLANS". Nobody has seen inside it. A plan that binds both sides is called an agreement.','mbl26'],
 ['note','Forecast chart','A hockey-stick chart and a sticky note: "Trust me." Under it, in another hand: "Don\'t."'],
-['scroll','Pending tray','A tray marked PENDING. The stack under it is marked PENDING PENDING.'],
-['chair','Quota card','An overturned chair and a laminated quota card reading 140%. Ken whispers: "Bro, that is not a number."'],
+['scroll','Pending tray','A tray marked PENDING. The stack under it\'s marked PENDING PENDING.'],
+['chair','Quota card','An overturned chair and a laminated quota card reading 140%. Ken whispers: "Bro, that isn\'t a number."'],
 ['coat','Eleven blazers','A coat rack with eleven identical blazers. Each one is a promotion. Each one has someone\'s fingerprints on the pocket.'],
-['scroll','Welcome packet','A 400-page welcome packet. Page 212 says employment is at-will. It is not.','las4'],
+['scroll','Welcome packet','A 400-page welcome packet. Page 212 says employment is at-will. It isn\'t.','las4'],
 ['plant','Fruit basket','A fruit basket labelled "BENEFITS". The apple is a wax apple.'],
 ['nameplate','Wrong nameplate','A desk with a brand-new nameplate: "CONSULTANT". Under it, the glue of an older one. The pen holder still says "M. Bjorn".','las25'],
 ['candle','Wellness corner','A scented candle, a yoga mat and a poster: "Wellbeing is YOUR responsibility." The poster is wrong.','aml3_2'],
 ['chair','Two chairs','Two chairs facing each other. One has been sat in a lot. The other never has.'],
-['candle','Red folder','A red folder: "WARNINGS". Under it, another: "REASONS". It is empty.','las7'],
+['candle','Red folder','A red folder: "WARNINGS". Under it, another: "REASONS". It\'s empty.','las7'],
 ['box','Personal files','A drawer of PERSONAL FILES with a padlock and a sticker: "You may not look." Joan is already studying the lock.'],
 ['scroll','Blank slip','A pink slip with the line "Reason:" and nothing after it.','las8'],
 ['lunch','Fun pizza','Cold pizza under a banner: "FUN IS MANDATORY". Half the slices have been counted.'],
@@ -1296,7 +1338,7 @@ const VIG=[
 ['chair','Cell stool','A stool and a tally on the wall. The tally stops at "Day 41". Under it: "Still here."'],
 ['hardhat','Hard hat','A hard hat on a stool. Under it, a note: "Safety rep wanted. Apply within."','aml6_2'],
 ['box','Barrel stamp','A barrel stamped "EXPENSES 1411". The lid is nailed shut.'],
-['scroll','Scribe\'s scroll','A half-written scroll: "Dearest Employer, I regret to inform you that I have read my contract."','las11'],
+['scroll','Scribe\'s scroll','A half-written scroll: "Dearest Employer, I regret to inform you that I\'ve read my contract."','las11'],
 ['plant','Wilted loom plant','A wilted plant in a pot on the loom. It has been watered with ink.'],
 ['lunch','Feast leftovers','The banquet leftovers: a chicken leg and a note, "Staff eat in the kitchen. Not today."'],
 ['candle','Chapel candle','A candle burning beside a rulebook that has never been opened. Its spine is perfectly smooth.'],
@@ -1324,7 +1366,7 @@ async function ruleBattleStart(B){const f=G.floor,D=dunOf(f);
  if(D===0&&(G.ot||0)>=OTCAP){for(const m of aliveP())m.st.slow=3;await ban('OVERTIME CAP: your team is exhausted and slow! Rest on a couch.',1100)}
  const d=decOf(f);if(d&&!(G.dec&&G.dec[f])){await tipBan('dec','A decree is in force on this floor. Menu > Stand together can repeal it, once per dungeon.');if(d.id==='gloom'){for(const m of aliveP())m.st.demor=2;await ban(d.nm+': the party starts demoralised!',1000)}else if(d.id==='haste'){for(const e of B.en)e.st.buff=3;await ban(d.nm+': the foes are fired up!',1000)}else if(d.id==='famine')await ban(d.nm+': no items this fight!',900);else if(d.id==='chains')await ban(d.nm+': no fleeing, no swapping!',900);else if(d.id==='gag')await ban(d.nm+': no organizing on company time!',900)}}
 function ruleGate(){const f=G.floor,D=dunOf(f);if(f>=NF-1||(D!==1&&D!==2))return null;const r=G.rul&&G.rul[f],st=r?r.st:0;if(st>=3)return null;
- return D===1?`The elevator is locked until the deal is closed. Pipeline: ${st}/3 stages. Follow the numbered DEAL DESKS in order.`:`The door stamp has not lifted. Forms filed: ${st}/3. Find the three FORMS and file them in the order the law requires.`}
+ return D===1?`The elevator is locked until the deal is closed. Pipeline: ${st}/3 stages. Follow the numbered DEAL DESKS in order.`:`The door stamp hasn't lifted. Forms filed: ${st}/3. Find the three FORMS and file them in the order the law requires.`}
 function ruleHud(){const f=G.floor,D=dunOf(f);if(f>=NF-1)return;let s=null,c='#9fe8ff',bar=null;
  if(D===0){const o=G.ot||0;s=`OVERTIME ${o}/${OTCAP}`;c=o>=OTCAP?'#ff6060':o>=OTCAP-2?'#ffd840':'#9fe8ff';bar=o/OTCAP}
  else if(D===1){const st=(G.rul[f]||{}).st||0;s=`PIPELINE ${st}/3`;c=st>=3?'#7dff9a':'#38e0d0';bar=st/3}
@@ -1333,7 +1375,7 @@ function ruleHud(){const f=G.floor,D=dunOf(f);if(f>=NF-1)return;let s=null,c='#9
  if(!s)return;const lg=OPT.lg,w=s.length*(lg?12:6)+8,y=lg?20:13,h=lg?18:11+(bar!=null?3:0);
  R(W-w,y,w,h,'rgba(0,0,0,.6)');if(lg)TS(s,W-w+4,y+2,c,2,null);else T(s,W-w+4,y+2,c,null);
  if(bar!=null&&!lg){R(W-w+4,y+10,w-8,2,'rgba(255,255,255,.2)');R(W-w+4,y+10,Math.round((w-8)*Math.min(1,bar)),2,c)}
- if(lg){wrap('Landmark: '+LM[f],Math.floor((W-10)/12)).slice(0,2).forEach((ln,i)=>{const tw=ln.length*12+8;R(0,40+i*18,tw,18,'rgba(0,0,0,.6)');TS(ln,3,42+i*18,'#cfe',2,null)})}}
+ if(lg&&G.t-(G.lmT||0)<300){wrap('Landmark: '+LM[f],Math.floor((W-10)/12)).slice(0,2).forEach((ln,i)=>{const tw=ln.length*12+8;R(0,40+i*18,tw,18,'rgba(0,0,0,.6)');TS(ln,3,42+i*18,'#cfe',2,null)})}}
 /* ---- props: placement, drawing, interaction ---- */
 function ruleSpots(n){const F=FLOORS[n],M=G.map,w=M.w,h=M.h,st=F.start;
  const bfs=()=>{const dist=new Int16Array(w*h).fill(-1),q=[];if(M.t[st.y][st.x]!=='.')return{dist,q};const blk=new Set(G.ents.filter(e=>!e.gone).map(e=>e.x+','+e.y));dist[st.y*w+st.x]=0;q.push([st.x,st.y]);
@@ -1379,7 +1421,7 @@ async function termUse(e){const f=G.floor,D=dunOf(f),r=G.rul[f]||(G.rul[f]={st:0
   const right=LAWI[d.law],os=lawOpts(right,3);await say('',`Which paragraph answers this decree? Hint: ${right.x.replace(/\s*\([^)]*\)/g,'')}`);
   const j=await choose(os.map(o=>({t:lawLabel(o)})),{x:0,y:160,w:236,h:92,title:'Cite the paragraph',cancel:true});if(j<0)return;lawUnlock(right.id);
   if(os[j]===right){sfx('combo');(G.dec=G.dec||{})[f]=1;e.done=1;await say('',`${right.ref}: ${right.t}. The decree is void. REPEALED for this whole floor.`)}
-  else{sfx('no');await say('',`That paragraph does not apply. The right one was ${right.ref}: ${right.t}. The decree stands. Try again.`)}return}
+  else{sfx('no');await say('',`That paragraph doesn't apply. The right one was ${right.ref}: ${right.t}. The decree stands. Try again.`)}return}
  if(D===1){const s=e.stage;if(r.st>=3){await say(e.n,'The deal is closed. This desk has nothing left to do.');return}
   if(s<r.st){await say(e.n,'This stage is already done.');return}
   if(s===r.st){r.st++;e.done=1;sfx('sign');lawUnlock(PIPE[s][2]);await say(e.n,PIPE[s][1]);if(r.st===3){sfx('lvl');await say('','DEAL CLOSED. The elevator is released.')}return}
@@ -1398,8 +1440,8 @@ async function citeLaw(a){const B=G.B,D=dunOf(G.floor),THS=[['HOURS','ENV'],['OP
  await say(a.name,`"Which paragraph says this? ${right.x.replace(/\s*\([^)]*\)/g,'')}"`);
  const card=(G.inv.card||0)>0;if(card)G.inv.card--;const i=await choose(os.map(o=>({t:(card&&o===right?'>> ':'')+lawLabel(o),col:card&&o===right?'#ffd840':undefined})),{x:0,y:160,w:236,h:92,title:card?'Cite (card used)':'Cite the paragraph',cancel:true});if(i<0){if(card)G.inv.card++;return false}
  B.cited=1;lawUnlock(right.id);
- if(os[i]===right){sfx('combo');B.par={t:0,ref:right.ref,nm:right.t};for(const e of aliveE()){e.st.stun=1;e.flash=10}const ow=aliveP().find(m=>m===a&&woundOwn(m,right))||aliveP().find(m=>woundOwn(m,right)),own=!!ow,g=25+(own?20:0);B.meter=Math.min(100,B.meter+g);if(own)toast(ow.name+': THAT ONE IS MINE! extra SOLIDARITY');await ban(`${a.name} cites ${right.ref}: ${right.t}! Every foe is on strike for a turn. SOLIDARITY +${g}.`,1700);if(ow&&WOUND[ow.id]&&WOUND[ow.id].cite)await say(ow.name,WOUND[ow.id].cite)}
- else{sfx('no');await ban(`Not that one. It was ${right.ref}: ${right.t}. ${tierOn(3)?'The shop steward covers for you: your turn is not lost.':'The turn is lost.'}`,1700);if(tierOn(3))return false}
+ if(os[i]===right){sfx('combo');G.stats=G.stats||{};G.stats.cite=(G.stats.cite||0)+1;B.par={t:0,ref:right.ref,nm:right.t};for(const e of aliveE()){e.st.stun=1;e.flash=10}const ow=aliveP().find(m=>m===a&&woundOwn(m,right))||aliveP().find(m=>woundOwn(m,right)),own=!!ow,g=25+(own?20:0);B.meter=Math.min(100,B.meter+g);if(own)toast(ow.name+': THAT ONE IS MINE! extra SOLIDARITY');await ban(`${a.name} cites ${right.ref}: ${right.t}! Every foe is on strike for a turn. SOLIDARITY +${g}.`,1700);if(ow&&WOUND[ow.id]&&WOUND[ow.id].cite)await say(ow.name,WOUND[ow.id].cite)}
+ else{sfx('no');await ban(`Not that one. It was ${right.ref}: ${right.t}. ${tierOn(3)?'The shop steward covers for you: your turn isn\'t lost.':'The turn is lost.'}`,1700);if(tierOn(3))return false}
  return true}
 function drawCite(B){const p=B&&B.par;if(!p)return;if(++p.t>78){B.par=null;return}const a=p.t<60?1:1-(p.t-60)/18,r=8+p.t*2.4,cy=74;ctx.save();ctx.globalAlpha=Math.max(0,a);
  ring(224,cy,r,3,'#9fe8ff');ring(224,cy,r*.62,2,'#fff');ctx.globalAlpha=Math.max(0,a);
@@ -1472,13 +1514,13 @@ async function standTogether(){const D=dunOf(G.floor),f=G.floor,n=roster().lengt
  G.flags['wo'+D]=1;sfx('combo');await say('',msg);if(law)lawUnlock(law)}
 
 /* ---- RPG layer: union tiers, perks, dues shop, grievance log, lead demands ---- */
-const TIERS=[{n:10,nm:'Break room',d:'After each won fight, the party recovers 10% HP.'},{n:25,nm:'Strike fund',d:'Every fight starts with +10 SOLIDARITY.'},{n:50,nm:'Shop steward',d:'A wrong Cite no longer costs your turn.'},{n:75,nm:'General assembly',d:'Combos cost 75 SOLIDARITY instead of 100.'}];
+const TIERS=[{n:10,nm:'Break room',d:'After each won fight, the party recovers 10% HP.'},{n:20,nm:'Strike fund',d:'Every fight starts with +10 SOLIDARITY.'},{n:35,nm:'Shop steward',d:'A wrong Cite no longer costs your turn.'},{n:50,nm:'General assembly',d:'Combos cost 75 SOLIDARITY instead of 100.'}];
 const tierOn=i=>cards()>=TIERS[i-1].n;
 const comboCost=()=>tierOn(4)?75:100;
 async function tierCheck(){for(let i=1;i<=TIERS.length;i++){if(tierOn(i)&&!G.flags['tier'+i]){G.flags['tier'+i]=1;const t=TIERS[i-1];sfx('lvl');await say('',`UNION STRENGTH: ${t.n} MEMBERS. ${t.nm.toUpperCase()} unlocked! ${t.d}`)}}}
 async function unionPage(){let sel=0;for(;;){const i=await choose(TIERS.map((t,k)=>({t:t.nm,r:tierOn(k+1)?'ON':t.n+' members',col:tierOn(k+1)?'#9fff9f':'#9aa4d8'})),{x:40,y:14,w:330,sel,title:`MEMBERS ${cards()}/${CT}   DUES ${G.dues||0}`,foot:i=>TIERS[i].d});if(i<0)return;sel=i;const t=TIERS[i];await say('',`${t.nm.toUpperCase()} (${t.n} members): ${t.d} ${tierOn(i+1)?'Active.':'You have '+cards()+'. Sign co-workers and organize foes to grow the union.'}`)}}
-const SHOP=[['coffee','Lukewarm Coffee',8,'Heals 25% HP (min 45).'],['donut','Stale Donut',10,'Restores 25% MP (min 14).'],['ibu','Ibuprofen',12,'In battle: cures despair and slow.'],['agenda','Meeting Agenda',15,'In battle: leave the fight. Not bosses.'],['card','Paragraph Card',25,'Your next Cite shows the right answer.']];
-async function shopMenu(){await say('Union rep','Dues at work. What does the team need?');let sel=0;for(;;){const i=await choose(SHOP.map(([k,n,c])=>({t:n+' x'+(G.inv[k]||0),r:c+'',dis:(G.dues||0)<c})),{x:40,y:14,w:330,sel,title:`UNION DUES: ${G.dues||0}`,foot:i=>SHOP[i][3]});if(i<0)return;sel=i;const [k,n,c]=SHOP[i];if((G.dues||0)<c){sfx('no');continue}G.dues-=c;G.inv[k]=(G.inv[k]||0)+1;sfx('heal');toast(`BOUGHT: ${n}`)}}
+const SHOP=[['coffee','Lukewarm Coffee',8,'Heals 25% HP (min 45).'],['donut','Stale Donut',10,'Restores 25% MP (min 14).'],['ibu','Ibuprofen',12,'In battle: cures despair and slow.'],['agenda','Meeting Agenda',15,'In battle: leave the fight. Not bosses.'],['card','Paragraph Card',25,'Your next Cite shows the right answer.'],['ccoffee','Collective Coffee',40,'Heals the whole party 50% HP.'],['lunch','Team Lunch',45,'Restores the whole party 50% MP.'],['respec','Focus Respec',60,'Re-choose one character\'s focuses.']];
+async function shopMenu(){await say('Union rep','Dues at work. What does the team need?');let sel=0;for(;;){const i=await choose(SHOP.map(([k,n,c])=>({t:n+(k==='respec'?'':' x'+(G.inv[k]||0)),r:c+'',dis:(G.dues||0)<c})),{x:40,y:14,w:330,sel,title:`UNION DUES: ${G.dues||0}`,foot:i=>SHOP[i][3]});if(i<0)return;sel=i;const [k,n,c]=SHOP[i];if((G.dues||0)<c){sfx('no');continue}if(k==='respec'){const R=roster().filter(m=>Object.keys(m.pk||{}).length);if(!R.length){await say('Union rep','Nobody has a focus to change yet.');continue}const j=await choose(R.map(m=>({t:m.name})),{x:60,y:40,w:200,title:'RESPEC WHO?'});if(j<0)continue;G.dues-=c;const m=R[j],ph=m.mhp,pm=m.mmp;m.pk={};calc(m);m.hp=Math.min(m.hp,m.mhp);m.mp=Math.min(m.mp,m.mmp);await perkCheck();continue}G.dues-=c;G.inv[k]=(G.inv[k]||0)+1;sfx('heal');toast(`BOUGHT: ${n}`)}}
 const PERK={
 kaj:{5:[{n:'Sysadmin',m:{mag:3,mp:6}},{n:'Debugger',m:{atk:3,spd:1}}],10:[{n:'Whistleblower',m:{mag:4,spd:2}},{n:'Senior Dev',m:{atk:4,hp:20}}],15:[{n:'Architect',m:{mag:6,mp:10}},{n:'Full Stack',m:{atk:5,def:3}}]},
 clementine:{5:[{n:'Facilitator',m:{mag:3,mp:6}},{n:'Timeboxer',m:{spd:2,def:2}}],10:[{n:'Coach',m:{mag:4,hp:16}},{n:'Kanban',m:{spd:3,mp:8}}],15:[{n:'Agile Rebel',m:{mag:6,spd:2}},{n:'Servant Leader',m:{hp:30,def:3}}]},
@@ -1490,20 +1532,58 @@ const perkTxt=o=>Object.entries(o.m).map(([k,v])=>k.toUpperCase()+' +'+v).join('
 async function perkCheck(){for(const m of roster()){const P=PERK[m.id];if(!P)continue;m.pk=m.pk||{};for(const t of [5,10,15]){if(m.lv<t||m.pk[t]!=null)continue;await say(m.name,`LV ${t}! Time to choose where ${m.name} grows.`);const os=P[t];const i=await choose(os.map(o=>({t:o.n,r:perkTxt(o)})),{x:60,y:40,w:300,cancel:false,title:m.name.toUpperCase()+': CHOOSE A FOCUS'});m.pk[t]=i;const ph=m.mhp,pm=m.mmp;calc(m);m.hp+=m.mhp-ph;m.mp+=m.mmp-pm;sfx('lvl');toast(`${m.name}: ${os[i].n}`)}}}
 async function grievLog(){let sel=0;for(;;){const ids=Object.keys(WOUND).filter(id=>roster().some(m=>m.id===id)),wg=woundG(),D=dunOf(G.floor);
  const st=id=>{const w=WOUND[id],ks=Object.keys(w.conf).map(Number).filter(k=>k<3);const b=ks.length?Math.min(...ks):3;return G.boss[b]?'WON':wg[id]?'RAISED':'HEARD'};
- const rows=ids.map(id=>({t:CH[id].name+': '+WOUND[id].title,r:st(id),col:st(id)==='WON'?'#9fff9f':'#fff',id})).concat(BOSSES.map((b,bi)=>({t:'Table: '+b.name,r:G.boss[bi]?'WON':bi===D?'OPEN':'AHEAD',col:G.boss[bi]?'#9fff9f':bi===D?'#ffd840':'#9aa4d8',bi})));
+ const rows=ids.map(id=>({t:CH[id].name+': '+WOUND[id].title,r:st(id),col:st(id)==='WON'?'#9fff9f':'#fff',id})).concat(FAVS.filter(v=>favG()[v.id]).map(v=>({t:'Favour: '+v.item,r:favSt(v),col:favSt(v)==='DONE'?'#9fff9f':'#fff',fv:v}))).concat(BOSSES.map((b,bi)=>({t:'Table: '+b.name,r:G.boss[bi]?'WON':bi===D?'OPEN':'AHEAD',col:G.boss[bi]?'#9fff9f':bi===D?'#ffd840':'#9aa4d8',bi}))).concat(G.flags.fired?[{t:'Clem: Fired for organizing',r:G.flags.rein?'WON':G.flags.ev?'RAISED':'HEARD',col:G.flags.rein?'#9fff9f':'#fff',cf:1}]:[]);
  const i=await choose(rows,{x:20,y:14,w:380,sel,vis:8,title:'GRIEVANCE LOG',foot:()=>'HEARD > RAISED > WON'});if(i<0)return;sel=i;const r=rows[i];
+ if(r.cf){await say('',G.flags.rein?'Clem was fired by email for organizing. Won at the table: she\'s back at work.':`Clem was fired by email for organizing. Evidence found: ${G.flags.ev||0} of ${CLEMEV.length}. Search the furniture in HR, then raise it at the Garglr's table.`);continue}
+ if(r.fv){const st=favSt(r.fv);await say('',`A co-worker on ${r.fv.f+1}F wants their ${r.fv.item} back from ${r.fv.f+2}F. `+(st==='DONE'?'Done: they signed.':st==='FOUND'?'You have it. Take it back down.':'Search the furniture on '+(r.fv.f+2)+'F.'));continue}
  if(r.id){const w=WOUND[r.id],s=r.r;await say(CH[r.id].name,w.sum+' '+(s==='WON'?'Won at the table.':s==='RAISED'?'Raised: the case file is open. Bring it to the table.':'Heard. Rest on a couch on a later floor to hear the whole story.'))}
  else{const b=BOSSES[r.bi],k=G.lead&&G.lead[r.bi];await say('',`${b.name}: ${r.r==='WON'?'Agreement signed.':r.r==='OPEN'?'Waiting at the top of this part of the tower.':'Further up the tower.'}${k?' You led with '+INT[k].n+'.':''}`)}}}
 const LEADEND={WAGES:"At @'s table you led with wages. The first page anyone reads now is the pay scale.",SECURITY:"At @'s table you led with job security. Notice periods are in writing now, and the layoff roulette is over.",VOICE:"At @'s table you led with influence. The union sits in every reorganization meeting now. Before, not after.",EQUAL:"At @'s table you led with equality. Every promotion round is checked for patterns, and the report is read out loud.",OPEN:"At @'s table you led with transparency. The books are open, and anyone can read the numbers every quarter."};
-function migrate(s){if(!s.v||s.v<3){s.dues=s.dues||0;s.lead=s.lead||{};(s.mem||[]).concat(s.ben||[]).forEach(d=>{d.pk=d.pk||{}});s.v=3}return s}
+function migrate(s){if(s.v===3){s.wks=s.wks||{};s.v=4}if(!s.v||s.v<3){s.dues=s.dues||0;s.lead=s.lead||{};(s.mem||[]).concat(s.ben||[]).forEach(d=>{d.pk=d.pk||{}});s.v=4}return s}
+
+/* ---- review 2: bestiary, kit, favours, report, NG+ ---- */
+const NGK='crunchtime-ngplus';
+function addDues(n){G.dues=(G.dues||0)+n;G.stats=G.stats||{};G.stats.dues=(G.stats.dues||0)+n}
+const seenEnc=()=>{const o={};for(const k in SEENF){const a=SEENF[k];let t='';for(let i=0;i<a.length;i+=8192)t+=String.fromCharCode.apply(null,a.subarray(i,i+8192));o[k]=btoa(t)}return o};
+function seenDec(o){for(const k in SEENF)delete SEENF[k];for(const k in o||{}){try{const t=atob(o[k]);SEENF[k]=Uint8Array.from(t,c=>c.charCodeAt(0))}catch(e){}}}
+async function teamItem(k){const al=roster().filter(m=>m.hp>0);if(!al.length)return;G.inv[k]--;for(const m of al){if(k==='ccoffee')m.hp=Math.min(m.mhp,m.hp+Math.round(m.mhp*.5));else m.mp=Math.min(m.mmp,m.mp+Math.round(m.mmp*.5))}sfx('heal');await say('',k==='ccoffee'?'A whole pot, shared. Everyone recovers half their HP.':'Lunch together, on the union. Everyone recovers half their MP.')}
+async function bestiary(){const ks=Object.keys(G.met||{});if(!ks.length){await say('','No foes met yet. The bestiary fills in as you fight.');return}let sel=0;for(;;){
+ const i=await choose(ks.map(k=>({t:balEN(k).n,r:wkSeen()[k]?'WEAK KNOWN':'?'})),{x:40,y:14,w:300,sel,vis:9,title:'KNOW YOUR BOSS: BESTIARY'});if(i<0)return;sel=i;const k=ks[i],w=wkOf(k),kn=wkSeen()[k];
+ const mv=(EACTS[k]||balEN(k).acts||[]).map(x=>x.split(':')[0]).join(', ');
+ await say('',`${balEN(k).n}. Moves: ${mv}. `+(kn?`Weak to ${CH[w[0]].name}'s attacks, resists ${CH[w[1]].name}'s.`:'Weakness unknown: hit it with different people to find out.'))}}
+const KIT=[{id:'boots',n:'Steel-toe Boots',m:{def:3}},{id:'chair',n:'Ergonomic Chair',m:{hp:24}},{id:'phones',n:'Noise-cancelling Headphones',m:{mag:2,mp:6}},{id:'desk',n:'Standing Desk',m:{spd:2}},{id:'lanyard',n:'Lanyard of Seniority',m:{def:2,hp:10}},{id:'keys',n:'Mechanical Keyboard',m:{atk:3}},{id:'bottle',n:'Reusable Bottle',m:{mp:10}},{id:'mouse',n:'Vertical Mouse',m:{atk:2,spd:1}}];
+const kitOf=id=>KIT.find(k=>k.id===id);
+async function kitMenu(){if(!(G.kits||[]).length){await say('','No kit yet. Search desks, bins and cabinets: workplace gear turns up now and then.');return}
+ for(;;){const R=roster();const j=await choose(R.map(m=>({t:m.name,r:m.kit?kitOf(m.kit).n:'-'})),{x:40,y:14,w:330,title:'KIT: WHO?'});if(j<0)return;const m=R[j];
+  const opts=[{t:'(none)'}].concat(G.kits.map(id=>{const o=roster().find(x=>x.kit===id&&x!==m);return{t:kitOf(id).n+(o?' ('+o.name+')':''),r:perkTxt(kitOf(id))}}));
+  const i=await choose(opts,{x:40,y:30,w:360,title:m.name.toUpperCase()+': EQUIP'});if(i<0)continue;const id=i===0?null:G.kits[i-1];
+  if(id){const o=roster().find(x=>x.kit===id&&x!==m);if(o){const ph=o.mhp,pm=o.mmp;o.kit=null;calc(o);o.hp=Math.min(o.hp,o.mhp);o.mp=Math.min(o.mp,o.mmp)}}
+  const ph=m.mhp,pm=m.mmp;m.kit=id;calc(m);m.hp=Math.max(1,Math.min(m.mhp,m.hp+(m.mhp-ph)));m.mp=Math.max(0,Math.min(m.mmp,m.mp+(m.mmp-pm)));sfx('ok')}}
+const FAVS=[{id:'ts',f:1,item:'signed timesheet'},{id:'hn',f:5,item:'spare harness'},{id:'rc',f:11,item:'expense receipt'},{id:'oc',f:15,item:'old org chart'},{id:'fm',f:21,item:'Form 27-B'},{id:'sn',f:25,item:'sick note'},{id:'pt',f:31,item:'petition page'},{id:'ps',f:35,item:'pay slip'}];
+/* ---- favours as small stories ---- */
+const FAVST={ts:{who:['kaj'],law:'atl8',L:[['@','Forty-six hours, signed by your manager. And they paid you for forty?'],['@','Keep this. It\'s proof. Every hour over forty is overtime, and overtime is paid (ATL 8 §).']]},
+ hn:{who:['henrietta'],law:'aml6_7',L:[['','Henrietta takes the harness first. She checks every buckle herself before she hands it over.'],['@','Use it. Every time. And if anyone says a harness is "on order", you come and find me.']]},
+ rc:{who:['marl','joan'],law:'mbl19',L:[['@','Receipts don\'t go missing. They get put somewhere.'],['@','Make a copy for yourself and one for the union. The company has to show us the numbers (MBL 19 §). We\'ll compare.']]},
+ oc:{who:['clementine','kaj'],law:'mbl11',L:[['@','Look at this chart. Twelve names on that team. Now there are four.'],['@','Nobody was asked. Next time they negotiate first (MBL 11 §).']]},
+ fm:{who:['joan','kaj'],law:'mbl11',L:[['@','"Form 27-B: Request to be consulted. Filed on your behalf." So HR consulted you by filling in a form for you.'],['@','Being consulted isn\'t a form. It\'s a negotiation, before the decision (MBL 11 §).']]},
+ sn:{who:['henrietta','kaj'],law:'aml3_2',L:[['@','A sick note, and they still told you to come in?'],['@','Working sick is a work environment problem, and preventing it\'s the employer\'s job (AML 3 kap 2 §). Go home. That\'s an order from your safety rep.']]},
+ pt:{who:['marl','joan'],law:'mbl7',L:[['@','This petition is from 1979. I know some of these names.'],['@','They were let go the next spring, one by one. ...We finish it this time. With the law behind us (MBL 7 §).']]},
+ ps:{who:['joan','ken'],law:'dl3',L:[['@','Your pay slip and your colleague\'s. Same job, same start year. Look at the difference.'],['@','This is why employers must map pay gaps every year (DL 3 kap). Bring both slips to the table.']]}};
+async function favStory(fv){const st=FAVST[fv.id];if(!st)return;const sp=st.who.map(id=>roster().find(m=>m.id===id)).find(Boolean)||roster()[0];
+ await talk(st.L.map(([n,t])=>[n==='@'?sp.name:n,t]));if(st.law)lawUnlock(st.law)}
+const favG=()=>G.fav||(G.fav={});
+const favSt=v=>['','ASKED','FOUND','DONE'][(favG()[v.id]||{}).st||0]||'';
+const LEADEND_GS=[['','At noon, every worker in the tower stands up and walks out. Ninety out of ninety. The lights stay on, but nobody is there to be told what to do.'],['Alis','...All of you?'],['Kaj','All of us. That\'s what a general strike is.']];
 async function fieldMenu(){let sel=0;for(;;){
  const its=[
   ['Status',async()=>{for(;;){const R=roster(),n=G.members.length;const j=await choose(R.map((m,k)=>({t:m.name,r:(k<n?'':'bench ')+'LV'+m.lv})),{x:100,y:14,w:150});if(j<0)break;const m=R[j],c=CH[m.id];await say(m.name,`${c.cls}. LV ${m.lv}. HP ${m.hp}/${m.mhp}  MP ${m.mp}/${m.mmp}. ATK ${m.atk} DEF ${m.def} MAG ${m.mag} SPD ${m.spd}. Strong arguments: ${c.str.join(', ')}. EXP to next: ${need(m.lv)-m.exp}.${Object.keys(m.pk||{}).length?' Focus: '+Object.entries(m.pk).map(([t,i])=>PERK[m.id][t][i].n).join(', ')+'.':''}`)}}],
   ['Party',partyMenu],
   ['Union',unionPage],
   ['Grievances',grievLog],
+  ['Kit',kitMenu],
+  ['Bestiary',bestiary],
   [standLabel(),standTogether],
-  ['Items',async()=>{const its=[['coffee','Lukewarm Coffee'],['donut','Stale Donut']];const k=await choose(its.map(([k,n])=>({t:n,r:'x'+G.inv[k],dis:G.inv[k]<=0})),{x:100,y:14,w:140});if(k<0)return;const R=roster();const j=await choose(R.map(m=>({t:m.name,r:m.hp+'/'+m.mhp})),{x:100,y:60,w:140});if(j<0)return;const m=R[j];
+  ['Items',async()=>{const its=[['coffee','Lukewarm Coffee'],['donut','Stale Donut'],['ccoffee','Collective Coffee'],['lunch','Team Lunch']];const k=await choose(its.map(([k,n])=>({t:n,r:'x'+(G.inv[k]||0),dis:!(G.inv[k]>0)})),{x:100,y:14,w:200});if(k<0)return;if(k>=2){await teamItem(its[k][0]);return}const R=roster();const j=await choose(R.map(m=>({t:m.name,r:m.hp+'/'+m.mhp})),{x:100,y:60,w:140});if(j<0)return;const m=R[j];
    if(its[k][0]==='coffee'){if(m.hp<=0||m.hp>=m.mhp){sfx('no');return}G.inv.coffee--;m.hp=Math.min(m.mhp,m.hp+Math.max(45,Math.round(m.mhp*.25)))}else{if(m.mp>=m.mmp){sfx('no');return}G.inv.donut--;m.mp=Math.min(m.mmp,m.mp+Math.max(14,Math.round(m.mmp*.25)))}sfx('heal')}],
   ['Options',optionsMenu],
   [`Lagboken ${Object.keys(lawG()).length}/${LAW.length}`,bookParas],
@@ -1513,7 +1593,7 @@ async function fieldMenu(){let sel=0;for(;;){
   ['Glossary',bookGloss]];
  const i=await choose(its.map(x=>({t:x[0]})),{x:4,y:14,w:110,sel});if(i<0)return;sel=i;await its[i][1]()}}
 
-const CLEM_JOIN=[['Clem','Good morning, team! Stand-up time! Yesterday I... ...okay. Nobody. Right.'],['Kaj','Clem? Clementine Piruetti, the Scrum Master?'],['Clem','Former Scrum Master. My team was "reorganized" on Monday. By email. At 4:58 on a Friday. I kept the stand-up anyway.'],['Kaj','Nobody asked you before they moved everyone around?'],['Clem','Nobody asked anyone. That is the whole problem.'],['Kaj','We are forming a union. Collective bargaining, and a say before the big changes, not after.'],['Clem','A seat at the table before the change instead of after? ...Is that on the board? I am adding it. Put me down.']];
+const CLEM_JOIN=[['Clem','Good morning, team! Stand-up time! Yesterday I... ...okay. Nobody. Right.'],['Kaj','Clem? Clementine Piruetti, the Scrum Master?'],['Clem','Former Scrum Master. My team got "reorganized". By email. 4:58 on a Friday. I kept doing the stand-up anyway. Habit, I guess.'],['Kaj','Nobody asked you before they moved everyone around?'],['Clem','Nobody asked anyone. That\'s the whole problem.'],['Kaj','We\'re forming a union. Collective bargaining, and a say before the big changes, not after.'],['Clem','A seat at the table before the change instead of after? ...Is that on the board? I\'m adding it. Put me down.']];
 function clearLine(ax,ay,bx,by){const n=Math.max(Math.abs(bx-ax),Math.abs(by-ay));for(let i=1;i<n;i++){const x=Math.round(ax+(bx-ax)*i/n),y=Math.round(ay+(by-ay)*i/n);if(G.map.t[y][x]!=='.')return false}return true}
 
 /* ================= LAGBOKEN (Swedish labour law lessons) ================= */
@@ -1567,10 +1647,10 @@ const lawLabel=e=>e.ref+' '+e.t;
 async function lawTip(list,who){const id=list.find(i=>!lawG()[i]);if(!id)return;lawUnlock(id);const e=LAWI[id];await say(who,`${e.ref}: ${e.t}. ${e.x}`)}
 const lawWho=()=>byId('joan')?'Joan':'Kaj';
 async function lawScene(key){const w=lawWho();
- if(key==='citadel'){['mbl19','mbl23','dl3'].forEach(lawUnlock);await talk([[w,'Sales Citadel. Everything here is numbers, so use numbers. MBL 19 §: the employer must keep the union informed about finances and personnel policy.'],['Clem','So when the ticker shows record profits, we are allowed to ask where it went?'],[w,'Yes. And a collective agreement (MBL 23 §) is how pay gets written down. DL 3 kap: employers must map pay gaps. Equal work, equal pay.']])}
- else if(key==='hell'){['las22','atl13','atl14'].forEach(lawUnlock);await talk([[w,'HR Hellscape. Here is what they do not want you to read. LAS 22 §: layoffs go last in, first out. No secret lists.'],['Henrietta','And nobody works around the clock. Eleven hours of rest every day, thirty-six every week. ATL 13 and 14 §.'],[w,'Safety reps can stop dangerous work (AML 6 kap 7 §). With lava in the break room, that matters.']])}
+ if(key==='citadel'){['mbl19','mbl23','dl3'].forEach(lawUnlock);await talk([[w,'Sales Citadel. Everything here\'s numbers, so use numbers. MBL 19 §: the employer must keep the union informed about finances and personnel policy.'],['Clem','So when the ticker shows record profits, we\'re allowed to ask where it went?'],[w,'Yes. And a collective agreement (MBL 23 §) is how pay gets written down. DL 3 kap: employers must map pay gaps. Equal work, equal pay.']])}
+ else if(key==='hell'){['las22','atl13','atl14'].forEach(lawUnlock);await talk([[w,'HR Hellscape. Here\'s what they don\'t want you to read. LAS 22 §: layoffs go last in, first out. No secret lists.'],['Henrietta','And nobody works around the clock. Eleven hours of rest every day, thirty-six every week. ATL 13 and 14 §.'],[w,'Safety reps can stop dangerous work (AML 6 kap 7 §). With lava in the break room, that matters.']])}
  else if(key==='kingdom'){['mbl11','mbl10','osa'].forEach(lawUnlock);await talk([[w,'Corporate Kingdom. Decrees, councils, tapestries. The law is simpler: MBL 11 §, the employer must negotiate BEFORE major changes.'],['Kaj','And the union holds the right to negotiate (MBL 10 §), so nobody speaks for us as individuals.'],[w,'Workload, hours and degrading treatment are work-environment issues too (AFS 2023:2). Report them to your safety rep.']])}
- else if(key==='crunch'){['atl5','atl8','atl8a'].forEach(lawUnlock);await talk([['Kaj','Wait. An 80-hour week? Ordinary working time is 40 hours (Arbetstidslagen 5 §).'],['Kaj','Overtime is capped at 200 hours a year (8 §), plus 48 hours over four weeks. A "voluntary" crunch like this is not even legal.'],['Henrietta','Then we are not asking for favours. We are asking them to follow the law. Somebody write that down.']])}}
+ else if(key==='crunch'){['atl5','atl8','atl8a'].forEach(lawUnlock);await talk([['Kaj','Wait, wait. An 80-hour week? Normal working time is 40 hours. That\'s Arbetstidslagen, 5 §.'],['Kaj','Overtime is capped at 200 hours a year (8 §), plus 48 hours over four weeks. A "voluntary" crunch like this isn\'t even legal.'],['Henrietta','Then we aren\'t asking for favours. We\'re asking them to follow the law. Somebody write that down.']])}}
 async function lawBook0(){let sel=0;for(;;){const g=lawG();const items=LAW.map(e=>g[e.id]?{t:lawLabel(e)}:{t:'???',dis:true});const j=await choose(items,{x:100,y:14,w:300,vis:9,sel,title:'Lagboken '+Object.keys(g).length+'/'+LAW.length});if(j<0)return;sel=j;const e=LAW[j];await say('Lagboken: '+e.ref,e.t+'. '+e.x)}}
 
 const LIB_IDX='https://www.government.se/government-policy/labour-law-and-work-environment/';
@@ -1609,7 +1689,7 @@ const GLOSS=[
 ['Förtroendeman','Union representative','A person elected by union members at a workplace to represent them. Protected by the Trade Union Representatives Act.'],
 ['Skyddsombud','Safety representative','Represents employees on work environment issues and can stop dangerous work (AML 6 kap).'],
 ['Stridsåtgärd','Industrial action','A strike, lockout or blockade used in a labour dispute.'],
-['Fredsplikt','Peace obligation','While a collective agreement is in force, industrial action over what it covers is not allowed.'],
+['Fredsplikt','Peace obligation','While a collective agreement is in force, industrial action over what it covers isn\'t allowed.'],
 ['Arbetsdomstolen','Labour Court','The special court that handles most labour disputes.'],
 ['Arbetsmiljöverket','Work Environment Authority','The authority that inspects workplaces and can order employers to fix problems.'],
 ['Diskrimineringsombudsmannen','Equality Ombudsman (DO)','The authority that supervises compliance with the Discrimination Act.'],
@@ -1665,7 +1745,7 @@ async function bookGloss(){await bookView({title:'GLOSSARY: '+GLOSS.length+' TER
  detail(i,x,y,w,bot){const e=GLOSS[i];y=bkHead(e[0],x,y,w,'#ffd840');y=bkLines(e[1],x,y,w,'#8ad0ff',13)+2;bkRule(x,y,w);y+=9;bkLines(e[2],x,y,w,'#e8ecff',14)}})}
 
 
-const cards=()=>G.members.length+G.bench.length+Object.keys(G.signed).length+G.interns;
+const cards=()=>Math.min(CT,G.members.length+G.bench.length+Object.keys(G.signed).length+G.interns+(G.vets||0));
 const cn=()=>cards()*21/CT;
 
 /* ---- skills ---- */
@@ -1717,29 +1797,29 @@ intern:{n:'Unpaid Intern',hp:22,atk:5,def:1,spd:9,exp:5,w:32,h:44,rec:1,acts:['C
 
 /* ---- bosses ---- */
 const eggp=(x,y,u)=>{R(x+u*2,y,u*2,u,'#3a8a3a');R(x+u,y+u,u*4,u,'#3a8a3a');R(x+u,y+2*u,u*4,u*3,'#6a2a8a');R(x+2*u,y+5*u,u*3,u*2,'#5a2078');R(x+u*3,y+7*u,u*2,u,'#4a1a68');R(x+2*u,y+2*u,u,u*2,'#a060c8')};
-const DEFL={stone:['That is non-negotiable. Next.','I will not discuss that.'],memo:['*slides a Union-Busting Memo across*','Read this. It is very binding.'],divide:['Why not talk to me privately, one at a time?'],bad:['Look! A generous offer! (It is not.)']};
+const DEFL={stone:['That\'s non-negotiable. Next.','I won\'t discuss that.'],memo:['*slides a Union-Busting Memo across*','Read this. It\'s very binding.'],divide:['Why not talk to me privately, one at a time?'],bad:['Look! A generous offer! (It isn\'t.)']};
 const BOSSES=[
-{name:'Friedrich Mahl',u:3,lawIntro:['las4','las7'],look:lk('#2a2a30','slick','#f4f4f4','#203060','#1a1a28','#e8c4a0',{acc:'glass',det:'fried'}),
- intro:[['Friedrich','Kaj Flack. Clementine Piruetti. Friedrich Mahl, Esq., Legal. I have read every clause of your little scheme. All of them. Twice.'],['Kaj','Mr. Mahl, we just want to talk. As equals.'],['Friedrich','Equals? Section 4, paragraph 9: you are "at-will." I am "billable." Talk, then. Every word is being noted for the record. My record.'],['Kaj','There is no "at will" here, Mr. Mahl. Employment is permanent by default (LAS 4 §) and dismissal needs a valid reason (LAS 7 §).'],['Friedrich','...You have read it. How tedious. Sit.']],
- ph:[{name:'DEPOSITION',need:4,tn:1,ints:[{k:'OPEN'},{k:'EQUAL'},{k:'VOICE',hid:1}],tac:['stone','memo','stone'],slip:'I draft the rules nobody reads, and I am never thanked. ...Nobody has ever asked what I think. Objection withdrawn.',react:['Hm. That is... technically defensible.','I will need to amend my own footnote.','Sustained. Annoyingly.']}],
- win:[['Friedrich','...Fine. Form your union. I will not file the injunction. Today.'],['Kaj','The elevator, Mr. Mahl.'],['Friedrich','Take it. I will be billing someone for this. Possibly myself.']],lose:'Motion granted! Your case is dismissed with prejudice!'},
+{name:'Friedrich Maul',u:3,lawIntro:['las4','las7'],look:lk('#2a2a30','slick','#f4f4f4','#203060','#1a1a28','#e8c4a0',{acc:'glass',det:'fried'}),
+ intro:[['Friedrich','Kaj Flack. Clementine Piruetti. Friedrich Maul, Esq., Legal. I\'ve read every clause of your little scheme. All of them. Twice.'],['Kaj','Mr. Maul, we just want to talk. As equals.'],['Friedrich','Equals? Section 4, paragraph 9: you are "at-will." I am "billable." Talk, then. Every word is being noted for the record. My record.'],['Kaj','There\'s no "at will" here, Mr. Maul. Employment is permanent by default (LAS 4 §) and dismissal needs a valid reason (LAS 7 §).'],['Friedrich','...You\'ve read it. How tedious. Sit.']],
+ ph:[{name:'DEPOSITION',need:4,tn:1,ints:[{k:'OPEN'},{k:'EQUAL'},{k:'VOICE',hid:1}],tac:['stone','memo','stone'],slip:'I draft the rules nobody reads, and I\'m never thanked. ...Nobody has ever asked what I think. Objection withdrawn.',react:['Hm. That is... technically defensible.','I\'ll need to amend my own footnote.','Sustained. Annoyingly.']}],
+ win:[['Friedrich','...Objection withdrawn. Form your union. I won\'t file the injunction. Today.'],['Kaj','The elevator, Mr. Maul.'],['Friedrich','Take it. I\'ll be billing someone for this. Possibly myself.']],lose:'Motion granted! Your case is dismissed with prejudice!'},
 {name:'The Garglr',u:3,lawIntro:['aml6_2','aml6_7'],eggplant:1,look:lk('#4a2a6a','slick','#e8e0f0','#7a2a8a','#3a2a50','#e0b890',{acc:'glass',det:'garg'}),
- intro:[['Garglr','Welcome, Associates, to the family! I am the Garglr, Head of Human Resources. Have you seen our CULTURE?'],['Clem','Garglr, we are organizing. You know what that means.'],['Garglr','It means you love the free fruit basket! And the generous benefits! The ping-pong table! ...Take this eggplant as a gift. Oh, I am keeping it. To hit you with.'],['Henrietta','Benefits? There is a lava pit in the break room. A safety rep can stop dangerous work on the spot (AML 6 kap 7 §), and every workplace with five employees needs one (6 kap 2 §).'],['Garglr','Mm! Lava is part of our culture!']],
- ph:[{name:'CULTURE FIT',need:4,tn:1,ints:[{k:'WAGES'},{k:'EQUAL'},{k:'SECURITY',hid:1}],tac:['divide','memo','stone','divide'],slip:'The benefits are a ping-pong table nobody has time to use. ...I have not had a day off in six years. I just say the word culture a lot.',react:['That is... not in the Culture Deck. Hm.','We are a family! ...Families listen, sometimes.','Great feedback! I will thoughtfully file it under Great Feedback.']}],
- win:[['Garglr','Our culture... has apparently been a bit of a PowerPoint. Fine, you win. Take the elevator.'],['Joan','...Noted.'],['Garglr','Please fill in the exit survey. Tick "Great". Please tick Great.']],lose:'Culture session over! Reflect on your feelings! And on the eggplant!'},
+ intro:[['Garglr','Welcome, Associates, to the family! I\'m the Garglr, Head of Human Resources. Have you seen our CULTURE?'],['Clem','Garglr, we\'re organizing. You know what that means.'],['Garglr','It means you love the free fruit basket! And the generous benefits! The ping-pong table! ...Take this eggplant as a gift. Oh, I\'m keeping it. To hit you with.'],['Henrietta','Benefits? There\'s a lava pit in the break room. A safety rep can stop dangerous work on the spot (AML 6 kap 7 §), and every workplace with five employees needs one (6 kap 2 §).'],['Garglr','Mm! Lava is part of our culture!']],
+ ph:[{name:'CULTURE FIT',need:4,tn:1,ints:[{k:'WAGES'},{k:'EQUAL'},{k:'SECURITY',hid:1}],tac:['divide','memo','stone','divide'],slip:'The benefits are a ping-pong table nobody has time to use. ...I haven\'t had a day off in six years. I just say the word culture a lot.',react:['That is... not in the Culture Deck. Hm.','We\'re a family! ...Families listen, sometimes.','Great feedback! I\'ll thoughtfully file it under Great Feedback.']}],
+ win:[['Garglr','Our culture... has apparently been a bit of a PowerPoint. Culture is what people do, not what we print. Take the elevator.'],['Joan','...Noted.'],['Garglr','Please fill in the exit survey. Tick "Great". Please tick Great.']],lose:'Culture session over! Reflect on your feelings! And on the eggplant!'},
 {name:'Vance Upward',u:3,lawIntro:['atl8','atl8a'],look:lk('#1a1a1a','slick','#ffffff','#d4a010','#20202a','#f0c090',{acc:'bag',det:'vance'}),
- intro:[['Vance','Vance Upward, Regional Vice President of Sales. Eleven promotions in nine years. I did not get here by being nice.'],['Ken','Bro, we just want a fair deal for everyone!'],['Vance','Fair? Every rung of this ladder has someone under it. Your little union is a stepping stone, and I am about to step.'],['Kaj','Eleven promotions, and who counted the hours? Overtime is capped at 200 hours a year (ATL 8 §), 48 over four weeks.'],['Vance','Overtime is "voluntary", Associate. Strictly speaking. Eventually.']],
- ph:[{name:'PERFORMANCE REVIEW',need:4,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'VOICE'},{k:'SECURITY',hid:1}],tac:['stone','bad','divide','memo'],slip:'Every promotion cost me someone. I climbed past everyone I ever worked with. ...The view from up here is very quiet.',react:['That would look good in my next review. Hm.','If it helps my numbers, I can pretend to care.','Annoying. That is a better pitch than mine.']}],
- win:[['Vance','Fine. Backing the union looks great on my résumé. I will take the credit, naturally.'],['Kaj','Thank you, Vance.'],['Vance','Do not thank me. Put it in writing. With my name first.']],lose:'Review complete! You have been passed over. Permanently!'},
+ intro:[['Vance','Vance Upward, Regional Vice President of Sales. Eleven promotions in nine years. I didn\'t get here by being nice.'],['Ken','Bro, we just want a fair deal for everyone!'],['Vance','Fair? Every rung of this ladder has someone under it. Your little union is a stepping stone, and I\'m about to step.'],['Kaj','Eleven promotions, and who counted the hours? Overtime is capped at 200 hours a year (ATL 8 §), 48 over four weeks.'],['Vance','Overtime is "voluntary", Associate. Strictly speaking. Eventually.']],
+ ph:[{name:'PERFORMANCE REVIEW',need:4,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'VOICE'},{k:'SECURITY',hid:1}],tac:['stone','bad','divide','memo'],slip:'Every promotion cost me someone. I climbed past everyone I ever worked with. ...The view from up here\'s very quiet.',react:['That would look good in my next review. Hm.','If it helps my numbers, I can pretend to care.','Annoying. That\'s a better pitch than mine.']}],
+ win:[['Vance','Backing the union looks great on my résumé. I was always for it, actually. Early adopter.'],['Kaj','Thank you, Vance.'],['Vance','Don\'t thank me. Put it in writing. With my name first.']],lose:'Review complete! You\'ve been passed over. Permanently!'},
 {name:'Alis Neddis',u:3,lawIntro:['mbl19','mbl21'],mood:1,look:lk('#7a3a2a','bun','#f4ece4','#2a6a5a','#2a2a40','#f0c0a0',{skirt:1,acc:'glass',det:'alis'}),
- intro:[['Alis','Oh, HELLO! Alis Neddis, Chief Executive Officer. Chief of Everything. I am the CEO, and I have eleven minutes for you. Please, sit! Can I get you a tea? Of course I can. I am lovely.'],['Kaj','We are here to bargain in good faith, Alis. It is the law.'],['Alis','The law! What a thoughtful point! ...SIT DOWN AND LISTEN TO ME WHEN I AM TALKING TO YOU!! ...Sorry. Where were we? Tea?'],['Kaj','Alis, before any major change you must negotiate with us (MBL 11 §), and keep us informed about the business (MBL 19 §).'],['Alis','OF COURSE! Lovely! ...HOW DARE YOU READ THE LAW AT ME?! ...Tea?']],
+ intro:[['Alis','Oh, HELLO! Alis Neddis, Chief Executive Officer. Chief of Everything. I\'m the CEO, and I have eleven minutes for you. Please, sit! Can I get you a tea? Of course I can. I\'m lovely.'],['Kaj','We\'re here to bargain in good faith, Alis. It\'s the law.'],['Alis','The law! What a thoughtful point! ...SIT DOWN AND LISTEN TO ME WHEN I AM TALKING TO YOU!! ...Sorry. Where were we? Tea?'],['Kaj','Alis, before any major change you must negotiate with us (MBL 11 §), and keep us informed about the business (MBL 19 §).'],['Alis','OF COURSE! Lovely! ...HOW DARE YOU READ THE LAW AT ME?! ...Tea?']],
  ph:[
   {name:'STONEWALLING',need:5,tn:2,ints:[{k:'VOICE'},{k:'EQUAL'},{k:'SECURITY',hid:1}],tac:['stone','stone','memo','divide'],slip:'...People were afraid. I suppose that was the point. I just never knew how to stop shouting once I started.',react:['What a LOVELY idea! Truly! ...WHO TOLD YOU THAT?!','Mm, I hear you. I really do. ...NO YOU DO NOT HEAR ME!','Wonderful, wonderful. Do go on. (twitch)'],
-   post:[['Alis','Fine. I recognize you. *smiles* Now let us talk money, which you will not like. *keeps smiling*']]},
-  {name:'BAD-FAITH OFFER',need:5,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL',hid:1}],tac:['bad','bad','memo'],slip:'You want EQUAL OPPORTUNITY? ...I was passed over four times myself. Nobody ever gave me a fair shot either.',react:['Fascinating! Really! ...THAT IS EXCESSIVE!!','You are being SO constructive. ...STOP CITING EVIDENCE AT ME!','Your demands are... a fair starting point! (a vein pulses)'],
-   pre:[['Alis','Here is my offer, friends! A one percent raise, and a pizza party! Is that not generous? ...TAKE IT OR LEAVE IT!!'],['Joan','That is a bad-faith offer. Every word of it.']],
+   post:[['Alis','Fine. I recognize you. *smiles* Now let\'s talk money, which you won\'t like. *keeps smiling*']]},
+  {name:'BAD-FAITH OFFER',need:5,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL',hid:1}],tac:['bad','bad','memo'],slip:'You want EQUAL OPPORTUNITY? ...I was passed over four times myself. Nobody ever gave me a fair shot either.',react:['Fascinating! Really! ...THAT IS EXCESSIVE!!','You\'re being SO constructive. ...STOP CITING EVIDENCE AT ME!','Your demands are... a fair starting point! (a vein pulses)'],
+   pre:[['Alis','Here\'s my offer, friends! A one percent raise, and a pizza party! Is that not generous? ...TAKE IT OR LEAVE IT!!'],['Joan','That\'s a bad-faith offer. Every word of it.']],
    post:[['Alis','...*breathes deeply* Very well. A FINAL offer. Gently.']]},
-  {name:'THE FINAL OFFER',need:4,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL'},{k:'SECURITY'}],tac:['stone','bad','divide','memo'],react:['Gah! Reasonable, damn you!','Oh, that is airtight. How exciting for you! ...HOW DARE YOU!','Everyone in this room is standing together, huh. ...Lovely.'],
+  {name:'THE FINAL OFFER',need:4,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL'},{k:'SECURITY'}],tac:['stone','bad','divide','memo'],react:['Gah! Reasonable, damn you!','Oh, that\'s airtight. How exciting for you! ...HOW DARE YOU!','Everyone in this room is standing together, huh. ...Lovely.'],
    pre:[['Alis','Final offer! You get everything you wanted, or nothing. Every point, settled NOW. *calmly* Take your time. ...NOW!!']]}],
  win:[['Alis','...*wipes her chin* Fine. Fair wages, job security, equal opportunity, worker influence and transparency. Where do I sign? Sorry about the, ah, moisture.'],['Kaj','Right here, Alis.']],lose:'Talks over! Come back when you can afford my time! ...TEA?'}];
 
@@ -1801,27 +1881,35 @@ const NPCN=SPEC.map(s=>s.np);let CUM=[],_c=0;NPCN.forEach((v,i)=>{_c+=v;CUM[i]=_
 const CT=6+_c+7;
 const NEED=CUM.map(c=>3+Math.ceil(c*.55));NEED[0]=Math.min(NEED[0],4);
 const NAMES=['Priya','Tom','Mei','Dave','Olu','Sana','Lars','Bea','Hiro','Ines','Jamal','Fatima','Wen','Rosa','Kofi','Anya','Mateo','Yuki','Noor','Gus','Lena','Omar','Tess','Ravi','Ilse','Dmitri','Ayo','Cleo','Bram','Sofia','Hugo','Zainab','Kwame','Elif','Nils','Paloma','Tariq','Greta','Joon','Mira','Felix','Amara','Pavel','Luz','Soren','Dalia','Ezra','Nadia','Boris','Imani','Chen','Odile','Rafi','Vera','Teo','Liv','Arjun','Maeve','Sami','Petra','Idris','Tilda','Kai','Esme','Raul','Ada','Jun','Frida','Milo','Nia','Otto','Pia','Quinn','Rhea','Stan','Uma','Vik','Wanda'];
+/* ---- recurring co-workers: named people with a line, a signing and an ending ---- */
+const STAR={3:{n:'Priya',k:'EQUAL',l:'Every meeting, the manager asks me to take the notes. Every single meeting. Nobody else has ever been asked.',sign:'Next meeting, someone else takes the notes. Deal? ...Deal. I\'m in.',end:'Priya chairs the first union meeting. Someone else takes the notes.'},
+ 13:{n:'Tom',k:'OPEN',l:'I got the same feedback twice, in the exact same words. Nobody will tell me what the criteria are.',sign:'Criteria in writing? For everyone? Then I\'m in. I\'ll read them twice.',end:'Tom gets his review criteria in writing. He reads them twice, for old times\' sake.'},
+ 17:{n:'Mei',k:'EQUAL',l:'(She says nothing for a while.) ...Same job as the man next to me. Different grade. I stopped saying it.',sign:'Okay. I\'ll say it once more. Out loud this time. Sign me up.',end:'Mei says it out loud at the first pay-mapping meeting. This time everyone hears it.'},
+ 24:{n:'Dave',k:'VOICE',l:'Yes, THAT Dave. The password guy. They moved me to HR in March. Nobody told my old team. Nobody really told me either.',sign:'A say before they move people around? Then I\'m in. And the password is "union". It\'s now.',end:'Dave goes back to his old team. He finally tells them the password.'},
+ 26:{n:'Agnes',k:'VOICE',l:'I wrote the note on that thermos. Eleven hours between shifts. I sign everything "A. Tired". It stopped being a joke.',sign:'Nobody ever asked the night shift anything. You just did. I\'m in.',end:'Agnes signs her first rota under the new agreement. She signs it "A. Rested".'},
+ 30:{n:'Gus',k:'SECURITY',l:'You found my tally? Day 41 is when they moved me down to the cells. It\'s day 58 now. Still here.',sign:'A union. Then nobody gets sent down here without a reason. I\'m in. Day 58. Last one.',end:'Gus crosses out the tally on the cell wall. Underneath, he writes: "Went home."'}};
+const STARN=Object.values(STAR).map(v=>v.n);
 const KEYS=['WAGES','SECURITY','VOICE','EQUAL','OPEN'];
 const LN=[
 {WAGES:['My pay stub is thinner than the cubicle walls.','Rent went up, the heating went off. Guess which one I can negotiate.','I bring soup in a thermos for dinner. Every day. Because of my pay.'],
  SECURITY:['Every Friday someone\'s desk is empty on Monday.','My contract says "at will". The will is theirs.','I keep my stuff in a box under the desk. Just in case.'],
- VOICE:['Nobody asked us about the open floor plan. It has no windows.','Suggestion box? It is bolted shut. I checked.','Decisions come down in memos. Nobody up there has ever met us.'],
+ VOICE:['Nobody asked us about the open floor plan. It has no windows.','Suggestion box? It\'s bolted shut. I checked.','Decisions come down in memos. Nobody up there has ever met us.'],
  EQUAL:['They promoted Greg again. Greg golfs. I do Greg\'s work.','Same job, two pay grades. Guess which one I got.','I applied for that promotion four times. The posting says "internal only".'],
  OPEN:['Nobody will tell us what anyone earns. Or why.','The budget is a secret. The layoffs are a surprise. See the pattern?','I asked where the bonus pool went. They scheduled a meeting about my question.']},
-{WAGES:['The pipeline says record revenue. My commission slip disagrees.','The target went up. The commission rate went down. Funny how that works.','I close big accounts all day and still cannot make rent.'],
+{WAGES:['The pipeline says record revenue. My commission slip disagrees.','The target went up. The commission rate went down. Funny how that works.','I close big accounts all day and still can\'t make rent.'],
  SECURITY:['One missed quarter and the whole account team vanishes. Poof.','They redraw the territories every spring and call it "alignment".','My job is as safe as my pipeline. Which is to say, not at all.'],
- VOICE:['Our targets are decided in a room I have never seen.','We carry every client relationship but never a single decision.','There is a vote on the sales kickoff theme. Only for the directors.'],
+ VOICE:['Our targets are decided in a room I\'ve never seen.','We carry every client relationship but never a single decision.','There\'s a vote on the sales kickoff theme. Only for the directors.'],
  EQUAL:['The big accounts go to the golf crowd. The rest of us get the leftovers.','Same quota, same results. Their commission has an extra zero.','They promote the same profile every year and call it "culture fit".'],
  OPEN:['They publish the targets and hide the commission plan.','My commission formula is "proprietary". So is my own sales history.','Nobody will explain how the territories are split. The method is a rumour.']},
-{WAGES:['My salary is paid in "exposure". And embers.','They deduct for the lava. Apparently it is a perk.','Benefits offered me a raise... in the afterlife.'],
- SECURITY:['There is a list. Everybody knows there is a list. Nobody has seen it.','"Termination" is very literal down here. Please stop making me think about it.','My contract was signed in very dark ink. I did not read it.'],
+{WAGES:['My salary is paid in "exposure". And embers.','They deduct for the lava. Apparently it\'s a perk.','Benefits offered me a raise... in the afterlife.'],
+ SECURITY:['There\'s a list. Everybody knows there\'s a list. Nobody has seen it.','"Termination" is very literal down here. Please stop making me think about it.','My contract was signed in very dark ink. I didn\'t read it.'],
  VOICE:['Every complaint goes into the Pit of Forms. No reply. Ever.','The anonymous survey asked for my name. Twice.','"Speak up," they said. Then they took my mouth badge away.'],
  EQUAL:['The ritual promotes whoever the Garglr likes. He likes himself.','Some of us get the corner pit. Some of us get the lava vent. Nobody explains the system.','Same hours, same sins, different pay. HR calls this "synergy".'],
- OPEN:['Every policy is written in a language only the Garglr reads.','HR says the numbers are "confidential". The numbers are my own pay.','Nobody will tell me why I was written up. The form is blank. It is also sealed.']},
-{WAGES:['The crown pays in "honour". My landlord does not accept honour.','Another tax on the tax. The tax collector has a tax.','My weekly wage buys one loaf and a moral lesson.'],
+ OPEN:['Every policy is written in a language only the Garglr reads.','HR says the numbers are "confidential". The numbers are my own pay.','Nobody will tell me why I was written up. The form is blank. It\'s also sealed.']},
+{WAGES:['The crown pays in "honour". My landlord doesn\'t accept honour.','Another tax on the tax. The tax collector has a tax.','My weekly wage buys one loaf and a moral lesson.'],
  SECURITY:['Banished for asking a question. Exiled for the follow-up.','My family served here for generations. They still fired me by raven.','One bad harvest and the whole village gets "restructured".'],
- VOICE:['The Lord Chancellor decides everything by decree. We are the decree-ees.','We petition the king. The petition goes into the fireplace.','There is a Great Council. We are not allowed in the Great Council.'],
- EQUAL:['Nobles get the chair. Serfs get the floor. Same work, same hours.','My daughter cannot be a knight. Her name is not in the right ledger.','The lords\' children get the promotions. Ours get the stairs.'],
+ VOICE:['The Lord Chancellor decides everything by decree. We\'re the decree-ees.','We petition the king. The petition goes into the fireplace.','There\'s a Great Council. We aren\'t allowed in the Great Council.'],
+ EQUAL:['Nobles get the chair. Serfs get the floor. Same work, same hours.','My daughter can\'t be a knight. Her name isn\'t in the right ledger.','The lords\' children get the promotions. Ours get the stairs.'],
  OPEN:['The treasury is locked. So are the ledgers. So is the answer.','Nobody knows where the tithe goes. The tithe-keeper "forgot".','The decrees are read aloud in Latin. We speak common.']}];
 const NLOOK=[
 {sh:['#d8dcd0','#c0c8d8','#b8c4b0','#d8d0b8','#c8b8c8'],ti:['#6a7a8a',null,'#8a4a4a',null,'#4a6a8a'],pa:['#3a3a4a','#44444e','#2e3440']},
@@ -1927,10 +2015,11 @@ function genFloor(n,att){
   taken.push([x,y]);
   const j=npcs.length===0&&SPEC_JOIN[n];
   if(j){let px=x,py=y;if(o.closet){px=5;py=5}npcs.push({id:j.id,n:j.n,x:px,y:py,look:j.look(),join:j.join});if(o.closet)taken[taken.length-1]=[px,py];continue}
-  const i=npcs.length;let nm=NAMES[(n*7+i*13+((n>>1)*3))%NAMES.length];while(names.includes(nm))nm=NAMES[(NAMES.indexOf(nm)+1)%NAMES.length];names.push(nm);
+  const i=npcs.length;let nm=NAMES[(n*7+i*13+((n>>1)*3))%NAMES.length];while(names.includes(nm)||STARN.includes(nm))nm=NAMES[(NAMES.indexOf(nm)+1)%NAMES.length];names.push(nm);
   const k=KEYS[(n*2+i*3+(n>>2))%5],ln=LN[D][k];
   npcs.push({id:'n'+n+'_'+i,n:nm,x,y,look:npcLook(rng,D),k,l:ln[(n+i)%3]})}
  if(npcs.length<wantNpc)return null;
+ if(STAR[n]){const e=npcs.find(p=>!p.join);if(e)Object.assign(e,{n:STAR[n].n,k:STAR[n].k,l:STAR[n].l,star:n})}
  // closet interior must hold Joan
  return{t:m,w,h,ex,dx,rugs,rest,npcs,boss:bossAt}}
 function makeFloor(n){const sp=SPEC[n],D=dunOf(n);
@@ -1946,16 +2035,17 @@ const pl={x:1,y:1,rx:16,ry:16,dir:'down',mv:0,dx:0,dy:0};
 const G={rul:{},dec:{},ot:0,mode:'title',floor:0,flags:{},signed:{},boss:{},law:{},wound:{},inv:{coffee:3,donut:2},interns:0,wound:{},members:[],bench:[],map:null,fl:null,ents:[],steps:0,busy:false,t:0,vend:{},doors:{},rest:{f:0,x:15,y:11},B:null,TB:null,el:null,end:null};
 const UI={d:null,menus:[],cursor:null,ban:null,fx:[],wipe:null};
 const DV={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
-const mkM=(id,lv)=>{const m={id,name:CH[id].name,lv,exp:0,pk:{},st:{},isP:true,w:32,h:44,x:0,y:0,flash:0};calc(m);m.hp=m.mhp;m.mp=m.mmp;return m};
-function calc(m){const c=CH[m.id],l=m.lv-1;m.mhp=Math.round(c.b.hp+c.g.hp*l);m.mmp=Math.round(c.b.mp+c.g.mp*l);['atk','def','mag','spd'].forEach(k=>m[k]=Math.round(c.b[k]+c.g[k]*l));const pk=m.pk||{};for(const t in pk){const o=PERK[m.id]&&PERK[m.id][t]&&PERK[m.id][t][pk[t]];if(o)for(const k in o.m){if(k==='hp')m.mhp+=o.m[k];else if(k==='mp')m.mmp+=o.m[k];else m[k]+=o.m[k]}}}
+const mkM=(id,lv)=>{const m={id,name:CH[id].name,lv,exp:0,pk:{},kit:null,st:{},isP:true,w:32,h:44,x:0,y:0,flash:0};calc(m);m.hp=m.mhp;m.mp=m.mmp;return m};
+function calc(m){const c=CH[m.id],l=m.lv-1;m.mhp=Math.round(c.b.hp+c.g.hp*l);m.mmp=Math.round(c.b.mp+c.g.mp*l);['atk','def','mag','spd'].forEach(k=>m[k]=Math.round(c.b[k]+c.g[k]*l));if(m.kit){const o=kitOf(m.kit);if(o)for(const k in o.m){if(k==='hp')m.mhp+=o.m[k];else if(k==='mp')m.mmp+=o.m[k];else m[k]+=o.m[k]}}const pk=m.pk||{};for(const t in pk){const o=PERK[m.id]&&PERK[m.id][t]&&PERK[m.id][t][pk[t]];if(o)for(const k in o.m){if(k==='hp')m.mhp+=o.m[k];else if(k==='mp')m.mmp+=o.m[k];else m[k]+=o.m[k]}}}
 const LVMAX=20,need=l=>Math.round(8*l+2.6*l*l);
 
 /* ================= UI PRIMITIVES ================= */
 let SEEN_DIRTY=0;async function talk(list){SKIPOK=list.every(([w,t])=>OPT.seen[hs(w+'|'+t)]);SKIPNOW=false;for(const [w,t] of list){if(SKIPNOW)break;await say(w,t)}SKIPNOW=false;SKIPOK=false;if(SEEN_DIRTY){SEEN_DIRTY=0;optSave()}}
-async function choose(items,o){o=o||{};const m={items,x:o.x===undefined?8:o.x,y:o.y===undefined?168:o.y,w:o.w||100,sel:o.sel||0,title:o.title||(OPT.lg&&G.B&&G.B.act&&G.B.act.isP?G.B.act.name+'  HP '+G.B.act.hp+'/'+G.B.act.mhp+'  MP '+G.B.act.mp:undefined),above:o.above,vis:Math.min(items.length,o.vis||8),foot:o.foot,h:o.h};UI.menus.push(m);
+async function choose(items,o){o=o||{};const m={items,x:o.x===undefined?8:o.x,y:o.y===undefined?168:o.y,w:o.w||100,sel:o.sel||0,title:o.title||(OPT.lg&&G.B&&G.B.act&&G.B.act.isP?G.B.act.name+'  HP '+G.B.act.hp+'/'+G.B.act.mhp+'  MP '+G.B.act.mp:undefined),above:o.above,vis:Math.min(items.length,o.vis||8),foot:o.foot,h:o.h,cols:o.cols&&LG()>1?o.cols:0};UI.menus.push(m);
  try{for(;;){if(o.onMove)o.onMove(m.sel);const k=await key();
-  if(k==='up'){m.sel=(m.sel-1+items.length)%items.length;sfx('blip')}
-  else if(k==='down'){m.sel=(m.sel+1)%items.length;sfx('blip')}
+  if(k==='up'){m.sel=(m.sel-(m.cols||1)+items.length)%items.length;sfx('blip')}
+  else if(k==='down'){m.sel=(m.sel+(m.cols||1))%items.length;sfx('blip')}
+  else if(m.cols&&(k==='left'||k==='right')){m.sel=(m.sel+(k==='right'?1:-1)+items.length)%items.length;sfx('blip')}
   else if(k==='ok'){if(items[m.sel].dis){sfx('no');continue}sfx('ok');return m.sel}
   else if(k==='cancel'&&o.cancel!==false)return -1}}
  finally{const i=UI.menus.indexOf(m);if(i>=0)UI.menus.splice(i,1)}}
@@ -1984,14 +2074,15 @@ async function skillMenu(a){const keys=CH[a.id].sk;const items=keys.map(k=>{cons
  a.mp-=s.mp;a.cast=1;try{await s.f(a,t)}finally{a.cast=0}if(gain(a))await ban('SOLIDARITY MAX! Combo ready!',700);return true}
 async function comboMenu(a,cbs){const i=await choose(cbs.map(c=>({t:c.n,col:'#ffd840'})),{x:4,y:22,w:170,onMove:i=>{UI.ban=cbs[i].d||'Combo attack.'}});UI.ban=null;if(i<0)return false;const c=cbs[i];let t;if(c.t==='enemy'){t=await pickTarget(aliveE());if(!t)return false}
  G.B.meter=Math.max(0,G.B.meter-comboCost());aliveP().forEach(m=>m.cast=1);try{await c.f(a,t)}finally{G.members.forEach(m=>m.cast=0)}G.B.last=null;return true}
-async function itemMenu(a){const its=[['coffee','Lukewarm Coffee','Heal 25% HP (min 45)'],['donut','Stale Donut','Restore 25% MP (min 14)'],['ibu','Ibuprofen','Cure despair and slow'],['agenda','Meeting Agenda','Leave the fight (not bosses)']];const items=its.map(([k,n])=>({t:n,r:'x'+(G.inv[k]||0),dis:!(G.inv[k]>0)}));
- const i=await choose(items,{x:4,y:22,w:170,onMove:i=>{UI.ban=its[i][2]}});UI.ban=null;if(i<0)return false;if(its[i][0]==='agenda'){if(G.B.boss){await ban('This meeting cannot be adjourned.',800);return false}G.inv.agenda--;await ban(`${a.name} reads out the agenda. Item one: adjourn. Everyone leaves.`,1100);G.B.fled=1;return true}const t=await pickTarget(aliveP());if(!t)return false;
+async function itemMenu(a){const its=[['coffee','Lukewarm Coffee','Heal 25% HP (min 45)'],['donut','Stale Donut','Restore 25% MP (min 14)'],['ibu','Ibuprofen','Cure despair and slow'],['agenda','Meeting Agenda','Leave the fight (not bosses)'],['ccoffee','Collective Coffee','Whole party +50% HP'],['lunch','Team Lunch','Whole party +50% MP']];const items=its.map(([k,n])=>({t:n,r:'x'+(G.inv[k]||0),dis:!(G.inv[k]>0)}));
+ const i=await choose(items,{x:4,y:22,w:170,onMove:i=>{UI.ban=its[i][2]}});UI.ban=null;if(i<0)return false;if(its[i][0]==='ccoffee'||its[i][0]==='lunch'){const kk=its[i][0];G.inv[kk]--;for(const m of aliveP()){if(kk==='ccoffee')heal(m,m.mhp*.5);else{m.mp=Math.min(m.mmp,m.mp+Math.round(m.mmp*.5));pop(m,'+MP','#7ab8ff')}}await ban(`${a.name} shares the ${its[i][1]}.`,800);gain(a);return true}if(its[i][0]==='agenda'){if(decOn('chains')){await ban('The Chains decree is in force. Nobody may adjourn.',900);return false}if(G.B.boss){await ban('This meeting can\'t be adjourned.',800);return false}G.inv.agenda--;await ban(`${a.name} reads out the agenda. Item one: adjourn. Everyone leaves.`,1100);G.B.fled=1;return true}const t=await pickTarget(aliveP());if(!t)return false;
  const k=its[i][0];if(k==='ibu'){G.inv.ibu--;t.st.demor=0;t.st.slow=0;pop(t,'CURED','#7dff9a');sfx('heal');await ban(`${a.name} gives ${t.name} an Ibuprofen.`,700);gain(a);return true}G.inv[k]--;FXQ={k:'i_'+k,a,t};await ban(`${a.name} gives ${t.name} a ${its[i][1]}.`);if(k==='coffee')heal(t,Math.max(45,Math.round(t.mhp*.25)));else{const q=Math.max(14,Math.round(t.mmp*.25));t.mp=Math.min(t.mmp,t.mp+q);pop(t,'+'+q+'MP','#7ab8ff');sfx('heal')}await sleep(400);gain(a);return true}
-async function organize(a,t){FXQ={k:'org',a,t};await ban(`${a.name} pitches the union to ${t.name}...`);if(Math.random()<.8){t.gone=1;if(G.interns<7)G.interns++;G.dues=(G.dues||0)+3;sfx('sign');await ban(`${t.name} is convinced and joins the union! (${cards()}/${CT})`,900)}else await ban(`${t.name} is too scared to join yet.`);gain(a)}
+const ORGL={intern:['Wait. Interns can join? ...I get PAID now?','I\'ve been here six months. Nobody learned my name. ...You did.','I thought the coffee runs were the job. They aren\'t the job, are they?'],spineless:['I was always for it. Quietly. ...Okay. Loudly.','I agreed with everyone so nobody would notice me. I\'ll agree with you, on purpose.','(Uncurls.) Fine. I have a spine. It was on order.']};
+async function organize(a,t){FXQ={k:'org',a,t};await ban(`${a.name} pitches the union to ${t.name}...`);if(Math.random()<.8){t.gone=1;if(G.interns<7)G.interns++;addDues(3);sfx('sign');{const ol=ORGL[t.k];if(ol)await ban(t.name+': '+pick(ol),1300)}await ban(`${t.name} is convinced and joins the union! (${cards()}/${CT})`,900)}else await ban(`${t.name} is too scared to join yet.`);gain(a)}
 async function doAttack(a,t){const B=G.B;await ban(`${a.name}: ${CH[a.id].an}!`,450);B.anim={m:a,t,s:G.t,k:CH[a.id].look.wp};await sleep(330);dmgE(a,t,1);sfx(WSFX[CH[a.id].look.wp]||'hit');B.shake=9;await sleep(480);B.anim=null;gain(a)}
-async function partyTurn(a){const B=G.B;B.act=a;UI.ban=null;FXQ=null;
+async function partyTurn(a){const B=G.B;B.act=a;UI.ban=null;FXQ=null;{const ch=aliveE().filter(e=>e.charge);if(ch.length)await ban(`WARNING: ${ch.map(e=>e.name).join(' and ')} will strike hard. Defend?`,1000)}
  for(;;){const al=aliveE(),cbs=availCombos();
-  const c=await choose([{t:'Attack'},{t:'Skill'},{t:'Combo',dis:B.meter<comboCost()||!cbs.length,col:'#ffd840'},{t:'Organize',dis:decOn('gag')},{t:'Item',dis:decOn('famine')},{t:'Swap',dis:!G.bench.some(m=>m.hp>0)||decOn('chains')},{t:'Flee',dis:!!B.boss||decOn('chains')},{t:'Cite',dis:!!B.cited,col:'#9fe8ff'}],{x:0,y:160,w:84,vis:8,cancel:false,h:92,onMove:i=>{UI.ban=['Hit one foe with a plain attack.','Spend MP on a character skill.','Needs full SOLIDARITY: team attack.','Pitch the union to a foe that listens.','Use coffee (HP) or donut (MP).','Swap with a benched teammate.','Run away (not from bosses).','Cite a labour-law paragraph. A right answer puts every foe on strike for a turn.'][i]}});UI.ban=null;
+  const c=await choose([{t:'Attack'},{t:'Skill'},{t:'Combo',dis:B.meter<comboCost()||!cbs.length,col:'#ffd840'},{t:'Organize',dis:decOn('gag')},{t:'Item',dis:decOn('famine')},{t:'Swap',dis:!G.bench.some(m=>m.hp>0)||decOn('chains')},{t:'Flee',dis:!!B.boss||decOn('chains')},{t:'Cite',dis:!!B.cited,col:'#9fe8ff'},{t:'Defend'}],{x:0,y:160,w:84,vis:7,cols:3,cancel:false,h:92,onMove:i=>{UI.ban=['Hit one foe with a plain attack.','Spend MP on a character skill.','Needs full SOLIDARITY: team attack.','Pitch the union to a foe that listens.','Use coffee (HP) or donut (MP).','Swap with a benched teammate.','Run away (not from bosses).','Cite a labour-law paragraph. A right answer puts every foe on strike for a turn.','Hold the line: half damage until your next turn. SOLIDARITY +10.'][i]}});UI.ban=null;
   if(c===0){const t=await pickTarget(al);if(!t)continue;await doAttack(a,t);break}
   if(c===1){if(await skillMenu(a))break;continue}
   if(c===2){if(await comboMenu(a,cbs))break;continue}
@@ -1999,7 +2090,8 @@ async function partyTurn(a){const B=G.B;B.act=a;UI.ban=null;FXQ=null;
   if(c===4){if(await itemMenu(a))break;continue}
   if(c===5){if(await swapMenu(a))break;continue}
   if(c===6){await ban(`${a.name} tries to flee...`);if(Math.random()<.65)B.fled=1;else await ban("Couldn't get away!");break}
-  if(c===7){if(await citeLaw(a))break;continue}}
+  if(c===7){if(await citeLaw(a))break;continue}
+  if(c===8){a.st.shield=Math.max(a.st.shield||0,2);B.meter=Math.min(100,B.meter+10);pop(a,'DEFEND','#8ab8ff');sfx('ok');await ban(`${a.name} holds the line.`,600);break}}
  B.act=null}
 /* ---- enemy move lists: 'Name:type:form:glyph:colour:motion' ---- */
 const EACTS={
@@ -2028,10 +2120,11 @@ function pickAct(e){const ps=aliveP();let pool=e.acts.filter(s=>{const[n,ty]=s.s
  if(e.hp<e.mhp*.4){const m=pool.filter(s=>s.split(':')[1]==='mend');if(m.length&&Math.random()<.65)return m[0]}
  return pick(pool.length?pool:e.acts)}
 async function enemyTurn(e){const B=G.B,ps=aliveP();if(!ps.length)return;B.act=e;FXQ=null;
- const mvs=pickAct(e),[name,type,form,g,col,mot]=mvs.split(':');e.last=name;
+ let mvs,chg=0;if(e.charge){mvs=e.charge;e.charge=null;chg=1}else{mvs=pickAct(e);const ty=mvs.split(':')[1];if((ty==='heavy'||ty==='aoe')&&!B.boss&&Math.random()<.5){e.charge=mvs;await ban(`${e.name} is winding up ${mvs.split(':')[0]}! It'll hit extra hard.`,900);pop(e,'!','#ffd840');B.act=null;return}}
+ const [name,type,form,g,col,mot]=mvs.split(':');e.last=name;
  const low=ps.slice().sort((a,b)=>a.hp/a.mhp-b.hp/b.mhp)[0],t=type==='snipe'?low:(ps.find(p=>p.st.taunt>0)||pick(ps));
  await ban(`${e.name}: ${name}!`,500);
- const hit=(tg,m,pr)=>applyDmg(tg,(effAtk(e)*2*m-(pr?0:effDef(tg)))*rnd(.9,1.1));
+ const hit=(tg,m,pr)=>applyDmg(tg,(effAtk(e)*2*m*(chg?1.6:1)-(pr?0:effDef(tg)))*rnd(.9,1.1));
  const all=type==='aoe'||type==='sweep',self=type==='guard'||type==='rage'||type==='mend';
  const list=type==='multi'?[0,1,2].map(()=>{const l=aliveP();return l.length?pick(l):t}):null;
  e.mv={k:mot||(self||all?'cast':'lunge'),s:G.t,d:44,tx:t.x,ty:t.y};
@@ -2058,14 +2151,14 @@ async function battle(kinds,fl){
  await wipe(1);
  const rf=1-.3*clamp((fl-5)/14,0,1),sc=1+.035*fl,sHP=(1+.11*fl)*rf,sAT=(1+.065*fl)*(1-(1-rf)*.6),P=[[],[[110,134]],[[40,122],[150,142]],[[16,112],[120,128],[60,148]]][kinds.length],cnt={};
  const B=G.B={en:[],meter:0,last:null,act:null,q:[],fled:0,boss:0};
- B.en=kinds.map((k,i)=>{const d=balEN(k);const hp=Math.round(d.hp*sHP*EMH(fl));cnt[k]=(cnt[k]||0)+1;return{k,base:d.n,hp,mhp:hp,atk:d.atk*sAT*EMA(fl),def:d.def*sc,spd:d.spd,exp:Math.round(d.exp*sc*1.25*EXPF(fl)),rec:d.rec,acts:(EACTS[k]||d.acts),st:{},x:P[i][0],y:P[i][1]-d.h,w:d.w,h:d.h,isP:false,flash:0,fade:0}});
- B.en.forEach(e=>{const n=cnt[e.k];e.name=e.base});if(kinds.length>1){const seen={};B.en.forEach(e=>{if(cnt[e.k]>1){seen[e.k]=(seen[e.k]||0)+1;e.name=e.base+' '+'ABC'[seen[e.k]-1]}})}
+ B.en=kinds.map((k,i)=>{const d=balEN(k);const hp=Math.round(d.hp*sHP*EMH(fl)*(1+.2*(G.ngp||0)));cnt[k]=(cnt[k]||0)+1;return{k,base:d.n,hp,mhp:hp,atk:d.atk*sAT*EMA(fl)*(1+.1*(G.ngp||0)),def:d.def*sc,spd:d.spd,exp:Math.round(d.exp*sc*1.25*EXPF(fl)),rec:d.rec,acts:(EACTS[k]||d.acts),st:{},x:P[i][0],y:P[i][1]-d.h,w:d.w,h:d.h,isP:false,flash:0,fade:0}});
+ B.en.forEach(e=>{const n=cnt[e.k];e.name=e.base;(G.met||(G.met={}))[e.k]=1});if(kinds.length>1){const seen={};B.en.forEach(e=>{if(cnt[e.k]>1){seen[e.k]=(seen[e.k]||0)+1;e.name=e.base+' '+'ABC'[seen[e.k]-1]}})}
  const SL=[[404,78],[350,78],[296,78],[377,100],[323,100]];G.members.forEach((m,i)=>{m.st={};m.x=SL[i][0];m.y=SL[i][1];m.flash=0});
  G.mode='battle';music('battle');await wipe(-1);UI.wipe=null;
  await ban(kinds.length>1?'Crunch creatures attack!':`A ${B.en[0].name} blocks the way!`,800);
  {const hn=Object.keys(G.signed).filter(k=>k.startsWith(G.floor+':')).length;if(hn>0){sfx('heal');await ban(`${hn} signed co-worker${hn>1?'s':''} on this floor cheer you on!`,900);for(const m of aliveP()){m.st.shield=Math.max(m.st.shield||0,2);if(hn>=3)heal(m,Math.round(m.mhp*.1))}if(hn>=3)B.meter=Math.min(100,B.meter+20)}}
  await ruleBattleStart(B);
- if(tierOn(2)){B.meter=Math.min(100,B.meter+10);await ban('STRIKE FUND: SOLIDARITY +10.',600)}
+ if(tierOn(2)){B.meter=Math.min(100,B.meter+10);if(!G.flags.sfban){G.flags.sfban=1;await ban('STRIKE FUND: every fight now starts with SOLIDARITY +10.',1200)}}
  let res=null;
  while(!res){const q=B.q=[...aliveP(),...aliveE()].sort((a,b)=>(effSpd(b)+rnd(0,3))-(effSpd(a)+rnd(0,3)));
   while(q.length&&!res){const a=q.shift();if(a.hp<=0||a.gone)continue;
@@ -2075,7 +2168,7 @@ async function battle(kinds,fl){
    if(B.fled)res='flee';else if(!aliveE().length)res='win';else if(!aliveP().length){if(!await reinforce())res='lose'}}}
  UI.ban=null;
  if(res==='lose')return 'lose';
- if(res==='win'){B.over='win';sfx('lvl');const ex=B.en.reduce((s,e)=>s+(e.gone?Math.round(e.exp/2):e.exp),0);const du=B.en.length*(3+Math.floor(G.floor/3));G.dues=(G.dues||0)+du;await ban(`VICTORY! ${ex} EXP and ${du} union dues.`,1000);const avgLv=G.members.reduce((s,m)=>s+m.lv,0)/Math.max(1,G.members.length);
+ if(res==='win'){B.over='win';sfx('lvl');const ex=B.en.reduce((s,e)=>s+(e.gone?Math.round(e.exp/2):e.exp),0);const du=B.en.length*(3+Math.floor(G.floor/3));addDues(du);G.stats=G.stats||{};G.stats.wins=(G.stats.wins||0)+1;await ban(`VICTORY! ${ex} EXP and ${du} union dues.`,1000);const avgLv=G.members.reduce((s,m)=>s+m.lv,0)/Math.max(1,G.members.length);
   for(const m of roster()){if(m.hp<=0){m.hp=Math.max(1,Math.round(m.mhp*.25));continue}m.exp+=Math.round(ex*(G.bench.includes(m)?.75:1)*(m.lv<avgLv-2?1.5:1));const ms=[];const oh=m.mhp;
    while(m.exp>=need(m.lv)&&m.lv<LVMAX){m.exp-=need(m.lv);m.lv++;const ph=m.mhp,pm=m.mmp;calc(m);m.hp+=m.mhp-ph;m.mp+=m.mmp-pm;ms.push(`${m.name} reached LV ${m.lv}!`);for(const k of CH[m.id].sk)if(SK[k].lv===m.lv&&m.lv>1)ms.push(k==='root'?`${m.name}: GENIUS MODE! Root Access!`:`${m.name} learned ${SK[k].n}!`)}
    for(const s of ms){sfx('lvl');await ban(s,900)}}
@@ -2088,14 +2181,14 @@ async function negotiate(bi){
  const bd=BOSSES[bi];const TB=G.TB={bd,ints:[],need:4,res:clamp(Math.round(45+cards()*3.6),45,100),msg:'',tac:'',iso:null,ph:0,sp:null};
  await wipe(1);G.mode='table';music(bi===3?'throne':'boss');await wipe(-1);UI.wipe=null;
  if(bd.lawIntro)bd.lawIntro.forEach(lawUnlock);
- await talk(bd.intro);await confront(bi,TB);
- await say('','BOSS BATTLE! Attacks are useless here. Win at the TABLE: press each INTEREST until it is agreed. Keep SOLIDARITY up!');
+ if(bi===3)await talk([['','Through the door, Alis is on the phone. She doesn\'t see you yet.'],['Alis','Yes. Yes, I understand. Eighty hours, or the board finds someone who can. ...Of course. Lovely.'],['','She hangs up. For a moment her face does nothing at all. Then the smile comes back.']]);await talk(clemOut()?bd.intro.map(([n,t])=>n==='Clem'?['Henrietta',t]:[n,t]):bd.intro);await confront(bi,TB);if(bi===2)await clemTable(TB);if(bi===3)await kajLead();
+ await say('','BOSS BATTLE! Attacks are useless here. Win at the TABLE: press each INTEREST until it\'s agreed. Keep SOLIDARITY up!');
  {const c0=bd.ph[0].ints.filter(i=>!i.hid);const li=await choose(c0.map(i=>({t:INT[i.k].n,ic:[INT[i.k].ic]})),{x:0,y:160,w:116,h:92,title:'Lead with?',cancel:false});G.lead=G.lead||{};G.lead[bi]=c0[li].k;await say('',`You open with ${INT[c0[li].k].n}. It starts one step ahead, and the whole tower will remember what you put first.`)}
  for(let pi=0;pi<bd.ph.length;pi++){const ph=bd.ph[pi];TB.ph=pi;if(ph.pre)await talk(ph.pre);
-  const reset=()=>{TB.ints=ph.ints.map(i=>({k:i.k,hid:!!i.hid,p:pi===0&&G.lead&&G.lead[bi]===i.k?1:0,blk:0,pulse:0}));TB.need=ph.need};reset();TB.msg=`${ph.name}: Agree on every interest.`;
+  const reset=()=>{TB.ints=ph.ints.map(i=>({k:i.k,hid:!!i.hid,p:pi===0&&G.lead&&G.lead[bi]===i.k?1:0,blk:0,pulse:0}));TB.need=ph.need+(G.ngp?1:0)};reset();TB.msg=`${ph.name}: Agree on every interest.`;
   for(;;){
    if(TB.ints.every(i=>i.p>=TB.need))break;
-   if(TB.ints.filter(i=>!i.hid).every(i=>i.p>=TB.need)){const h=TB.ints.filter(i=>i.hid);if(h.length){h.forEach(i=>{i.hid=false;i.pulse=30});sfx('sign');if(bd.mood){TB.gs=(TB.gs||0)+1;TB.gt=G.t;await sleep(TB.gs>1?1700:1200)}await say(bd.name,ph.slip||'...There is one more thing that bothers me.');continue}}
+   if(TB.ints.filter(i=>!i.hid).every(i=>i.p>=TB.need)){const h=TB.ints.filter(i=>i.hid);if(h.length){h.forEach(i=>{i.hid=false;i.pulse=30});sfx('sign');if(bd.mood){TB.gs=(TB.gs||0)+1;TB.gt=G.t;await sleep(TB.gs>1?1700:1200)}await say(bd.name,ph.slip||'...There\'s one more thing that bothers me.');continue}}
    TB.ints.forEach(i=>i.blk=0);TB.iso=null;const tac=pick(ph.tac);TB.tac=tac;
    if(tac==='stone'||tac==='bad'){const c=TB.ints.filter(i=>!i.hid&&i.p<TB.need);for(let n=0;n<(ph.tn||1)&&c.length;n++){const i=c.splice(ri(0,c.length-1),1)[0];i.blk=1}}
    else if(tac==='divide')TB.iso=pick(G.members);
@@ -2112,14 +2205,14 @@ async function negotiate(bi){
      const ii=await choose(list.map(i=>({t:INT[i.k].n+(i.blk?' X':''),r:i.p+'/'+TB.need,col:i.blk?'#ff8080':'#fff',ic:[INT[i.k].ic]})),{x:0,y:160,w:116,h:92,title:'Which interest?'});
      if(ii<0)continue;const it=list[ii],str=c.str.includes(it.k);
      TB.sp=sp;TB.msg=`${sp.name}: "${argOf(sp,it.k)}"`;await sleep(1100);
-     if(mv===0){if(it.blk){TB.res-=5;sfx('no');TB.msg=`BLOCKED! ${bd.name} will not move on ${INT[it.k].n}. SOLIDARITY -5`;await sleep(1200)}
+     if(mv===0){if(it.blk){TB.res-=5;sfx('no');TB.msg=`BLOCKED! ${bd.name} won't move on ${INT[it.k].n}. SOLIDARITY -5`;await sleep(1200)}
       else{const g=2+(str?1:0)+(TB.res>=75?1:0);it.p=Math.min(TB.need,it.p+g);it.pulse=30;sfx('sign');TB.msg=`${bd.name}: "${pick(ph.react)}" (${INT[it.k].n} +${g}${str?' strong!':''})`;await sleep(1300)}}
      else{ctr=true;const g=1+(str?1:0);it.p=Math.min(TB.need,it.p+g);it.pulse=30;sfx('ok');TB.msg=`A fair counteroffer. ${INT[it.k].n} +${g}. Tactic damage halved.`;await sleep(1200)}
      done=true}
     else if(mv===2){const need=LAWI[TACLAW[tac]],os=lawOpts(need,3);const pi=await choose(os.map(e=>({t:lawLabel(e)})),{x:0,y:160,w:236,h:92,title:'Cite the paragraph',cancel:true});if(pi<0)continue;
      TB.sp=sp;const chs=os[pi];
      if(chs===need){ev=true;TB.res=Math.min(100,TB.res+8+(woundOwn(sp,need)?6:0));if(woundOwn(sp,need))toast('YOUR OWN PARAGRAPH: SOLIDARITY +6');const h=TB.ints.find(i=>i.hid);if(h){h.hid=false;h.pulse=30}lawUnlock(need.id);TB.msg=`${sp.name} cites ${need.ref}: ${need.t}! The tactic fails${h?' and a hidden interest is exposed':''}.`;sfx('combo');await sleep(1800);done=true}
-     else{lawUnlock(need.id);TB.msg=`${sp.name} cites ${chs.ref}, but it does not apply. The right one: ${need.ref}, ${need.t}.`;sfx('no');await sleep(2100);done=true}}
+     else{lawUnlock(need.id);TB.msg=`${sp.name} cites ${chs.ref}, but it doesn't apply. The right one: ${need.ref}, ${need.t}.`;sfx('no');await sleep(2100);done=true}}
     else{const g=c.ral;TB.res=Math.min(100,TB.res+g);TB.sp=sp;TB.msg=`${sp.name} rallies the room! SOLIDARITY +${g}.`;sfx('heal');await sleep(1200);done=true}}
    let dr=3;if(tac==='divide'&&!ev)dr+=8;if(tac==='memo'&&!ev)dr+=12;if(tac==='bad'&&!ev)dr+=5;if(ctr)dr=Math.ceil(dr/2);
    TB.res=Math.max(0,TB.res-dr);TB.msg=`Crunch pressure: SOLIDARITY -${dr}.`;sfx('hit');await sleep(900);TB.sp=null;
@@ -2532,18 +2625,18 @@ function bgBattle(fl){const D=dunOf(fl),th=FLOORS[fl].th,c=cn(),ch=Math.max(14,4
  if(th.dark){ctx.fillStyle='rgba(4,6,20,'+(th.dark*.8)+')';ctx.fillRect(0,0,W,160)}}
 const PTXT=[
 {d:['A desk. A sticky note reads: "Synergy is the new overtime."','Somebody\'s monitor: 147 unread emails. All marked URGENT.','A calendar with every day circled in red.','The keyboard is worn through. A plant has died next to it.','A mug: "World\'s Okayest Employee".','Under a pile of reports: a forgotten lunch from last Tuesday.'],
- p:'A plant. It gave up on the light a long time ago.',w:'The water cooler gurgles. Conversation here has been banned for 11 minutes per day.',f:'A file cabinet full of performance reviews. They are all "Meets Expectations".',s:'A server rack. It hums a quiet revolutionary tune.',T:'A long, cold conference table. Everyone sits far from the head chair.',b:'A bin overflowing with crumpled "Action Items".',B:'Binders labelled "Policies", "More Policies" and "Policies About Policies".',u:'A cubicle. The walls are exactly tall enough to see nothing and be seen by everyone.',x:'Boxes marked "FRAGILE: MORALE".',P:'The copier is jammed. It has been jammed since the last reorg.',o:'A concrete pillar. Someone scratched in it: "RENT > WAGES".',g:'A whiteboard with a tidy diagram labelled "SYNERGY". Nobody knows what it means.'},
-{d:['A CRM console. Forty open deals, all marked "stalled".','A headset left on a keyboard. Somebody is still saying "just circling back".','A cold coffee pod beside a printed forecast. The pod is on target. The forecast is not.'],p:'A hydroponic palm in a chrome planter. It has been polished more often than the staff were paid.',w:'A holographic notice board hums above its pedestal. The fine print scrolls past too fast to read.',f:'A pipeline kiosk. Every deal card slides left, never right.',T:'A holographic territory table. Every region is "strategic". None is yours.',b:'A chrome recycler stuffed with discarded proposals.',B:'Account-plan towers, all colour-coded. None mention the staff.',x:'Hover crates of printed contracts. Most are stamped "REVISED".',o:'A pipeline conduit. Deal cards crawl up it, then stall.',k:'A kanban board. Every deal card sits in "Awaiting Legal".',S:'The Quota Bull. Its horns are polished from all the wishful touching.',r:'A laser rail. Account managers lean on it just to survive the quarter.'},
-{d:['A desk with two candles and a ledger that is somehow warm.','A skull paperweight sits on a stack of pink slips. It looks smug.','A "Employee of the Eon" plaque. The employee is on fire.'],u:'A cubicle with a pentagram scorched into the carpet. HR calls it "team branding".',p:'A thorny bush with glowing fruit. It sighs when you pass.',w:'A cauldron of coffee, bubbling suspiciously. The label says "Wellness Blend".',f:'An iron cabinet. A drawer grins at you. You decide not to open it.',T:'A ritual table covered in forms. Triplicate, signed in something dark.',b:'A burning barrel. It is full of "feedback".',B:'Binders glowing with forbidden policy. One has a chain lock.',P:'A printer spitting out pink slips. It runs hot. Every slip has a name on it.',o:'An obsidian pillar with pulsing runes. It reads: "ALL HAIL THE HANDBOOK".',g:'A gargoyle. Its plaque reads "Compliance Officer of the Month".',h:'A brazier crackling with burning résumés.',A:'An altar draped in red. Candles flicker around a laminated mission statement.',l:'Lava. The break room is not far from here, sadly.',X:'A pile of skulls. A tiny label: "Former Mid-Level Managers".',R:'A banner with a horned smiley: "WELLNESS IS MANDATORY".'},
-{d:['A scribe\'s desk. The parchment reads: "Overtime is a virtue."','Ink still wet. Somebody was writing a very long contract.','A quill snapped in half. The scribe left without notice.'],p:'A herb pot. Someone is secretly growing rosemary against the Crown\'s decree.',w:'A stone well. The water tastes like austerity.',f:'A chest of drawers full of royal decrees. All are "FINAL NOTICE".',T:'A banquet table groaning with food. None of it is for the servants.',b:'A barrel, full of leftovers the nobles refused.',B:'A shelf of scrolls: "Tax Law", "More Tax Law", "Why Peasants Should Not Complain".',x:'Crates stamped with the royal seal. Contents: more crates.',o:'A stone pillar. Someone carved: "SERFS UNITE".',h:'A brazier. A tapestry nearby smells faintly scorched.',A:'A chapel altar. The candle is stamped "Approved by Compliance".',a:'A suit of armour. It is empty. Like the Crown\'s promises.',c:'A treasure chest. Gold coins spill out. A note: "Not for staff".',W:'A weapon rack. The swords are polished. The pay slips are not.',M:'A loom. The tapestry on it depicts a very long work week.',n:'A barrel of ale. The foreman keeps the key.',F:'A great fireplace. The nobles keep it hot. The servants keep it stocked.',G:'An iron cell. Empty. For now.',Q:'A grand throne. It looks uncomfortable. Good.'}];
-const VTXT=['The vending machine coughs up 2 Lukewarm Coffees and 1 Stale Donut. Free, because the coin slot is broken.','The neon kiosk dispenses 2 Lukewarm Coffees and 1 Stale Donut. "Complimentary", says the hologram. For account managers only. You are close enough.','The cursed machine whispers "Take them." You get 2 Lukewarm Coffees and 1 Stale Donut. The coffee is warm. Too warm.','The tavern keg pours 2 flagons of Lukewarm Coffee and a Stale Donut-shaped bread roll. Medieval, but fine.'];
+ p:'A plant. It gave up on the light a long time ago.',w:'The water cooler gurgles. Conversation here has been banned for 11 minutes per day.',f:'A file cabinet full of performance reviews. They\'re all "Meets Expectations".',s:'A server rack. It hums a quiet revolutionary tune.',T:'A long, cold conference table. Everyone sits far from the head chair.',b:'A bin overflowing with crumpled "Action Items".',B:'Binders labelled "Policies", "More Policies" and "Policies About Policies".',u:'A cubicle. The walls are exactly tall enough to see nothing and be seen by everyone.',x:'Boxes marked "FRAGILE: MORALE".',P:'The copier is jammed. It has been jammed since the last reorg.',o:'A concrete pillar. Someone scratched in it: "RENT > WAGES".',g:'A whiteboard with a tidy diagram labelled "SYNERGY". Nobody knows what it means.'},
+{d:['A CRM console. Forty open deals, all marked "stalled".','A headset left on a keyboard. Somebody is still saying "just circling back".','A cold coffee pod beside a printed forecast. The pod is on target. The forecast isn\'t.'],p:'A hydroponic palm in a chrome planter. It has been polished more often than the staff were paid.',w:'A holographic notice board hums above its pedestal. The fine print scrolls past too fast to read.',f:'A pipeline kiosk. Every deal card slides left, never right.',T:'A holographic territory table. Every region is "strategic". None is yours.',b:'A chrome recycler stuffed with discarded proposals.',B:'Account-plan towers, all colour-coded. None mention the staff.',x:'Hover crates of printed contracts. Most are stamped "REVISED".',o:'A pipeline conduit. Deal cards crawl up it, then stall.',k:'A kanban board. Every deal card sits in "Awaiting Legal".',S:'The Quota Bull. Its horns are polished from all the wishful touching.',r:'A laser rail. Account managers lean on it just to survive the quarter.'},
+{d:['A desk with two candles and a ledger that\'s somehow warm.','A skull paperweight sits on a stack of pink slips. It looks smug.','A "Employee of the Eon" plaque. The employee is on fire.'],u:'A cubicle with a pentagram scorched into the carpet. HR calls it "team branding".',p:'A thorny bush with glowing fruit. It sighs when you pass.',w:'A cauldron of coffee, bubbling suspiciously. The label says "Wellness Blend".',f:'An iron cabinet. A drawer grins at you. You decide not to open it.',T:'A ritual table covered in forms. Triplicate, signed in something dark.',b:'A burning barrel. It\'s full of "feedback".',B:'Binders glowing with forbidden policy. One has a chain lock.',P:'A printer spitting out pink slips. It runs hot. Every slip has a name on it.',o:'An obsidian pillar with pulsing runes. It reads: "ALL HAIL THE HANDBOOK".',g:'A gargoyle. Its plaque reads "Compliance Officer of the Month".',h:'A brazier crackling with burning résumés.',A:'An altar draped in red. Candles flicker around a laminated mission statement.',l:'Lava. The break room isn\'t far from here, sadly.',X:'A pile of skulls. A tiny label: "Former Mid-Level Managers".',R:'A banner with a horned smiley: "WELLNESS IS MANDATORY".'},
+{d:['A scribe\'s desk. The parchment reads: "Overtime is a virtue."','Ink still wet. Somebody was writing a very long contract.','A quill snapped in half. The scribe left without notice.'],p:'A herb pot. Someone is secretly growing rosemary against the Crown\'s decree.',w:'A stone well. The water tastes like austerity.',f:'A chest of drawers full of royal decrees. All are "FINAL NOTICE".',T:'A banquet table groaning with food. None of it\'s for the servants.',b:'A barrel, full of leftovers the nobles refused.',B:'A shelf of scrolls: "Tax Law", "More Tax Law", "Why Peasants Should Not Complain".',x:'Crates stamped with the royal seal. Contents: more crates.',o:'A stone pillar. Someone carved: "SERFS UNITE".',h:'A brazier. A tapestry nearby smells faintly scorched.',A:'A chapel altar. The candle is stamped "Approved by Compliance".',a:'A suit of armour. It\'s empty. Like the Crown\'s promises.',c:'A treasure chest. Gold coins spill out. A note: "Not for staff".',W:'A weapon rack. The swords are polished. The pay slips aren\'t.',M:'A loom. The tapestry on it depicts a very long work week.',n:'A barrel of ale. The foreman keeps the key.',F:'A great fireplace. The nobles keep it hot. The servants keep it stocked.',G:'An iron cell. Empty. For now.',Q:'A grand throne. It looks uncomfortable. Good.'}];
+const VTXT=['The vending machine coughs up 2 Lukewarm Coffees and 1 Stale Donut. Free, because the coin slot is broken.','The neon kiosk dispenses 2 Lukewarm Coffees and 1 Stale Donut. "Complimentary", says the hologram. For account managers only. You\'re close enough.','The cursed machine whispers "Take them." You get 2 Lukewarm Coffees and 1 Stale Donut. The coffee is warm. Too warm.','The tavern keg pours 2 flagons of Lukewarm Coffee and a Stale Donut-shaped bread roll. Medieval, but fine.'];
 
 const ENS={slime:1.4,mimic:1.4,hydra:1.3};
 /* ---- new enemies for the four dungeons ---- */
 Object.assign(EN,{
 slimeb:{n:'Blue-Sky Slime',hp:34,atk:8,def:3,spd:6,exp:7,w:56,h:48,acts:['Blue-Sky Thinking:demor','Drip:hit','Splash:hit']},
 bootlicker:{n:'Bootlicker',hp:38,atk:9,def:5,spd:6,exp:8,w:54,h:46,acts:['Snitch:demor','Brown-Nose:hit','Loyalty Oath:heavy']},
-spineless:{n:'Spineless Co-Worker',hp:30,atk:8,def:1,spd:10,exp:7,w:62,h:30,acts:['Slither:hit','Noncommittal Shrug:demor','Constrict:slow']},
+spineless:{n:'Spineless Co-Worker',hp:30,atk:8,def:1,spd:10,exp:7,w:62,h:30,rec:1,acts:['Slither:hit','Noncommittal Shrug:demor','Constrict:slow']},
 neolib:{n:'Shareholder',hp:46,atk:10,def:5,spd:7,exp:10,w:34,h:44,acts:['Dividend Demand:demor','Condescending Sneer:slow','Share Buyback:heavy']},
 altright:{n:'Forum Troll',hp:44,atk:10,def:4,spd:8,exp:10,w:44,h:44,acts:["No Offence, But:heavy",'Pile-On:aoe',"Devil's Advocate:slow",'Deny Everything:demor']}});
 Object.assign(EN,{
@@ -2662,10 +2755,13 @@ function drawBattle0(){const B=G.B;bgBattle(G.floor);const tg=[];
   const tags=[e.st.stun>0&&'STRIKE',e.st.slow>0&&'SLOW',e.st.weak>0&&'WEAK',e.st.hacked&&'HACKED',e.st.shield>0&&'GUARD',e.st.buff>0&&'RAGE'].filter(Boolean).join(' ');if(tags)tg.push([tags,e.x,e.y+e.h+(e.k==='intern'?12:2)])}
  [...G.members].sort((a,b)=>a.y-b.y).forEach(m=>{const an=B.anim&&B.anim.m===m?B.anim:null,ox=an?aOx(an):(B.act===m?-12:0)+lgx(m),oy=an?aOy(an):0;if(m.flash>0&&(m.flash&2))return;ctx.globalAlpha=m.hp>0?1:.35;person(m.x+ox,m.y+oy,2,CH[m.id].look,'left',0,bPose(m));ctx.globalAlpha=1});
  drawWpFx(B);drawCite(B);drawFx();retro();tg.forEach(([a,x,y])=>T(a,x,y,'#ffd840',null));B.en.forEach(e=>{if(e.k==='intern'&&e.hp>0&&!e.gone)T('INTERN',e.x-2,e.y+46,'#9fe',null)});
- if(UI.cursor){const b=UI.cursor;const cx=b.x+b.w/2;R(cx-3,b.y-8+((G.t>>3)&1)*2,7,2,'#ffd840');R(cx-1,b.y-6+((G.t>>3)&1)*2,3,2,'#ffd840');const s=b.name+(b.isP?'':' '+b.hp+'/'+b.mhp);TC(s,cx,b.y+b.h+(b.k==='intern'?22:12),'#fff');if(!b.isP&&b.k&&wkSeen()[b.k]){const w=wkOf(b.k),s2='Weak: '+CH[w[0]].name+'  Resists: '+CH[w[1]].name;TC(s2,cx,b.y+b.h+(b.k==='intern'?32:22)+(OPT.lg?6:0),'#ffd840')}}
- if(OPT.lg)hudL(B);else{panel(0,160,84,92);panel(84,160,W-84,92);T('SOLIDARITY',94,166,'#ff9a9a');R(176,167,W-190,6,'#000');R(177,168,W-192,4,'#401018');R(177,168,(W-192)*G.B.meter/100,4,G.B.meter>=comboCost()&&((G.t>>3)&1)?'#fff':'#ff5a5a');
+  if(OPT.lg)hudL(B);else{panel(0,160,84,92);panel(84,160,W-84,92);T('SOLIDARITY',94,166,'#ff9a9a');R(176,167,W-190,6,'#000');R(177,168,W-192,4,'#401018');R(177,168,(W-192)*G.B.meter/100,4,G.B.meter>=comboCost()&&((G.t>>3)&1)?'#fff':'#ff5a5a');
  G.members.forEach((m,i)=>{const y=181+i*14,act=B.act===m;T(m.name,94,y,act?'#ffd840':(m.hp>0?'#fff':'#ff7a7a'));T(`${m.hp}/${m.mhp}`,250,y,'#cfe');T('MP',330,y,'#6a8ab8');T(`${m.mp}`,348,y,'#8ab8ff');R(94,y+9,230,2,'#000');R(94,y+9,230*m.hp/m.mhp,2,'#6fe86f');
-  let sx=388;for(const [k,c,L] of [['shield','#5ac8ff','S'],['buff','#ffb347','B'],['demor','#b07aff','D'],['taunt','#ff6060','T'],['slow','#aaa','Z']])if(m.st[k]>0){T(L,sx,y,c);sx+=7}})}}
+  let sx=388;for(const [k,c,L] of [['shield','#5ac8ff','S'],['buff','#ffb347','B'],['demor','#b07aff','D'],['taunt','#ff6060','T'],['slow','#aaa','Z']])if(m.st[k]>0){T(L,sx,y,c);sx+=7}})}
+ if(UI.cursor){const b=UI.cursor;const cx=b.x+b.w/2;R(cx-3,b.y-8+((G.t>>3)&1)*2,7,2,'#ffd840');R(cx-1,b.y-6+((G.t>>3)&1)*2,3,2,'#ffd840');
+  const L=[[b.name+(b.isP?'':' '+b.hp+'/'+b.mhp),'#fff']];if(!b.isP&&b.k&&wkSeen()[b.k]){const w=wkOf(b.k);L.push(['Weak: '+CH[w[0]].name+'  Resists: '+CH[w[1]].name,'#ffd840'])}
+  const lh=OPT.lg?16:10;let ly=b.y+b.h+(b.k==='intern'?22:12);if(ly+L.length*lh>158)ly=Math.max(22,b.y-12-L.length*lh);
+  L.forEach(([t,c],i)=>{const w=tW(t),x=clamp(Math.round(cx-w/2),2,W-w-2),y=ly+i*lh;R(x-3,y-2,w+6,lh,'rgba(6,8,34,.75)');LT(t,x,y,c)})}}
 function drawVault(){const t=G.t;
  R(0,0,W,96,'#0e1428');for(let x=0;x<W;x+=28)R(x,0,1,96,'#18223e');for(let y=14;y<96;y+=16)R(0,y,W,1,'#16203a');
  R(0,0,W,12,'#141c30');R(0,10,W,2,'#38e0d0');for(let i=0;i<9;i++){const x=((t*.6+i*52)%(W+30))-20;R(x,3,14,6,'#f4f0e0');R(x,3,14,1,'#ff3ca8');R(x+2,5,9,1,'#8a90a0')}
@@ -2757,7 +2853,7 @@ function twDraw(Y,f,t,tx){const base=mix('#1e2140','#5a6290',f*.7),dk=mix('#1214
   for(const lx of [TX0-6,TX0+TXW+4]){R(lx,sy+28,2,42,'#222');R(lx-3,sy+24,8,5,'#ffe8a0');R(lx-14,sy+24,30,22,'rgba(255,230,160,.1)')}}
 }
 const IWH=840,TX0=124,TXW=200,IDUR=20.2,IFL=[2.0,2.35,5.4,8.9,9.25,13.1,16.0,18.2];
-const ICAP=[[1.4,5.4,'Neddiscorp Exploitations Tower. 1993.'],[6,10,'Forty floors of fluorescent light and stale coffee.'],[10.6,14.6,'Wages are low. The hours are long. Nobody goes home.'],[15,19,'And at the top, Alis Neddis rules with an iron fist']];
+const ICAP=[[1.4,5.4,'Neddiscorp Exploitations Tower.'],[6,10,'Forty floors of fluorescent light and stale coffee.'],[10.6,14.6,'Wages are low. The hours are long. Nobody goes home.'],[15,19,'And at the top, Alis Neddis rules with an iron fist']];
 function drawIntro(){const I=G.intro,t=I.t;
  const p=clamp((t-1)/16,0,1),e=p*p*(3-2*p),cam=Math.round((IWH-H)*(1-e));const Y=wy=>wy-cam,tx=[];
  let f=0,bolt=null;IFL.forEach(ts=>{const d=t-ts;if(d>=0&&d<.8){const v=d<.07?1:d<.13?.25:d<.2?.95:Math.max(0,.9-(d-.2)*1.8);if(v>f)f=v;if(d<.22)bolt=ts}});
@@ -2828,7 +2924,7 @@ function loadFloor(n,sp){G.floor=n;const F=FLOORS[n],t=F.build();G.map={t,w:t[0]
  (G.doors[n]||[]).forEach(([x,y])=>{t[y][x]='.'});
  G.ents=[];F.npcs.forEach(d=>{if(d.join&&roster().some(m=>m.id===d.join))return;G.ents.push(Object.assign({},d))});
  if(F.boss&&!G.boss[F.dun])G.ents.push({boss:1,bi:F.dun,x:F.boss.x,y:F.boss.y,n:BOSSES[F.dun].name});
- widenChokes(n);placeProps(n);if(OPT.sr&&LM[n])setTimeout(()=>SRM('Landmark: '+LM[n]+'.'),600);pl.x=sp.x;pl.y=sp.y;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;pl.dir=sp.dir||'up';pl.mv=0;G.steps=0;music(floorMus(n))}
+ widenChokes(n);placeProps(n);G.lmT=G.t;if(OPT.sr&&LM[n])setTimeout(()=>SRM('Landmark: '+LM[n]+'.'),600);pl.x=sp.x;pl.y=sp.y;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;pl.dir=sp.dir||'up';pl.mv=0;G.steps=0;music(floorMus(n))}
 function fieldUpdate(){
  if(pl.mv){pl.rx+=pl.dx*2;pl.ry+=pl.dy*2;if(--pl.mv===0){pl.x+=pl.dx;pl.y+=pl.dy;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;afterStep()}return}
  const d=held.up?'up':held.down?'down':held.left?'left':held.right?'right':null;
@@ -2847,17 +2943,17 @@ async function interact(){const [dx,dy]=DV[pl.dir],tx=pl.x+dx,ty=pl.y+dy;const e
  case'L':if(roster().some(m=>m.id==='henrietta')){await say('Henrietta','Master Key, meet lock.');sfx('ok');G.map.t[ty][tx]='.';(G.doors[G.floor]=G.doors[G.floor]||[]).push([tx,ty]);await say('','CLICK. The server room door opens.')}else await say('','Locked. You need someone with a Master Key.');break;
  case'E':await useElevator();break;
  case'D':if(G.floor===0)await say('','The lobby doors are locked from the outside. Nobody leaves until the contract is signed.');else if(G.floor===NF-1)await say('','Alis has locked the elevator. Nobody leaves until the deal is done.');else await rideTo(G.floor-1,'down');break}}
-async function useElevator(){const f=G.floor,nd=NEED[f];const pend=G.ents.filter(e=>e.join&&!e.gone);if(pend.length){await say('',pend[0].join==='joan'?'Something is humming behind the locked server room door. Someone in there is worth meeting before you leave. Henrietta can open it.':`${pend[0].n} is still somewhere on this floor, and you will want them with you. Look for the cyan speech bubble.`);return}
+async function useElevator(){const f=G.floor,nd=NEED[f];const pend=G.ents.filter(e=>e.join&&!e.gone);if(pend.length){await say('',pend[0].join==='joan'?'Something is humming behind the locked server room door. Someone in there\'s worth meeting before you leave. Henrietta can open it.':`${pend[0].n} is still somewhere on this floor, and you'll want them with you. Look for the cyan speech bubble.`);return}
  {const rg=ruleGate();if(rg){await say('',rg);return}}
  if(cards()<nd){await say('',`The elevator roll call needs ${nd} union members. You have ${cards()}. Keep making your case!`);return}
  if(f===29){await talk([['Kaj',`That is ${cards()} members. A clear majority.`],['Clem','Filing with the Labour Board... stamp, stamp, STAMP!'],['','The Board recognizes your union. Alis must now bargain in good faith.'],['','ACT I COMPLETE: Win the Argument.  ACT II: Bargain in Good Faith.']])}
  await rideTo(f+1,'up')}
-const ARRIVE={10:'THE SALES CITADEL. Floors 11-20. A fortress of glass and neon built around the sales pipeline, guarded by key accounts. Every floor is a stage in the deal. Everyone here sells, and everyone is measured.',20:'THE HR HELLSCAPE. Floors 21-30. Human Resources found a darker budget. Red tape, chained filing cabinets, and a floor that is one giant form. Mind the lava.',30:'ACT II: Bargain in Good Faith. THE CORPORATE KINGDOM. Floors 31-40. Stone halls, stained glass and banners woven from unpaid overtime. Alis Neddis holds court at the very top.',39:'The Throne Room. Alis Neddis waits on her throne, the clock ticking behind her.'};
+const ARRIVE={10:'THE SALES CITADEL. Floors 11-20. A fortress of glass and neon built around the sales pipeline, guarded by key accounts. Every floor is a stage in the deal. Everyone here sells, and everyone is measured.',20:'ACT II: Stand Together. THE HR HELLSCAPE. Floors 21-30. Human Resources found a darker budget. Red tape, chained filing cabinets, and a floor that\'s one giant form. Mind the lava.',30:'ACT III: Bargain in Good Faith. THE CORPORATE KINGDOM. Floors 31-40. Stone halls, stained glass and banners woven from unpaid overtime. Alis Neddis holds court at the very top.',39:'The Throne Room. Alis Neddis waits on her throne, the clock ticking behind her.'};
 
-const PA={1:'Good morning. This is Alis, your CEO. Please enjoy the lift. It is a privilege.',2:'Our culture is a verb. Overtime is a culture.',3:'Reminder: wellbeing is YOUR responsibility. The company supports you emotionally. From a distance.',4:'Today\'s value is Flexibility. Yours.',5:'A note from your CEO: unions are a bit 2019. Anyway! Smile!',6:'We have an open-door policy. The door is on the roof.',7:'Please do not tamper with the lift. It has been through enough. As have you.',8:'I have eleven minutes for everyone. You may share them.',9:'Friedrich is waiting upstairs. He is in Legal. He is lovely. He is billable.',
-10:'Legal appears to be unstaffed. How untidy. Welcome to Sales, I suppose.',11:'Welcome to the Citadel. Everyone here is measured. You are being measured now.',12:'The pipeline is healthy. People are a line item.',13:'This trip has been logged as Unproductive Vertical Movement.',14:'Targets are not goals. Targets are weather.',15:'Rest is a perk. Perks are earned. You have not earned this lift.',16:'Overtime is voluntary. Please volunteer by Monday.',17:'Vance sends his regards. He would like them returned with his name first.',18:'Every rung of the ladder is a person. Do try not to count them.',19:'Regional Sales awaits. Eleven promotions. Do not be impressed. Be quick.',
-20:'Sales has lost its Vice President. I will be asking questions. In writing. Welcome to Human Resources.',21:'Please have your forms ready.',22:'Form 27B has been filed on your behalf. You have been consulted. That is the form.',23:'Your wellbeing score is 4. We have no comment.',24:'The red tape is for your safety. Please do not cut it. Please do not read it.',25:'Redundancy is a conversation. This is not that conversation.',26:'This lift is being recorded. It is not. We are checking whether you flinch.',27:'The ping-pong table is on the fourth floor. Nobody has found the fourth floor.',28:'Exit survey: please tick Great.',29:'The Garglr is expecting you. Be gentle. He is sensitive about culture.',
-30:'Culture has been noted as a risk. Come up. I will see you now. All of you. Together. Wonderful.',31:'You have eleven minutes. You have nine.',32:'Your union is under review. By me.',33:'I decide who is thanked.',34:'There is a decree for this lift. It says: stand still.',35:'Do not trouble yourself with the paragraphs. I know them better than you.',36:'Sit up. Straight. In my building we do not slouch.',37:'I have an eleven-promotion supply of patience. Yours is not included.',38:'Come up. Do not make me come down.',39:'...Come up, then.'};
+const PA={1:'Good morning. This is Alis, your CEO. Please enjoy the lift. It\'s a privilege.',2:'Our culture is a verb. Overtime is a culture.',3:'Reminder: wellbeing is YOUR responsibility. The company supports you emotionally. From a distance.',4:'Today\'s value is Flexibility. Yours.',5:'A note from your CEO: unions are a bit 2019. Anyway! Smile!',6:'We have an open-door policy. The door is on the roof.',7:'Please don\'t tamper with the lift. It has been through enough. As have you.',8:'I have eleven minutes for everyone. You may share them.',9:'Friedrich is waiting upstairs. He\'s in Legal. He\'s lovely. He\'s billable.',
+10:'Legal appears to be unstaffed. How untidy. Welcome to Sales, I suppose.',11:'Welcome to the Citadel. Everyone here\'s measured. You\'re being measured now.',12:'The pipeline is healthy. People are a line item.',13:'This trip has been logged as Unproductive Vertical Movement.',14:'Targets aren\'t goals. Targets are weather.',15:'Rest is a perk. Perks are earned. You haven\'t earned this lift.',16:'Overtime is voluntary. Please volunteer by Monday.',17:'Vance sends his regards. He would like them returned with his name first.',18:'Every rung of the ladder is a person. Do try not to count them.',19:'Regional Sales awaits. Eleven promotions. Don\'t be impressed. Be quick.',
+20:'Sales has lost its Vice President. I\'ll be asking questions. In writing. Welcome to Human Resources.',21:'Please have your forms ready.',22:'Form 27B has been filed on your behalf. You\'ve been consulted. That\'s the form.',23:'Your wellbeing score is 4. We have no comment.',24:'The red tape is for your safety. Please don\'t cut it. Please don\'t read it.',25:'Redundancy is a conversation. This isn\'t that conversation.',26:'This lift is being recorded. It isn\'t. We\'re checking whether you flinch.',27:'The ping-pong table is on the fourth floor. Nobody has found the fourth floor.',28:'Exit survey: please tick Great.',29:'The Garglr is expecting you. Be gentle. He\'s sensitive about culture.',
+30:'Culture has been noted as a risk. Come up. I\'ll see you now. All of you. Together. Wonderful.',31:'You have eleven minutes. You have nine.',32:'Your union is under review. By me.',33:'I decide who\'s thanked.',34:'There\'s a decree for this lift. It says: stand still.',35:'Don\'t trouble yourself with the paragraphs. I know them better than you.',36:'Sit up. Straight. Somebody said that to me every morning for nine years. ...Sit up.',37:'I was an assistant once. On the thirty-eighth floor. ...Never mind. Come up.',38:'Come up. Don\'t make me come down.',39:'...Come up, then.'};
 const DOORV={10:1,20:2,30:3,39:4};
 const paLine=t=>PA[t]||null;
 const paDur=s=>s?Math.min(5600,Math.max(2800,1500+s.length*50)):2500;
@@ -2889,21 +2985,26 @@ function elevDoors(e){const t=e.t,cx=W>>1,dr=clamp((t-e.d0)/1.4,0,1),ez=1-Math.p
  if(lw>0)for(const x0 of[0,W-lw]){R(x0,0,lw,H,'#8a94a8');for(let x=x0;x<x0+lw;x+=6)R(x,0,2,H,'#9aa4b8');R(x0,0,lw,6,'#aab4c8');R(x0,H-12,lw,12,'#6a7488');R(x0===0?lw-2:x0,0,2,H,'#4a5266')}
  R(0,0,18,H,'#15151f');R(W-18,0,18,H,'#15151f');R(0,0,W,14,'#15151f');panel(cx-28,10,56,28);TS((e.b+1)+'F',cx-16,16,'#ffd840',2,'#000');elevPA(e)}
 async function rideTo(t,dir){const f=G.floor;sfx('ding');G.mode='elev';G.el={t:0,a:f,b:t,pa:paLine(t)};if(G.el.pa)SR('Intercom, Alis: '+G.el.pa);await rideWait(paDur(G.el.pa));if(DOORV[t]){G.el.door=DOORV[t];G.el.d0=G.el.t;sfx('ding');await rideWait(1700)}G.el=null;const F=FLOORS[t];F.build();loadFloor(t,dir==='up'?F.start:F.back);G.mode='field';sfx('ding');
- G.rest={f:t,x:pl.x,y:pl.y};const sv=save();const nm=`${t+1}F  ${F.name}`;if(!G.flags['seen'+t]){G.flags['seen'+t]=1;if(ARRIVE[t]){await say('',ARRIVE[t]);const lkey={10:'citadel',20:'hell',30:'kingdom'}[t];if(lkey)await lawScene(lkey)}else toast(nm)}else toast(nm);if(sv)setTimeout(()=>toast('Progress saved'),1800);await woundScene(3)}
+ G.rest={f:t,x:pl.x,y:pl.y};const sv=save();const nm=`${t+1}F  ${F.name}`;if(!G.flags['seen'+t]){G.flags['seen'+t]=1;if(t===20)await clemFired();if(ARRIVE[t]){await say('',ARRIVE[t]);const lkey={10:'citadel',20:'hell',30:'kingdom'}[t];if(lkey)await lawScene(lkey)}else toast(nm)}else toast(nm);if(sv)setTimeout(()=>toast('Progress saved'),1800);await woundScene(3)}
 async function talkEnt(e){
  if(e.boss){const bd=BOSSES[e.bi];const i=await ask('',`${bd.name} blocks the way. Start negotiating?`,['Negotiate','Not yet']);if(i!==0)return;
   await negotiate(e.bi);
   G.boss[e.bi]=1;e.gone=1;
   await wipe(1);G.mode='field';music(floorMus(G.floor));await wipe(-1);UI.wipe=null;
-  if(e.bi===3){await ending();return}
+  if(e.bi===3){await ending();return}if(e.bi===2)await clemBack();if(e.bi===0)await kajSeed();
   sfx('lvl');await say('','The way to the elevator is clear.');return}
  if(e.term){await termUse(e);return}if(e.vig){await vigUse(e);return}
  if(e.join){await joinScene(e);return}
  if(!e.k){await say(e.n||'','...');return}
  const key=G.floor+':'+e.id;
- if(G.signed[key]){await say(e.n,pick(['Solidarity!','I am with you. Stay strong.','Go get them. We have your back.']));return}
- await say(e.n,e.l);
- if(G.floor>=2&&parseInt(hs(key+'f'),36)%6===0&&G.inv.coffee>0){const fi=await ask(e.n,'Honestly? A coffee would settle it. Mine went cold hours ago.',['Give a coffee','Make my case']);if(fi===0){G.inv.coffee--;G.signed[key]=1;G.dues=(G.dues||0)+5;sfx('sign');await say(e.n,'Aaah. Thank you. That is the nicest thing anyone did here all year. I am in.');toast(`NEW MEMBER ${cards()}/${CT}`);return}}
+ if(G.signed[key]){await say(e.n,pick(['Solidarity!','I\'m with you. Stay strong.','Go get them. We have your back.']));return}
+ if(clemOut()&&G.floor>=20&&G.floor<30&&!G.flags['afr'+key]){G.flags['afr'+key]=1;await say(e.n,pick(AFRAID))}
+ {const fv=FAVS.find(v=>v.f===G.floor),fs=fv&&favG()[fv.id];
+  if(fv&&fs&&fs.giver===key&&fs.st===2){fs.st=3;G.signed[key]=1;addDues(20);G.inv.coffee++;sfx('sign');await say(e.n,`My ${fv.item}! You actually went and got it. Of course I'm in. Here, have my coffee.`);toast(`FAVOUR DONE. NEW MEMBER ${cards()}/${CT}. +20 dues`);await favStory(fv);return}
+  if(fv&&fs&&fs.giver===key&&fs.st===1){await say(e.n,`Still waiting on my ${fv.item}. Should be somewhere on ${fv.f+2}F. Search the desks and cabinets.`);return}
+  if(fv&&!fs){await say(e.n,e.l);const a=await ask(e.n,`Look, I'll sign. But first: my ${fv.item} is stuck on ${fv.f+2}F. Bring it back down?`,['I will','Just argue']);if(a===0){favG()[fv.id]={st:1,giver:key};toast('FAVOUR ADDED TO THE GRIEVANCE LOG');return}}
+  else await say(e.n,e.l)}
+ if(G.floor>=2&&parseInt(hs(key+'f'),36)%6===0&&G.inv.coffee>0){const fi=await ask(e.n,'Honestly? A coffee would settle it. Mine went cold hours ago.',['Give a coffee','Make my case']);if(fi===0){G.inv.coffee--;G.signed[key]=1;if(e.star!=null)G.flags['star'+e.star]=1;addDues(5);sfx('sign');await say(e.n,'Aaah. Thank you. That\'s the nicest thing anyone did here all year. I\'m in.');toast(`NEW MEMBER ${cards()}/${CT}`);return}}
  let miss=0;const ARGCL={WAGES:'I keep checking my bank balance before the rent comes out.',SECURITY:'Every Friday I wonder if my badge still works on Monday.',VOICE:'Nobody ever asks us. We just get an email about it afterwards.',EQUAL:'Some of us get a different tone in meetings. Same work, different treatment.',OPEN:'We hear about decisions last, if at all. Like the weather.'};
  const scep=G.floor>=3&&parseInt(hs(key),36)%4===0;let cur=e.k,k2=null;if(scep){const ks=Object.keys(INT).filter(x=>x!==e.k);k2=ks[parseInt(hs(key+'b'),36)%ks.length];await say('','(They look sceptical. One argument may not be enough.)')}
  for(;;){
@@ -2911,34 +3012,40 @@ async function talkEnt(e){
   if(who>=roster().length)return;
   const sp=roster()[who],strong=CH[sp.id].str.includes(cur);
   const opts=[cur];const others=Object.keys(INT).filter(k=>k!==cur);while(opts.length<3)opts.push(others.splice(ri(0,others.length-1),1)[0]);opts.sort(()=>Math.random()-.5);
-  const i=await ask('Argue',`${sp.name}: what is your argument?`+(strong?' (* is a topic '+sp.name+' knows well)':''),[...opts.map(k=>INT[k].pitch+(strong&&k===cur?' *':'')),'Back']);
+  const i=await ask('Argue',`${sp.name}: what's your argument?`+(strong?' (* is a topic '+sp.name+' knows well)':''),[...opts.map(k=>INT[k].pitch+(strong&&k===cur?' *':'')),'Back']);
   if(i>=3)continue;
   const k=opts[i];
   await say(sp.name,argOf(sp,k));
-  if(k===cur&&k2&&cur===e.k){await say(e.n,'Hm. That is a good point. But it is not the whole story.');cur=k2;miss=0;await say(e.n,ARGCL[k2]);continue}
-  if(k===cur){G.signed[key]=1;G.dues=(G.dues||0)+5;sfx('sign');await say(e.n,pick(['You know what? That is exactly it. I am in. Sign me up as a member.','Nobody has put it like that before. Count me in.','That is a fair argument. I want to be a member.']));toast(`NEW MEMBER ${cards()}/${CT}`);await say(sp.name,pick(CLOSE[sp.id]));{const le=lawPick(cur,dunOf(G.floor));await say(e.n,'One more thing. Show me where the law says that. Which paragraph?');const os=lawOpts(le,3);const j=await ask('Cite the law',`${sp.name}: which paragraph backs this up?`,[...os.map(lawLabel),'I will look it up later']);
+  if(k===cur&&k2&&cur===e.k){await say(e.n,'Hm. That\'s a good point. But it isn\'t the whole story.');cur=k2;miss=0;await say(e.n,ARGCL[k2]);continue}
+  if(k===cur){G.signed[key]=1;addDues(5);sfx('sign');if(e.star!=null)G.flags['star'+e.star]=1;await say(e.n,e.star!=null?STAR[e.star].sign:pick(['You know what? Yeah. That\'s exactly it. I\'m in, sign me up.','Huh. Nobody\'s ever put it like that. Okay, count me in.','Okay, yeah, fair. I want in.']));toast(`NEW MEMBER ${cards()}/${CT}`);await say(sp.name,pick(CLOSE[sp.id]));{const le=lawPick(cur,dunOf(G.floor));await say(e.n,'One more thing. Show me where the law says that. Which paragraph?');const os=lawOpts(le,3);const j=await ask('Cite the law',`${sp.name}: which paragraph backs this up?`,[...os.map(lawLabel),'I\'ll look it up later']);
    if(j<3){lawUnlock(le.id);if(os[j]===le){G.inv.coffee++;G.inv.donut++;await say(sp.name,`${le.ref}: ${le.t}. ${le.x}`);await say(e.n,'Right there in the law. Impressive. Take a coffee and a donut.');if(woundOwn(sp,le))await ownLaw(sp,le)}else await say(lawWho(),`Close, but no. It is ${le.ref}: ${le.t}. ${le.x}`)}}return}
   await say(e.n,INT[k].wrong);miss++;if(miss===1)await say(e.n,ARGCL[cur]);
   if(miss>=2)await say(e.n,`Let me put it plainly: what I need is ${INT[cur].hint}.`)}}
 async function joinScene(e){
- if(e.join==='joan')await talk([['Joan','...Quiet. The compiler is almost done.'],['Kaj','Joan Marx? They said you never leave this closet.'],['Joan','I am writing Redistribute v1.0. Software that moves wealth from those who hoard it to those who earn it.'],['Clem','We are forming a union, Joan.'],['Joan','A union. Legally protected collective bargaining. I have read every statute. I am in. Quietly. Then loudly.'],['Joan','Take my Lagboken, in your menu. Every paragraph we use goes in it. MBL 7 §: you may join a union. MBL 8 §: nobody may punish you for it.']]);
+ if(e.join==='joan')await talk([['Joan','...Shh. Compiler\'s almost done.'],['Kaj','Joan Marx? They said you never leave this closet.'],['Joan','I\'m writing Redistribute v1.0. Software that moves wealth from those who hoard it to those who earn it.'],['Clem','We\'re forming a union, Joan.'],['Joan','A union. Legally protected collective bargaining. I\'ve read every statute. I\'m in. Quietly. Then loudly.'],['Joan','Take my Lagboken, in your menu. Every paragraph we use goes in it. MBL 7 §: you may join a union. MBL 8 §: nobody may punish you for it.']]);
  else if(e.join==='clementine')await talk(CLEM_JOIN);
- else if(e.join==='marl')await talk(MARL_JOIN);
- else await talk([['Ken','DUDES! Another beautiful day to be crushed by a spreadsheet! Wait. Is that a UNION?'],['Kaj','Want in?'],['Ken','Bro. I have waited my whole life to be part of something rad. Equality for everybody! Sign me up!']]);
+ else if(e.join==='marl')await talk(clemOut()?MARL_JOIN.map(([n,t])=>n==='Clem'?['Henrietta',t]:[n,t]):MARL_JOIN);
+ else await talk([['Ken','DUDES! Another beautiful day to be crushed by a spreadsheet! Wait. Is that a UNION?'],['Kaj','Want in?'],['Ken','Bro. I\'ve waited my whole life to be part of something rad. Equality for everybody! Sign me up!']]);
  if(e.join==='joan'){lawUnlock('mbl7');lawUnlock('mbl8')}if(e.join==='marl'){lawUnlock('las22');lawUnlock('las25')}const RR=roster();const lv=Math.max(1,Math.round(RR.reduce((s,m)=>s+m.lv,0)/RR.length));const m=mkM(e.join,lv);const onTeam=addMember(m);e.gone=1;sfx('lvl');toast(`${m.name} joined! MEMBERS ${cards()}/${CT}`);
  await say('',`${m.name} (${CH[m.id].cls}) joined the party!`);if(!onTeam&&!G.flags.benchTip){G.flags.benchTip=1;await say('','Three fight at a time. The others wait on the bench. Swap them in the PARTY menu, or with SWAP in battle.')}}
 /* ================= ENDING ================= */
 async function ending(){
  {const has=id=>roster().some(m=>m.id===id),L=[['Alis','...Fine. Fair wages, job security, equal opportunity, worker influence and transparency. Where do I sign?']];
   if(has('joan'))L.push(['Joan','Not yet.'],['','Joan reads the Agreement aloud. Page one. Page two. Page forty. Alis shifts in her chair. Nobody interrupts.'],['Joan','Now. Sign.']);
-  L.push(['','The Collective Bargaining Agreement is signed. Overtime is voluntary and paid. Weekends are weekends.']);
-  if(has('ken'))L.push(['Ken','Bro. Passed over four times. And I never once looked.'],['Ken','...We did it. Equally.']);
-  if(has('henrietta'))L.push(['Henrietta','For Marit. Harness. Twice.'],['Henrietta','I will still mop. But on the clock.']);
+  L.push(['','The Collective Bargaining Agreement is signed. Overtime is voluntary and paid. Weekends are weekends.'],['Alis','...Eleven minutes. That took four hours.'],['Alis','It\'s very quiet in here when nobody is shouting.']);
+  {const c=cards();if(c<CT*.6)L.push(['','It\'s a thin agreement. Barely half the tower signed, and Alis knows exactly which half.'],['Alis','See you at the next round. I\'ll be ready.']);else if(c<CT)L.push(['','Most of the tower signed. Enough to make it stick, and enough to come back for the rest.'])}
+  if(has('ken'))L.push(['Ken','Bro. I used to think it was just vibes. Now I say it out loud, in the room.'],['Ken','...We did it. Equally.']);
+  if(has('henrietta'))L.push(['Henrietta','For Marit. Harness. Twice.'],['Henrietta','I\'ll still mop. But on the clock.']);
   if(has('marl'))L.push(['Marl','Thirty-one years in Accounts. Today somebody asked me to read the numbers. I did.'],['Marl','Somebody called me back.']);
-  if(has('clementine'))L.push(['Clem','Stand-up is cancelled. Forever.']);
+  if(has('clementine')&&G.flags.rein)L.push(['Clem','Fired on a Friday. Back by the next table. Put that in the agreement too.']);if(has('clementine'))L.push(['Clem','Stand-up tomorrow at nine. Everyone is invited. Management too, if they listen.']);
   if(has('joan'))L.push(['Joan','Redistribute v1.0 ships Monday.']);
+  {const M=[];if(has('marl'))M.push(['','Down in Accounts, the CONSULTANT nameplate is gone. The pen holder says "M. Bjorn" again.']);if(has('henrietta'))M.push(['','The hard hat by the stairs has a name written on it now: "Henrietta. Safety Rep."']);for(const f in STAR)if(G.flags['star'+f])M.push(['',STAR[f].end]);if(M.length)L.push(['','One month later.'],...M)}
   for(let bi=0;bi<BOSSES.length;bi++){const k=G.lead&&G.lead[bi];if(k&&LEADEND[k])L.push(['',LEADEND[k].replace('@',BOSSES[bi].name)])}
-  L.push(['','Kaj turns his phone face down on the table. Nobody pings.'],['Kaj','Let us go home.']);await talk(L)}
+  if(cards()>=CT)L.push(...LEADEND_GS);
+  {const ld=G.flags.leader&&roster().find(m=>m.id===G.flags.leader);if(ld)L.push(['',`${ld.name} slides the pen across the table. Kaj doesn't reach for it first.`])}L.push(['','Kaj turns his phone face down on the table. Nobody pings.'],['Kaj','Let\'s go home. All of us.']);await talk(L)}
+ {const S=G.stats||{},fd=FAVS.filter(v=>(favG()[v.id]||{}).st===3).length;await say('',`UNION REPORT${G.ngp?' (NEW GAME+ '+G.ngp+')':''}. Members: ${cards()} of ${CT}${cards()>=CT?': GENERAL STRIKE!':''}. Paragraphs learned: ${Object.keys(lawG()).length} of ${LAW.length}. Correct Cites: ${S.cite||0}. Fights won: ${S.wins||0}. Dues raised: ${S.dues||0}. Favours done: ${fd} of ${FAVS.length}.`);
+  try{localStorage.setItem(NGK,JSON.stringify({lv:(G.ngp||0)+1,law:G.law,vets:Math.min(40,Math.floor(cards()/2))}))}catch(e){}
+  await say('','NEW GAME+ unlocked: start again with your Lagboken and veteran members. Bosses and foes will be tougher.')}
  await wipe(1);G.mode='end';G.end={t:0,done:0};music('end');await wipe(-1);UI.wipe=null;
  while(!G.end.done)await sleep(200);
  for(;;){const k=await key();if(k==='ok')break}
@@ -2947,18 +3054,19 @@ async function ending(){
 
 /* ================= SAVE / START ================= */
 const SAVEK='crunchtime-last-overtime-v2';
-function save(){try{localStorage.setItem(SAVEK,JSON.stringify({v:3,dues:G.dues||0,lead:G.lead||{},law:G.law,wound:G.wound,rest:G.rest,signed:G.signed,boss:G.boss,flags:G.flags,inv:G.inv,interns:G.interns,vend:G.vend,doors:G.doors,ot:G.ot,rul:G.rul,dec:G.dec,mem:G.members.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{}})),ben:G.bench.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{}}))}));return true}catch(e){return false}}
+function save(){try{localStorage.setItem(SAVEK,JSON.stringify({v:4,dues:G.dues||0,lead:G.lead||{},wks:G.wks||{},met:G.met||{},seen:seenEnc(),kits:G.kits||[],fav:G.fav||{},stats:G.stats||{},ngp:G.ngp||0,vets:G.vets||0,law:G.law,wound:G.wound,rest:G.rest,signed:G.signed,boss:G.boss,flags:G.flags,inv:G.inv,interns:G.interns,vend:G.vend,doors:G.doors,ot:G.ot,rul:G.rul,dec:G.dec,mem:G.members.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{},kit:m.kit||null})),ben:G.bench.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{},kit:m.kit||null}))}));return true}catch(e){return false}}
 function hasSave(){try{return!!localStorage.getItem(SAVEK)}catch(e){return false}}
-function loadSave(){try{const s=migrate(JSON.parse(localStorage.getItem(SAVEK)));Object.assign(G,{dues:s.dues,lead:s.lead,law:s.law||{},wound:s.wound||{},signed:s.signed,boss:s.boss,flags:s.flags,inv:s.inv,interns:s.interns,vend:s.vend,doors:s.doors,rest:s.rest,rul:s.rul||{},dec:s.dec||{},ot:s.ot||0});const lm=d=>{const m=mkM(d.id,d.lv);m.pk=d.pk||{};calc(m);m.exp=d.exp;m.hp=d.hp;m.mp=d.mp;return m};G.members=s.mem.map(lm);G.bench=(s.ben||[]).map(lm);G.bench=G.members.splice(PARTY_MAX).concat(G.bench);return true}catch(e){return false}}
-async function newGame(){G.busy=true;
- Object.assign(G,{rul:{},dec:{},ot:0,flags:{},signed:{},boss:{},law:{},wound:{},inv:{coffee:3,donut:2},interns:0,dues:0,lead:{},vend:{},doors:{},rest:{f:0,x:0,y:0},members:[mkM('kaj',1)],bench:[]});const F0=FLOORS[0];F0.build();G.rest={f:0,x:F0.rest.x,y:F0.rest.y};
+function loadSave(){try{const s=migrate(JSON.parse(localStorage.getItem(SAVEK)));Object.assign(G,{dues:s.dues,lead:s.lead,wks:s.wks||{},met:s.met||{},kits:s.kits||[],fav:s.fav||{},stats:s.stats||{},ngp:s.ngp||0,vets:s.vets||0,law:s.law||{},wound:s.wound||{},signed:s.signed,boss:s.boss,flags:s.flags,inv:s.inv,interns:s.interns,vend:s.vend,doors:s.doors,rest:s.rest,rul:s.rul||{},dec:s.dec||{},ot:s.ot||0});seenDec(s.seen);const lm=d=>{const m=mkM(d.id,d.lv);m.pk=d.pk||{};m.kit=d.kit||null;calc(m);m.exp=d.exp;m.hp=d.hp;m.mp=d.mp;return m};G.members=s.mem.map(lm);G.bench=(s.ben||[]).map(lm);G.bench=G.members.splice(PARTY_MAX).concat(G.bench);return true}catch(e){return false}}
+async function newGame(plus){G.busy=true;
+ Object.assign(G,{rul:{},dec:{},ot:0,flags:{},signed:{},boss:{},law:{},wound:{},inv:{coffee:3,donut:2},interns:0,dues:0,lead:{},wks:{},met:{},kits:[],fav:{},stats:{wins:0,cite:0,dues:0},ngp:0,vets:0,vend:{},doors:{},rest:{f:0,x:0,y:0},members:[mkM('kaj',1)],bench:[]});seenDec({});if(plus){try{const P=JSON.parse(localStorage.getItem(NGK));G.law=P.law||{};G.ngp=P.lv||1;G.vets=P.vets||0}catch(e){}}const F0=FLOORS[0];F0.build();G.rest={f:0,x:F0.rest.x,y:F0.rest.y};
  await wipe(1);G.mode='field';loadFloor(0,{x:F0.dx,y:F0.mh-4,dir:'down'});const hen={id:'hen0',n:'Henrietta',x:F0.dx,y:F0.mh-2,look:CH.henrietta.look,dir:'up'};G.ents.push(hen);await wipe(-1);UI.wipe=null;G.busy=false;
- await run(async()=>{await talk([['','Neddiscorp Exploitations Tower, 1993. Forty floors of fluorescent light, stale coffee and unpaid overtime. From the Cubicle Farm up to the Corporate Kingdom.'],['','CEO Alis Neddis has announced a "voluntary" 80-hour crunch. Again.'],['Kaj','Another weekend gone. My last raise was a pizza party.'],['Kaj','Somebody should organize this place. A union. A real one, with a collective bargaining agreement.'],['Kaj','...Somebody. Right. Nobody else is going to do it.'],['Henrietta','Sorry to interrupt. I emptied the bins and noticed your build was failing on line 12. I fixed it.'],['Kaj','You fixed the build? With a mop?'],['Henrietta','I wrote the compiler they use upstairs. Nobody ever asks the janitor anything.'],['Kaj','I am forming a union. Want in?'],['Henrietta','I have waited ten years for someone to ask.']]);
+ await run(async()=>{await talk([['','ACT I: Organize.'],['','Neddiscorp Exploitations Tower. Forty floors of fluorescent light, stale coffee and unpaid overtime. From the Cubicle Farm up to the Corporate Kingdom.'],['','CEO Alis Neddis has announced a "voluntary" 80-hour crunch. Again.'],['Kaj','Another weekend gone. My last raise was a pizza party.'],['Kaj','Somebody should file a bug report on this whole place. No, wait. Somebody should organize it. Like, a union. A real one, with a collective agreement and everything.'],['Kaj','...Somebody. Right. Nobody else is going to do it.'],['Henrietta','Sorry, didn\'t mean to listen in. I was doing the bins. Your fire door\'s chained shut, by the way. Was. I unchained it.'],['Kaj','You cut the chain? On your break?'],['Henrietta','Twelve years as an electrician at the shipyard. I know what a fire code is. Nobody ever asks the janitor anything.'],['Kaj','I\'m, uh. I\'m forming a union. Want in?'],['Henrietta','Ten years I\'ve waited for someone to ask me that.'],['Kaj','Great! Okay. I\'ll write the leaflets, do the sign-ups, talk to every floor... tonight, probably.'],['Henrietta','All by yourself? That\'s how they got you into the 80-hour week.'],['Henrietta','Lesson one: sit down. A worker sitting down is the strongest thing in this building.'],['Kaj','...Sit-Down Strike. Noted.']]);
   hen.gone=1;G.members.push(mkM('henrietta',1));sfx('lvl');await talk([['','Henrietta joined the party! GOAL: convince a majority of your coworkers to become union members, then win the Collective Bargaining Agreement.'],['','Talk to coworkers with A/Z and argue the case that fits what bothers them: fair wages, job security, worker influence, equal opportunity or employer transparency. Rest on couches to save. Press B/X for the menu. Bosses are won by NEGOTIATING. Allies are scattered through the tower. Look for the cyan speech bubble.']]);await lawScene('crunch')})}
 async function boot(skip){if(!skip)await playIntro();G.mode='title';music('office');
- for(;;){const items=[{t:'NEW GAME'}];if(hasSave())items.push({t:'CONTINUE'});items.push({t:muted?'SOUND: OFF':'SOUND: ON'});items.push({t:PX>1?'PIXELS: CHUNKY':'PIXELS: SMOOTH'});items.push({t:OPT.lg?'LARGE TEXT: ON':'LARGE TEXT: OFF'});items.push({t:OPT.sr?'SCREEN READER: ON':'SCREEN READER: OFF'});items.push({t:'OPTIONS'});
-  const i=await choose(items,{x:162,y:118,w:124,cancel:false});const t=items[i].t;
+ for(;;){const items=[{t:'NEW GAME'}];if(hasSave())items.push({t:'CONTINUE'});try{if(localStorage.getItem(NGK))items.push({t:'NEW GAME+'})}catch(e){}items.push({t:muted?'SOUND: OFF':'SOUND: ON'});items.push({t:PX>1?'PIXELS: CHUNKY':'PIXELS: SMOOTH'});items.push({t:OPT.lg?'LARGE TEXT: ON':'LARGE TEXT: OFF'});items.push({t:OPT.sr?'SCREEN READER: ON':'SCREEN READER: OFF'});items.push({t:'OPTIONS'});
+  const i=await choose(items,{x:296,y:80,w:146,cancel:false});const t=items[i].t;
   if(t==='NEW GAME'){await newGame();return}
+  if(t==='NEW GAME+'){await newGame(true);return}
   if(t==='CONTINUE'){if(loadSave()){await wipe(1);G.mode='field';loadFloor(G.rest.f,{x:G.rest.x,y:G.rest.y,dir:'up'});await wipe(-1);UI.wipe=null;return}}
   else if(t==='OPTIONS')await optionsMenu();else if(t.startsWith('PIXELS'))PX=PX>1?1:2;else if(t.startsWith('LARGE'))toggleLG();else if(t.startsWith('SCREEN'))toggleSR();else toggleMute()}}
 
@@ -2972,7 +3080,7 @@ function tick(){G.t++;srTick();ambTick();UI.fx=UI.fx.filter(f=>++f.t<40);UI.fx.f
  if(G.mode==='field'&&!G.busy)fieldUpdate();else if(G.busy)for(const k in q)q[k]=0}
 let last=0,acc=0;
 function frame(ts){const dt=Math.min(.1,(ts-last)/1000||0);last=ts;acc+=dt;while(acc>=1/60){tick();acc-=1/60}draw();requestAnimationFrame(frame)}
-window.__dbg={perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,citeLaw,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
+if(/[?&]debug\b/.test(location.search))window.__dbg={favStory,STAR,ORGL,organize,kajSeed,kajLead,clemFired,clemBack,clemEvidence,clemTable,bestiary,kitMenu,KIT,FAVS,favG,teamItem,addDues,decOn,seenEnc,NGK,itemMenu:typeof itemMenu!=='undefined'?itemMenu:null,enemyTurn,perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,citeLaw,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
 boot();requestAnimationFrame(frame);
 })();
 </script>
