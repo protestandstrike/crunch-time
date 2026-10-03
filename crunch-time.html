@@ -801,7 +801,7 @@ FXF.org=(p,c)=>{const[ax,ay]=c.a,[tx,ty]=c.t;for(let i=0;i<4;i++){const q=fxez(f
 Object.assign(FXD,{refactor:[56,.3],hotfix:[54,.4],sitdown:[56,.4],rally:[64,.35],standup:[56,.3],reset:[60,.35],slowdown:[56,.35],retro:[64,.5],mop:[56,.4],masterkey:[54,.5],root:[60,.65],fineprint:[56,.5],loophole:[60,.65],redistribute:[64,.55],fistbump:[56,.4],goodvibes:[62,.3],brolidarity:[60,.3],seniority:[60,.3],lifo:[62,.55],recall:[66,.4],notice:[60,.55],c_slam:[78,.45],c_agree:[84,.6],c_picket:[80,.55],c_consult:[84,.6],c_stop:[80,.5],c_general:[90,.5],i_coffee:[50,.3],i_donut:[50,.5],org:[56,.5],
  e_impact:[44,.4],e_proj:[48,.52],e_volley:[60,.5],e_rain:[58,.5],e_wave:[60,.45],e_slash:[46,.4],e_bite:[46,.42],e_beam:[56,.5],e_orbit:[58,.82],e_aura:[56,.4],e_ring:[54,.5],e_cloud:[54,.4],e_drain:[58,.55],e_stomp:[56,.5],e_crash:[54,.5],e_spin:[56,.42]});
 /* ---- balance pass ---- */
-const EMH=f=>[1.5,1.5,1.4,1.0][Math.min(3,f/10|0)],EMA=f=>[1.3,1.3,1.25,.95][Math.min(3,f/10|0)],EXPF=f=>f<15?1:.8;
+const EMH=f=>f<3?1.2:f===3?1.3:f===4?1.4:[1.5,1.5,1.3,1.0][Math.min(3,f/10|0)],EMA=f=>f<3?1.1:f===3?1.2:f===4?1.25:[1.3,1.3,1.15,.95][Math.min(3,f/10|0)],EXPF=f=>f<15?1:.8;
 const EB={imp:1.6,ticker:1.15,slime:1.3,spineless:1.2,micro:1.4,slimeb:1.4,ghost:1.35,bootlicker:1.25,jester:1.4,spider:1.4,bull:.9,knight:1.1};
 const balEN=k=>{const d=EN[k],m=EB[k]||1;return m===1?d:Object.assign({},d,{hp:Math.round(d.hp*m),atk:d.atk*m})};
 FXF.burndown=(p,c)=>{const[tx,ty]=c.t,[ax,ay]=c.a;const q=fxsg(p,0,.35);fgc('clip',ax-10,ay-10,2,'#ffffff');for(let i=0;i<10;i++){const u=i/9,x=fxlp(ax-20,tx,fxez(q)*u+(1-fxez(q))*0),y=fxlp(ay-30,ty+6,u*u);if(u<=q*1.1)R(fxlp(tx-30,tx,u),fxlp(ty-40,ty+8,u*u),3,3,'#ff5a5a')}if(p>.3){const u=fxsg(p,.3,.7);fgc('arrow',tx,ty-20+u*30,3,'#ff5a5a');fln(tx-28,ty+14,tx+28,ty+14,1,'#ffffff',2);if(p>.5)fimp(fxsg(p,.5,1),tx,ty,'#ff5a5a');ftx('BURNDOWN',tx,ty-36,'#ffffff')}};
@@ -846,7 +846,7 @@ async function say(who,text){if(SKIPNOW)return;const K=LG(),lines=wrap(text,K>1?
 async function ask(who,text,opts){const K=LG();let lines=wrap(text,K>1?34:68);if(K>1&&lines.length>3){await say(who,lines.slice(0,lines.length-3).join(' '));lines=lines.slice(-3)}
  UI.d={who,lines,n:9999,tot:0,sr:text};const w=Math.max(...opts.map(o=>o.length))*6+26,h=opts.length*11+10;const i=await choose(opts.map(t=>({t})),{x:444-w,y:176-h,w,cancel:false,above:true});UI.d=null;return i}
 /* ---- battle HUD and table text ---- */
-function hudL(B){panel(0,160,W,92);TS('SOLIDARITY',8,163,'#ff9a9a',2,'#000');R(140,167,300,8,'#000');R(141,168,298,6,'#401018');R(141,168,298*B.meter/100,6,B.meter>=100&&((G.t>>3)&1)?'#fff':'#ff5a5a');
+function hudL(B){panel(0,160,W,92);TS('SOLIDARITY',8,163,'#ff9a9a',2,'#000');R(140,167,300,8,'#000');R(141,168,298,6,'#401018');R(141,168,298*B.meter/100,6,B.meter>=comboCost()&&((G.t>>3)&1)?'#fff':'#ff5a5a');
  G.members.forEach((m,i)=>{const y=182+i*23,act=B.act===m;TS(m.name,8,y,act?'#ffd840':(m.hp>0?'#fff':'#ff7a7a'),2,'#000');TS(`${m.hp}/${m.mhp}`,124,y,'#cfe',2,'#000');TS('MP '+m.mp,226,y,'#8ab8ff',2,'#000');
   R(8,y+15,270,3,'#000');R(8,y+15,270*m.hp/m.mhp,3,'#6fe86f');let sx=330;for(const [k,c,L] of [['shield','#5ac8ff','S'],['buff','#ffb347','B'],['demor','#b07aff','D'],['taunt','#ff6060','T'],['slow','#aaa','Z']])if(m.st[k]>0){TS(L,sx,y,c,2,'#000');sx+=14}})}
 function tblMsg(TB){const L=wrap(TB.msg,26),pg=Math.max(1,Math.ceil(L.length/4)),p=pg>1?Math.floor(G.t/220)%pg:0;L.slice(p*4,p*4+4).forEach((l,i)=>LT(l,124,179+i*18,'#fff'));if(pg>1)T(`(${p+1}/${pg})`,W-42,166,'#9aa4d8',null)}
@@ -1396,10 +1396,10 @@ async function vigUse(e){await say('',e.l);if(e.law)await lawTip([e.law],lawWho(
 async function citeLaw(a){const B=G.B,D=dunOf(G.floor),THS=[['HOURS','ENV'],['OPEN','WAGES'],['SECURITY','EQUAL'],['VOICE','WAGES']][D];
  const right=lawPick(pick(THS),D),os=lawOpts(right,3);
  await say(a.name,`"Which paragraph says this? ${right.x.replace(/\s*\([^)]*\)/g,'')}"`);
- const i=await choose(os.map(o=>({t:lawLabel(o)})),{x:0,y:160,w:236,h:92,title:'Cite the paragraph',cancel:true});if(i<0)return false;
+ const card=(G.inv.card||0)>0;if(card)G.inv.card--;const i=await choose(os.map(o=>({t:(card&&o===right?'>> ':'')+lawLabel(o),col:card&&o===right?'#ffd840':undefined})),{x:0,y:160,w:236,h:92,title:card?'Cite (card used)':'Cite the paragraph',cancel:true});if(i<0){if(card)G.inv.card++;return false}
  B.cited=1;lawUnlock(right.id);
  if(os[i]===right){sfx('combo');B.par={t:0,ref:right.ref,nm:right.t};for(const e of aliveE()){e.st.stun=1;e.flash=10}const ow=aliveP().find(m=>m===a&&woundOwn(m,right))||aliveP().find(m=>woundOwn(m,right)),own=!!ow,g=25+(own?20:0);B.meter=Math.min(100,B.meter+g);if(own)toast(ow.name+': THAT ONE IS MINE! extra SOLIDARITY');await ban(`${a.name} cites ${right.ref}: ${right.t}! Every foe is on strike for a turn. SOLIDARITY +${g}.`,1700);if(ow&&WOUND[ow.id]&&WOUND[ow.id].cite)await say(ow.name,WOUND[ow.id].cite)}
- else{sfx('no');await ban(`Not that one. It was ${right.ref}: ${right.t}. The turn is lost.`,1700)}
+ else{sfx('no');await ban(`Not that one. It was ${right.ref}: ${right.t}. ${tierOn(3)?'The shop steward covers for you: your turn is not lost.':'The turn is lost.'}`,1700);if(tierOn(3))return false}
  return true}
 function drawCite(B){const p=B&&B.par;if(!p)return;if(++p.t>78){B.par=null;return}const a=p.t<60?1:1-(p.t-60)/18,r=8+p.t*2.4,cy=74;ctx.save();ctx.globalAlpha=Math.max(0,a);
  ring(224,cy,r,3,'#9fe8ff');ring(224,cy,r*.62,2,'#fff');ctx.globalAlpha=Math.max(0,a);
@@ -1470,10 +1470,38 @@ async function standTogether(){const D=dunOf(G.floor),f=G.floor,n=roster().lengt
  else if(D===3){const d=decOf(f);if(d&&!(G.dec&&G.dec[f])){G.dec=G.dec||{};G.dec[f]=1;msg=d.nm+' is repealed. Nobody is willing to carry it out. The decree is just paper now.';law=d.law}}
  if(!msg){await say('','Nothing here to refuse right now. Save it for when it counts.');return}
  G.flags['wo'+D]=1;sfx('combo');await say('',msg);if(law)lawUnlock(law)}
+
+/* ---- RPG layer: union tiers, perks, dues shop, grievance log, lead demands ---- */
+const TIERS=[{n:10,nm:'Break room',d:'After each won fight, the party recovers 10% HP.'},{n:25,nm:'Strike fund',d:'Every fight starts with +10 SOLIDARITY.'},{n:50,nm:'Shop steward',d:'A wrong Cite no longer costs your turn.'},{n:75,nm:'General assembly',d:'Combos cost 75 SOLIDARITY instead of 100.'}];
+const tierOn=i=>cards()>=TIERS[i-1].n;
+const comboCost=()=>tierOn(4)?75:100;
+async function tierCheck(){for(let i=1;i<=TIERS.length;i++){if(tierOn(i)&&!G.flags['tier'+i]){G.flags['tier'+i]=1;const t=TIERS[i-1];sfx('lvl');await say('',`UNION STRENGTH: ${t.n} MEMBERS. ${t.nm.toUpperCase()} unlocked! ${t.d}`)}}}
+async function unionPage(){let sel=0;for(;;){const i=await choose(TIERS.map((t,k)=>({t:t.nm,r:tierOn(k+1)?'ON':t.n+' members',col:tierOn(k+1)?'#9fff9f':'#9aa4d8'})),{x:40,y:14,w:330,sel,title:`MEMBERS ${cards()}/${CT}   DUES ${G.dues||0}`,foot:i=>TIERS[i].d});if(i<0)return;sel=i;const t=TIERS[i];await say('',`${t.nm.toUpperCase()} (${t.n} members): ${t.d} ${tierOn(i+1)?'Active.':'You have '+cards()+'. Sign co-workers and organize foes to grow the union.'}`)}}
+const SHOP=[['coffee','Lukewarm Coffee',8,'Heals 25% HP (min 45).'],['donut','Stale Donut',10,'Restores 25% MP (min 14).'],['ibu','Ibuprofen',12,'In battle: cures despair and slow.'],['agenda','Meeting Agenda',15,'In battle: leave the fight. Not bosses.'],['card','Paragraph Card',25,'Your next Cite shows the right answer.']];
+async function shopMenu(){await say('Union rep','Dues at work. What does the team need?');let sel=0;for(;;){const i=await choose(SHOP.map(([k,n,c])=>({t:n+' x'+(G.inv[k]||0),r:c+'',dis:(G.dues||0)<c})),{x:40,y:14,w:330,sel,title:`UNION DUES: ${G.dues||0}`,foot:i=>SHOP[i][3]});if(i<0)return;sel=i;const [k,n,c]=SHOP[i];if((G.dues||0)<c){sfx('no');continue}G.dues-=c;G.inv[k]=(G.inv[k]||0)+1;sfx('heal');toast(`BOUGHT: ${n}`)}}
+const PERK={
+kaj:{5:[{n:'Sysadmin',m:{mag:3,mp:6}},{n:'Debugger',m:{atk:3,spd:1}}],10:[{n:'Whistleblower',m:{mag:4,spd:2}},{n:'Senior Dev',m:{atk:4,hp:20}}],15:[{n:'Architect',m:{mag:6,mp:10}},{n:'Full Stack',m:{atk:5,def:3}}]},
+clementine:{5:[{n:'Facilitator',m:{mag:3,mp:6}},{n:'Timeboxer',m:{spd:2,def:2}}],10:[{n:'Coach',m:{mag:4,hp:16}},{n:'Kanban',m:{spd:3,mp:8}}],15:[{n:'Agile Rebel',m:{mag:6,spd:2}},{n:'Servant Leader',m:{hp:30,def:3}}]},
+henrietta:{5:[{n:'Safety Rep',m:{def:3,hp:16}},{n:'Night Shift',m:{atk:3,spd:1}}],10:[{n:'Master Key',m:{atk:4,mag:2}},{n:'Hard Hat',m:{def:4,hp:20}}],15:[{n:'Steward',m:{def:5,hp:30}},{n:'Mop Master',m:{atk:6,spd:1}}]},
+joan:{5:[{n:'Close Reader',m:{mag:4}},{n:'Paper Trail',m:{mp:10,def:1}}],10:[{n:'Legal Eagle',m:{mag:5,mp:6}},{n:'Quiet Resolve',m:{hp:24,def:2}}],15:[{n:'The Loud Part',m:{mag:7}},{n:'Archivist',m:{mp:16,spd:2}}]},
+ken:{5:[{n:'True Ally',m:{def:3,hp:20}},{n:'Bro Strength',m:{atk:3,hp:10}}],10:[{n:'Wingman',m:{def:4,spd:1}},{n:'Gym Rat',m:{atk:5}}],15:[{n:'Shield Bro',m:{def:6,hp:30}},{n:'Power Lifter',m:{atk:7,hp:10}}]},
+marl:{5:[{n:'Seniority',m:{def:3,hp:16}},{n:'Audit',m:{mag:3,mp:6}}],10:[{n:'Last In First Out',m:{def:4,mag:2}},{n:'Ledger',m:{mag:4,mp:8}}],15:[{n:'Recall Right',m:{hp:36,def:4}},{n:'Forensic',m:{mag:6,spd:1}}]}};
+const perkTxt=o=>Object.entries(o.m).map(([k,v])=>k.toUpperCase()+' +'+v).join(', ');
+async function perkCheck(){for(const m of roster()){const P=PERK[m.id];if(!P)continue;m.pk=m.pk||{};for(const t of [5,10,15]){if(m.lv<t||m.pk[t]!=null)continue;await say(m.name,`LV ${t}! Time to choose where ${m.name} grows.`);const os=P[t];const i=await choose(os.map(o=>({t:o.n,r:perkTxt(o)})),{x:60,y:40,w:300,cancel:false,title:m.name.toUpperCase()+': CHOOSE A FOCUS'});m.pk[t]=i;const ph=m.mhp,pm=m.mmp;calc(m);m.hp+=m.mhp-ph;m.mp+=m.mmp-pm;sfx('lvl');toast(`${m.name}: ${os[i].n}`)}}}
+async function grievLog(){let sel=0;for(;;){const ids=Object.keys(WOUND).filter(id=>roster().some(m=>m.id===id)),wg=woundG(),D=dunOf(G.floor);
+ const st=id=>{const w=WOUND[id],ks=Object.keys(w.conf).map(Number).filter(k=>k<3);const b=ks.length?Math.min(...ks):3;return G.boss[b]?'WON':wg[id]?'RAISED':'HEARD'};
+ const rows=ids.map(id=>({t:CH[id].name+': '+WOUND[id].title,r:st(id),col:st(id)==='WON'?'#9fff9f':'#fff',id})).concat(BOSSES.map((b,bi)=>({t:'Table: '+b.name,r:G.boss[bi]?'WON':bi===D?'OPEN':'AHEAD',col:G.boss[bi]?'#9fff9f':bi===D?'#ffd840':'#9aa4d8',bi})));
+ const i=await choose(rows,{x:20,y:14,w:380,sel,vis:8,title:'GRIEVANCE LOG',foot:()=>'HEARD > RAISED > WON'});if(i<0)return;sel=i;const r=rows[i];
+ if(r.id){const w=WOUND[r.id],s=r.r;await say(CH[r.id].name,w.sum+' '+(s==='WON'?'Won at the table.':s==='RAISED'?'Raised: the case file is open. Bring it to the table.':'Heard. Rest on a couch on a later floor to hear the whole story.'))}
+ else{const b=BOSSES[r.bi],k=G.lead&&G.lead[r.bi];await say('',`${b.name}: ${r.r==='WON'?'Agreement signed.':r.r==='OPEN'?'Waiting at the top of this part of the tower.':'Further up the tower.'}${k?' You led with '+INT[k].n+'.':''}`)}}}
+const LEADEND={WAGES:"At @'s table you led with wages. The first page anyone reads now is the pay scale.",SECURITY:"At @'s table you led with job security. Notice periods are in writing now, and the layoff roulette is over.",VOICE:"At @'s table you led with influence. The union sits in every reorganization meeting now. Before, not after.",EQUAL:"At @'s table you led with equality. Every promotion round is checked for patterns, and the report is read out loud.",OPEN:"At @'s table you led with transparency. The books are open, and anyone can read the numbers every quarter."};
+function migrate(s){if(!s.v||s.v<3){s.dues=s.dues||0;s.lead=s.lead||{};(s.mem||[]).concat(s.ben||[]).forEach(d=>{d.pk=d.pk||{}});s.v=3}return s}
 async function fieldMenu(){let sel=0;for(;;){
  const its=[
-  ['Status',async()=>{for(;;){const R=roster(),n=G.members.length;const j=await choose(R.map((m,k)=>({t:m.name,r:(k<n?'':'bench ')+'LV'+m.lv})),{x:100,y:14,w:150});if(j<0)break;const m=R[j],c=CH[m.id];await say(m.name,`${c.cls}. LV ${m.lv}. HP ${m.hp}/${m.mhp}  MP ${m.mp}/${m.mmp}. ATK ${m.atk} DEF ${m.def} MAG ${m.mag} SPD ${m.spd}. Strong arguments: ${c.str.join(', ')}. EXP to next: ${need(m.lv)-m.exp}.`)}}],
+  ['Status',async()=>{for(;;){const R=roster(),n=G.members.length;const j=await choose(R.map((m,k)=>({t:m.name,r:(k<n?'':'bench ')+'LV'+m.lv})),{x:100,y:14,w:150});if(j<0)break;const m=R[j],c=CH[m.id];await say(m.name,`${c.cls}. LV ${m.lv}. HP ${m.hp}/${m.mhp}  MP ${m.mp}/${m.mmp}. ATK ${m.atk} DEF ${m.def} MAG ${m.mag} SPD ${m.spd}. Strong arguments: ${c.str.join(', ')}. EXP to next: ${need(m.lv)-m.exp}.${Object.keys(m.pk||{}).length?' Focus: '+Object.entries(m.pk).map(([t,i])=>PERK[m.id][t][i].n).join(', ')+'.':''}`)}}],
   ['Party',partyMenu],
+  ['Union',unionPage],
+  ['Grievances',grievLog],
   [standLabel(),standTogether],
   ['Items',async()=>{const its=[['coffee','Lukewarm Coffee'],['donut','Stale Donut']];const k=await choose(its.map(([k,n])=>({t:n,r:'x'+G.inv[k],dis:G.inv[k]<=0})),{x:100,y:14,w:140});if(k<0)return;const R=roster();const j=await choose(R.map(m=>({t:m.name,r:m.hp+'/'+m.mhp})),{x:100,y:60,w:140});if(j<0)return;const m=R[j];
    if(its[k][0]==='coffee'){if(m.hp<=0||m.hp>=m.mhp){sfx('no');return}G.inv.coffee--;m.hp=Math.min(m.mhp,m.hp+Math.max(45,Math.round(m.mhp*.25)))}else{if(m.mp>=m.mmp){sfx('no');return}G.inv.donut--;m.mp=Math.min(m.mmp,m.mp+Math.max(14,Math.round(m.mmp*.25)))}sfx('heal')}],
@@ -1918,8 +1946,8 @@ const pl={x:1,y:1,rx:16,ry:16,dir:'down',mv:0,dx:0,dy:0};
 const G={rul:{},dec:{},ot:0,mode:'title',floor:0,flags:{},signed:{},boss:{},law:{},wound:{},inv:{coffee:3,donut:2},interns:0,wound:{},members:[],bench:[],map:null,fl:null,ents:[],steps:0,busy:false,t:0,vend:{},doors:{},rest:{f:0,x:15,y:11},B:null,TB:null,el:null,end:null};
 const UI={d:null,menus:[],cursor:null,ban:null,fx:[],wipe:null};
 const DV={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
-const mkM=(id,lv)=>{const m={id,name:CH[id].name,lv,exp:0,st:{},isP:true,w:32,h:44,x:0,y:0,flash:0};calc(m);m.hp=m.mhp;m.mp=m.mmp;return m};
-function calc(m){const c=CH[m.id],l=m.lv-1;m.mhp=Math.round(c.b.hp+c.g.hp*l);m.mmp=Math.round(c.b.mp+c.g.mp*l);['atk','def','mag','spd'].forEach(k=>m[k]=Math.round(c.b[k]+c.g[k]*l))}
+const mkM=(id,lv)=>{const m={id,name:CH[id].name,lv,exp:0,pk:{},st:{},isP:true,w:32,h:44,x:0,y:0,flash:0};calc(m);m.hp=m.mhp;m.mp=m.mmp;return m};
+function calc(m){const c=CH[m.id],l=m.lv-1;m.mhp=Math.round(c.b.hp+c.g.hp*l);m.mmp=Math.round(c.b.mp+c.g.mp*l);['atk','def','mag','spd'].forEach(k=>m[k]=Math.round(c.b[k]+c.g[k]*l));const pk=m.pk||{};for(const t in pk){const o=PERK[m.id]&&PERK[m.id][t]&&PERK[m.id][t][pk[t]];if(o)for(const k in o.m){if(k==='hp')m.mhp+=o.m[k];else if(k==='mp')m.mmp+=o.m[k];else m[k]+=o.m[k]}}}
 const LVMAX=20,need=l=>Math.round(8*l+2.6*l*l);
 
 /* ================= UI PRIMITIVES ================= */
@@ -1948,22 +1976,22 @@ const WKO={ghost:['henrietta','joan'],bootlicker:['ken','kaj'],spineless:['joan'
 const wkOf=k=>{if(WKO[k])return WKO[k];let h=0;for(const c of k)h=(h*31+c.charCodeAt(0))>>>0;return[WKI[h%6],WKI[(h+3)%6]]};
 const wkSeen=()=>G.wks||(G.wks={});
 function dmgE(a,t,m,pierce){let f=1,tag=null;if(!t.isP&&t.k&&a&&a.isP!==false&&a.id){const w=wkOf(t.k);if(w[0]===a.id){f=1.3;tag=['WEAK!','#ffd840']}else if(w[1]===a.id){f=.75;tag=['RESIST','#9aa4d8']}if(tag){wkSeen()[t.k]=1;if(f>1)sfx('weak')}}const d=applyDmg(t,(effAtk(a)*2*m-(pierce?effDef(t)*.25:effDef(t)))*f*rnd(.92,1.1));if(tag){pop(t,tag[0],tag[1])}return d}
-function gain(a){const B=G.B,was=B.meter;B.meter=Math.min(100,B.meter+(B.last&&B.last!==a?12:5));B.last=a;return was<100&&B.meter>=100}
+function gain(a){const B=G.B,was=B.meter;B.meter=Math.min(100,B.meter+(B.last&&B.last!==a?12:5));B.last=a;const cc=comboCost();return was<cc&&B.meter>=cc}
 const availCombos=()=>CB.filter(c=>c.who?c.who.every(id=>{const m=byId(id);return m&&m.hp>0}):aliveP().length>=3);
 async function skillMenu(a){const keys=CH[a.id].sk;const items=keys.map(k=>{const s=SK[k];const lock=a.lv<s.lv;return{t:lock?'???':s.n,r:lock?'':s.mp,col:PIL[s.p],dis:lock||a.mp<s.mp||(s.t==='fallen'&&!G.members.some(m=>m.hp<=0))}});
  const i=await choose(items,{x:4,y:22,w:150,vis:6,onMove:i=>{const s=SK[keys[i]];UI.ban=a.lv<s.lv?'Unlocks at LV '+s.lv:`${s.p}: ${s.d}`}});UI.ban=null;if(i<0)return false;
  const s=SK[keys[i]];let t;if(s.t==='enemy'){t=await pickTarget(aliveE());if(!t)return false}else if(s.t==='ally'){t=await pickTarget(aliveP());if(!t)return false}else if(s.t==='fallen'){t=await pickTarget(G.members.filter(m=>m.hp<=0));if(!t)return false}
  a.mp-=s.mp;a.cast=1;try{await s.f(a,t)}finally{a.cast=0}if(gain(a))await ban('SOLIDARITY MAX! Combo ready!',700);return true}
 async function comboMenu(a,cbs){const i=await choose(cbs.map(c=>({t:c.n,col:'#ffd840'})),{x:4,y:22,w:170,onMove:i=>{UI.ban=cbs[i].d||'Combo attack.'}});UI.ban=null;if(i<0)return false;const c=cbs[i];let t;if(c.t==='enemy'){t=await pickTarget(aliveE());if(!t)return false}
- G.B.meter=0;aliveP().forEach(m=>m.cast=1);try{await c.f(a,t)}finally{G.members.forEach(m=>m.cast=0)}G.B.last=null;return true}
-async function itemMenu(a){const its=[['coffee','Lukewarm Coffee','Heal 25% HP (min 45)'],['donut','Stale Donut','Restore 25% MP (min 14)']];const items=its.map(([k,n])=>({t:n,r:'x'+G.inv[k],dis:G.inv[k]<=0}));
- const i=await choose(items,{x:4,y:22,w:170,onMove:i=>{UI.ban=its[i][2]}});UI.ban=null;if(i<0)return false;const t=await pickTarget(aliveP());if(!t)return false;
- const k=its[i][0];G.inv[k]--;FXQ={k:'i_'+k,a,t};await ban(`${a.name} gives ${t.name} a ${its[i][1]}.`);if(k==='coffee')heal(t,Math.max(45,Math.round(t.mhp*.25)));else{const q=Math.max(14,Math.round(t.mmp*.25));t.mp=Math.min(t.mmp,t.mp+q);pop(t,'+'+q+'MP','#7ab8ff');sfx('heal')}await sleep(400);gain(a);return true}
-async function organize(a,t){FXQ={k:'org',a,t};await ban(`${a.name} pitches the union to ${t.name}...`);if(Math.random()<.8){t.gone=1;if(G.interns<7)G.interns++;sfx('sign');await ban(`${t.name} is convinced and joins the union! (${cards()}/${CT})`,900)}else await ban(`${t.name} is too scared to join yet.`);gain(a)}
+ G.B.meter=Math.max(0,G.B.meter-comboCost());aliveP().forEach(m=>m.cast=1);try{await c.f(a,t)}finally{G.members.forEach(m=>m.cast=0)}G.B.last=null;return true}
+async function itemMenu(a){const its=[['coffee','Lukewarm Coffee','Heal 25% HP (min 45)'],['donut','Stale Donut','Restore 25% MP (min 14)'],['ibu','Ibuprofen','Cure despair and slow'],['agenda','Meeting Agenda','Leave the fight (not bosses)']];const items=its.map(([k,n])=>({t:n,r:'x'+(G.inv[k]||0),dis:!(G.inv[k]>0)}));
+ const i=await choose(items,{x:4,y:22,w:170,onMove:i=>{UI.ban=its[i][2]}});UI.ban=null;if(i<0)return false;if(its[i][0]==='agenda'){if(G.B.boss){await ban('This meeting cannot be adjourned.',800);return false}G.inv.agenda--;await ban(`${a.name} reads out the agenda. Item one: adjourn. Everyone leaves.`,1100);G.B.fled=1;return true}const t=await pickTarget(aliveP());if(!t)return false;
+ const k=its[i][0];if(k==='ibu'){G.inv.ibu--;t.st.demor=0;t.st.slow=0;pop(t,'CURED','#7dff9a');sfx('heal');await ban(`${a.name} gives ${t.name} an Ibuprofen.`,700);gain(a);return true}G.inv[k]--;FXQ={k:'i_'+k,a,t};await ban(`${a.name} gives ${t.name} a ${its[i][1]}.`);if(k==='coffee')heal(t,Math.max(45,Math.round(t.mhp*.25)));else{const q=Math.max(14,Math.round(t.mmp*.25));t.mp=Math.min(t.mmp,t.mp+q);pop(t,'+'+q+'MP','#7ab8ff');sfx('heal')}await sleep(400);gain(a);return true}
+async function organize(a,t){FXQ={k:'org',a,t};await ban(`${a.name} pitches the union to ${t.name}...`);if(Math.random()<.8){t.gone=1;if(G.interns<7)G.interns++;G.dues=(G.dues||0)+3;sfx('sign');await ban(`${t.name} is convinced and joins the union! (${cards()}/${CT})`,900)}else await ban(`${t.name} is too scared to join yet.`);gain(a)}
 async function doAttack(a,t){const B=G.B;await ban(`${a.name}: ${CH[a.id].an}!`,450);B.anim={m:a,t,s:G.t,k:CH[a.id].look.wp};await sleep(330);dmgE(a,t,1);sfx(WSFX[CH[a.id].look.wp]||'hit');B.shake=9;await sleep(480);B.anim=null;gain(a)}
 async function partyTurn(a){const B=G.B;B.act=a;UI.ban=null;FXQ=null;
  for(;;){const al=aliveE(),cbs=availCombos();
-  const c=await choose([{t:'Attack'},{t:'Skill'},{t:'Combo',dis:B.meter<100||!cbs.length,col:'#ffd840'},{t:'Organize',dis:decOn('gag')},{t:'Item',dis:decOn('famine')},{t:'Swap',dis:!G.bench.some(m=>m.hp>0)||decOn('chains')},{t:'Flee',dis:!!B.boss||decOn('chains')},{t:'Cite',dis:!!B.cited,col:'#9fe8ff'}],{x:0,y:160,w:84,vis:8,cancel:false,h:92,onMove:i=>{UI.ban=['Hit one foe with a plain attack.','Spend MP on a character skill.','Needs full SOLIDARITY: team attack.','Pitch the union to a foe that listens.','Use coffee (HP) or donut (MP).','Swap with a benched teammate.','Run away (not from bosses).','Cite a labour-law paragraph. A right answer puts every foe on strike for a turn.'][i]}});UI.ban=null;
+  const c=await choose([{t:'Attack'},{t:'Skill'},{t:'Combo',dis:B.meter<comboCost()||!cbs.length,col:'#ffd840'},{t:'Organize',dis:decOn('gag')},{t:'Item',dis:decOn('famine')},{t:'Swap',dis:!G.bench.some(m=>m.hp>0)||decOn('chains')},{t:'Flee',dis:!!B.boss||decOn('chains')},{t:'Cite',dis:!!B.cited,col:'#9fe8ff'}],{x:0,y:160,w:84,vis:8,cancel:false,h:92,onMove:i=>{UI.ban=['Hit one foe with a plain attack.','Spend MP on a character skill.','Needs full SOLIDARITY: team attack.','Pitch the union to a foe that listens.','Use coffee (HP) or donut (MP).','Swap with a benched teammate.','Run away (not from bosses).','Cite a labour-law paragraph. A right answer puts every foe on strike for a turn.'][i]}});UI.ban=null;
   if(c===0){const t=await pickTarget(al);if(!t)continue;await doAttack(a,t);break}
   if(c===1){if(await skillMenu(a))break;continue}
   if(c===2){if(await comboMenu(a,cbs))break;continue}
@@ -2037,6 +2065,7 @@ async function battle(kinds,fl){
  await ban(kinds.length>1?'Crunch creatures attack!':`A ${B.en[0].name} blocks the way!`,800);
  {const hn=Object.keys(G.signed).filter(k=>k.startsWith(G.floor+':')).length;if(hn>0){sfx('heal');await ban(`${hn} signed co-worker${hn>1?'s':''} on this floor cheer you on!`,900);for(const m of aliveP()){m.st.shield=Math.max(m.st.shield||0,2);if(hn>=3)heal(m,Math.round(m.mhp*.1))}if(hn>=3)B.meter=Math.min(100,B.meter+20)}}
  await ruleBattleStart(B);
+ if(tierOn(2)){B.meter=Math.min(100,B.meter+10);await ban('STRIKE FUND: SOLIDARITY +10.',600)}
  let res=null;
  while(!res){const q=B.q=[...aliveP(),...aliveE()].sort((a,b)=>(effSpd(b)+rnd(0,3))-(effSpd(a)+rnd(0,3)));
   while(q.length&&!res){const a=q.shift();if(a.hp<=0||a.gone)continue;
@@ -2046,13 +2075,13 @@ async function battle(kinds,fl){
    if(B.fled)res='flee';else if(!aliveE().length)res='win';else if(!aliveP().length){if(!await reinforce())res='lose'}}}
  UI.ban=null;
  if(res==='lose')return 'lose';
- if(res==='win'){B.over='win';sfx('lvl');const ex=B.en.reduce((s,e)=>s+(e.gone?Math.round(e.exp/2):e.exp),0);await ban(`VICTORY! Gained ${ex} EXP.`,1000);
-  for(const m of roster()){if(m.hp<=0){m.hp=Math.max(1,Math.round(m.mhp*.25));continue}m.exp+=G.bench.includes(m)?Math.round(ex*.5):ex;const ms=[];const oh=m.mhp;
+ if(res==='win'){B.over='win';sfx('lvl');const ex=B.en.reduce((s,e)=>s+(e.gone?Math.round(e.exp/2):e.exp),0);const du=B.en.length*(3+Math.floor(G.floor/3));G.dues=(G.dues||0)+du;await ban(`VICTORY! ${ex} EXP and ${du} union dues.`,1000);const avgLv=G.members.reduce((s,m)=>s+m.lv,0)/Math.max(1,G.members.length);
+  for(const m of roster()){if(m.hp<=0){m.hp=Math.max(1,Math.round(m.mhp*.25));continue}m.exp+=Math.round(ex*(G.bench.includes(m)?.75:1)*(m.lv<avgLv-2?1.5:1));const ms=[];const oh=m.mhp;
    while(m.exp>=need(m.lv)&&m.lv<LVMAX){m.exp-=need(m.lv);m.lv++;const ph=m.mhp,pm=m.mmp;calc(m);m.hp+=m.mhp-ph;m.mp+=m.mmp-pm;ms.push(`${m.name} reached LV ${m.lv}!`);for(const k of CH[m.id].sk)if(SK[k].lv===m.lv&&m.lv>1)ms.push(k==='root'?`${m.name}: GENIUS MODE! Root Access!`:`${m.name} learned ${SK[k].n}!`)}
    for(const s of ms){sfx('lvl');await ban(s,900)}}
-  if(Math.random()<.35){G.inv.coffee++;await ban('Found a Lukewarm Coffee!',700)}}
+  if(Math.random()<.35){G.inv.coffee++;await ban('Found a Lukewarm Coffee!',700)}if(tierOn(1)){for(const m of roster())if(m.hp>0)m.hp=Math.min(m.mhp,m.hp+Math.round(m.mhp*.1));await ban('BREAK ROOM: the party recovers 10% HP.',700)}}
  UI.ban=null;UI.fx.length=0;
- await wipe(1);UI.ban=null;G.B=null;G.mode='field';music(floorMus(G.floor));await wipe(-1);UI.wipe=null;return res}
+ await wipe(1);UI.ban=null;G.B=null;G.mode='field';music(floorMus(G.floor));await wipe(-1);UI.wipe=null;if(res==='win'){await perkCheck();await tierCheck();if(!G.flags.tipcouch&&roster().some(m=>m.hp>0&&m.hp<m.mhp*.6)){G.flags.tipcouch=1;const hn=roster().some(m=>m.id==='henrietta');await say(hn?'Henrietta':'',hn?'Sit down on a couch before the next one. Resting is the law too.':'TIP: Rest on a couch to heal the party before the next fight.')}}return res}
 
 /* ================= NEGOTIATION ================= */
 async function negotiate(bi){
@@ -2061,8 +2090,9 @@ async function negotiate(bi){
  if(bd.lawIntro)bd.lawIntro.forEach(lawUnlock);
  await talk(bd.intro);await confront(bi,TB);
  await say('','BOSS BATTLE! Attacks are useless here. Win at the TABLE: press each INTEREST until it is agreed. Keep SOLIDARITY up!');
+ {const c0=bd.ph[0].ints.filter(i=>!i.hid);const li=await choose(c0.map(i=>({t:INT[i.k].n,ic:[INT[i.k].ic]})),{x:0,y:160,w:116,h:92,title:'Lead with?',cancel:false});G.lead=G.lead||{};G.lead[bi]=c0[li].k;await say('',`You open with ${INT[c0[li].k].n}. It starts one step ahead, and the whole tower will remember what you put first.`)}
  for(let pi=0;pi<bd.ph.length;pi++){const ph=bd.ph[pi];TB.ph=pi;if(ph.pre)await talk(ph.pre);
-  const reset=()=>{TB.ints=ph.ints.map(i=>({k:i.k,hid:!!i.hid,p:0,blk:0,pulse:0}));TB.need=ph.need};reset();TB.msg=`${ph.name}: Agree on every interest.`;
+  const reset=()=>{TB.ints=ph.ints.map(i=>({k:i.k,hid:!!i.hid,p:pi===0&&G.lead&&G.lead[bi]===i.k?1:0,blk:0,pulse:0}));TB.need=ph.need};reset();TB.msg=`${ph.name}: Agree on every interest.`;
   for(;;){
    if(TB.ints.every(i=>i.p>=TB.need))break;
    if(TB.ints.filter(i=>!i.hid).every(i=>i.p>=TB.need)){const h=TB.ints.filter(i=>i.hid);if(h.length){h.forEach(i=>{i.hid=false;i.pulse=30});sfx('sign');if(bd.mood){TB.gs=(TB.gs||0)+1;TB.gt=G.t;await sleep(TB.gs>1?1700:1200)}await say(bd.name,ph.slip||'...There is one more thing that bothers me.');continue}}
@@ -2633,7 +2663,7 @@ function drawBattle0(){const B=G.B;bgBattle(G.floor);const tg=[];
  [...G.members].sort((a,b)=>a.y-b.y).forEach(m=>{const an=B.anim&&B.anim.m===m?B.anim:null,ox=an?aOx(an):(B.act===m?-12:0)+lgx(m),oy=an?aOy(an):0;if(m.flash>0&&(m.flash&2))return;ctx.globalAlpha=m.hp>0?1:.35;person(m.x+ox,m.y+oy,2,CH[m.id].look,'left',0,bPose(m));ctx.globalAlpha=1});
  drawWpFx(B);drawCite(B);drawFx();retro();tg.forEach(([a,x,y])=>T(a,x,y,'#ffd840',null));B.en.forEach(e=>{if(e.k==='intern'&&e.hp>0&&!e.gone)T('INTERN',e.x-2,e.y+46,'#9fe',null)});
  if(UI.cursor){const b=UI.cursor;const cx=b.x+b.w/2;R(cx-3,b.y-8+((G.t>>3)&1)*2,7,2,'#ffd840');R(cx-1,b.y-6+((G.t>>3)&1)*2,3,2,'#ffd840');const s=b.name+(b.isP?'':' '+b.hp+'/'+b.mhp);TC(s,cx,b.y+b.h+(b.k==='intern'?22:12),'#fff');if(!b.isP&&b.k&&wkSeen()[b.k]){const w=wkOf(b.k),s2='Weak: '+CH[w[0]].name+'  Resists: '+CH[w[1]].name;TC(s2,cx,b.y+b.h+(b.k==='intern'?32:22)+(OPT.lg?6:0),'#ffd840')}}
- if(OPT.lg)hudL(B);else{panel(0,160,84,92);panel(84,160,W-84,92);T('SOLIDARITY',94,166,'#ff9a9a');R(176,167,W-190,6,'#000');R(177,168,W-192,4,'#401018');R(177,168,(W-192)*G.B.meter/100,4,G.B.meter>=100&&((G.t>>3)&1)?'#fff':'#ff5a5a');
+ if(OPT.lg)hudL(B);else{panel(0,160,84,92);panel(84,160,W-84,92);T('SOLIDARITY',94,166,'#ff9a9a');R(176,167,W-190,6,'#000');R(177,168,W-192,4,'#401018');R(177,168,(W-192)*G.B.meter/100,4,G.B.meter>=comboCost()&&((G.t>>3)&1)?'#fff':'#ff5a5a');
  G.members.forEach((m,i)=>{const y=181+i*14,act=B.act===m;T(m.name,94,y,act?'#ffd840':(m.hp>0?'#fff':'#ff7a7a'));T(`${m.hp}/${m.mhp}`,250,y,'#cfe');T('MP',330,y,'#6a8ab8');T(`${m.mp}`,348,y,'#8ab8ff');R(94,y+9,230,2,'#000');R(94,y+9,230*m.hp/m.mhp,2,'#6fe86f');
   let sx=388;for(const [k,c,L] of [['shield','#5ac8ff','S'],['buff','#ffb347','B'],['demor','#b07aff','D'],['taunt','#ff6060','T'],['slow','#aaa','Z']])if(m.st[k]>0){T(L,sx,y,c);sx+=7}})}}
 function drawVault(){const t=G.t;
@@ -2808,12 +2838,12 @@ function afterStep(){markSeen();srStep();if(G.floor>=NF-1)return;const jn=G.ents
 async function run(fn){if(G.busy)return;G.busy=true;try{await fn()}catch(e){console.error(e)}finally{G.busy=false;for(const k in q)q[k]=0}}
 async function encounter(){const f=G.floor,D=dunOf(f),lo=f%10,n=ri(1,(D===0&&lo<3)?2:3),arr=ENC[D],mx=Math.min(arr.length-1,2+((lo*arr.length/10)|0)),kinds=Array.from({length:n},()=>arr[ri(0,mx)]);const r=await battle(kinds,f);if(r==='lose')await burnout();else if(r==='win')await otAdd(f)}
 async function burnout(){await wipe(1);G.B=null;G.mode='black';UI.ban=null;await say('','BURNOUT. The crunch claimed you... but your coworkers carry you back to the nearest couch.');roster().forEach(m=>{m.hp=m.mhp;m.mp=m.mmp;m.st={}});{const c0=G.inv.coffee,d0=G.inv.donut;G.inv.coffee=c0>>1;G.inv.donut=d0>>1;if(c0+d0>0)await say('','You lost '+(c0-G.inv.coffee)+' coffee and '+(d0-G.inv.donut)+' donut in the scramble.')}const r=G.rest;loadFloor(r.f,{x:r.x,y:r.y,dir:'up'});G.mode='field';await wipe(-1);UI.wipe=null}
-async function interact(){const [dx,dy]=DV[pl.dir],tx=pl.x+dx,ty=pl.y+dy;const e=G.ents.find(e=>!e.gone&&e.x===tx&&e.y===ty);if(e)return talkEnt(e);
+async function interact(){const [dx,dy]=DV[pl.dir],tx=pl.x+dx,ty=pl.y+dy;const e=G.ents.find(e=>!e.gone&&e.x===tx&&e.y===ty);if(e){const r=await talkEnt(e);await tierCheck();return r}
  const c=G.map.t[ty]&&G.map.t[ty][tx],D=dunOf(G.floor);
  if(c&&!'VCLED'.includes(c)){const px=PTXT[D][c];if(px){await say('',Array.isArray(px)?pick(px):px)}await searchSpot(c,tx,ty);if(c==='w'&&!G.flags['wc'+G.floor]){G.flags['wc'+G.floor]=1;await lawTip(['aml3_2','aml1_1','aml3_3','aml6_2','aml6_6a','aml6_7','osa'],'Notice board')}if(c==='w')waterBreak();return}
  switch(c){
  case'V':if(G.vend[G.floor]){await say('','The machine is out of snacks. You already cleaned it out.')}else{G.vend[G.floor]=1;G.inv.coffee+=2;G.inv.donut+=1;sfx('heal');await say('',VTXT[D])}break;
- case'C':{const i=await ask('',`Rest on the ${['couch','leather couch','bone bench','straw cot'][D]}? (Heals the party and saves.)`,['Rest','Not now']);if(i===0){await wipe(1);roster().forEach(m=>{m.hp=m.mhp;m.mp=m.mmp;m.st={}});G.rest={f:G.floor,x:G.fl.rest.x,y:G.fl.rest.y};if(G.ot){G.ot=0;toast('OVERTIME reset (ATL 13 §: daily rest)')}save();sfx('heal');await sleep(300);await wipe(-1);UI.wipe=null;await say('','You feel almost human. Progress saved.');await lawTip(['atl13','atl14','atl15','sem4','sem12'],lawWho());await woundScene(0)}break}
+ case'C':{const i=await ask('',`Rest on the ${['couch','leather couch','bone bench','straw cot'][D]}? (Heals the party and saves.) The union rep is here too.`,['Rest','Union rep','Not now']);if(i===1){await shopMenu();break}if(i===0){await wipe(1);roster().forEach(m=>{m.hp=m.mhp;m.mp=m.mmp;m.st={}});G.rest={f:G.floor,x:G.fl.rest.x,y:G.fl.rest.y};if(G.ot){G.ot=0;toast('OVERTIME reset (ATL 13 §: daily rest)')}save();sfx('heal');await sleep(300);await wipe(-1);UI.wipe=null;await say('','You feel almost human. Progress saved.');await perkCheck();await tierCheck();await lawTip(['atl13','atl14','atl15','sem4','sem12'],lawWho());await woundScene(0)}break}
  case'L':if(roster().some(m=>m.id==='henrietta')){await say('Henrietta','Master Key, meet lock.');sfx('ok');G.map.t[ty][tx]='.';(G.doors[G.floor]=G.doors[G.floor]||[]).push([tx,ty]);await say('','CLICK. The server room door opens.')}else await say('','Locked. You need someone with a Master Key.');break;
  case'E':await useElevator();break;
  case'D':if(G.floor===0)await say('','The lobby doors are locked from the outside. Nobody leaves until the contract is signed.');else if(G.floor===NF-1)await say('','Alis has locked the elevator. Nobody leaves until the deal is done.');else await rideTo(G.floor-1,'down');break}}
@@ -2873,7 +2903,7 @@ async function talkEnt(e){
  const key=G.floor+':'+e.id;
  if(G.signed[key]){await say(e.n,pick(['Solidarity!','I am with you. Stay strong.','Go get them. We have your back.']));return}
  await say(e.n,e.l);
- if(G.floor>=2&&parseInt(hs(key+'f'),36)%6===0&&G.inv.coffee>0){const fi=await ask(e.n,'Honestly? A coffee would settle it. Mine went cold hours ago.',['Give a coffee','Make my case']);if(fi===0){G.inv.coffee--;G.signed[key]=1;sfx('sign');await say(e.n,'Aaah. Thank you. That is the nicest thing anyone did here all year. I am in.');toast(`NEW MEMBER ${cards()}/${CT}`);return}}
+ if(G.floor>=2&&parseInt(hs(key+'f'),36)%6===0&&G.inv.coffee>0){const fi=await ask(e.n,'Honestly? A coffee would settle it. Mine went cold hours ago.',['Give a coffee','Make my case']);if(fi===0){G.inv.coffee--;G.signed[key]=1;G.dues=(G.dues||0)+5;sfx('sign');await say(e.n,'Aaah. Thank you. That is the nicest thing anyone did here all year. I am in.');toast(`NEW MEMBER ${cards()}/${CT}`);return}}
  let miss=0;const ARGCL={WAGES:'I keep checking my bank balance before the rent comes out.',SECURITY:'Every Friday I wonder if my badge still works on Monday.',VOICE:'Nobody ever asks us. We just get an email about it afterwards.',EQUAL:'Some of us get a different tone in meetings. Same work, different treatment.',OPEN:'We hear about decisions last, if at all. Like the weather.'};
  const scep=G.floor>=3&&parseInt(hs(key),36)%4===0;let cur=e.k,k2=null;if(scep){const ks=Object.keys(INT).filter(x=>x!==e.k);k2=ks[parseInt(hs(key+'b'),36)%ks.length];await say('','(They look sceptical. One argument may not be enough.)')}
  for(;;){
@@ -2886,7 +2916,7 @@ async function talkEnt(e){
   const k=opts[i];
   await say(sp.name,argOf(sp,k));
   if(k===cur&&k2&&cur===e.k){await say(e.n,'Hm. That is a good point. But it is not the whole story.');cur=k2;miss=0;await say(e.n,ARGCL[k2]);continue}
-  if(k===cur){G.signed[key]=1;sfx('sign');await say(e.n,pick(['You know what? That is exactly it. I am in. Sign me up as a member.','Nobody has put it like that before. Count me in.','That is a fair argument. I want to be a member.']));toast(`NEW MEMBER ${cards()}/${CT}`);await say(sp.name,pick(CLOSE[sp.id]));{const le=lawPick(cur,dunOf(G.floor));await say(e.n,'One more thing. Show me where the law says that. Which paragraph?');const os=lawOpts(le,3);const j=await ask('Cite the law',`${sp.name}: which paragraph backs this up?`,[...os.map(lawLabel),'I will look it up later']);
+  if(k===cur){G.signed[key]=1;G.dues=(G.dues||0)+5;sfx('sign');await say(e.n,pick(['You know what? That is exactly it. I am in. Sign me up as a member.','Nobody has put it like that before. Count me in.','That is a fair argument. I want to be a member.']));toast(`NEW MEMBER ${cards()}/${CT}`);await say(sp.name,pick(CLOSE[sp.id]));{const le=lawPick(cur,dunOf(G.floor));await say(e.n,'One more thing. Show me where the law says that. Which paragraph?');const os=lawOpts(le,3);const j=await ask('Cite the law',`${sp.name}: which paragraph backs this up?`,[...os.map(lawLabel),'I will look it up later']);
    if(j<3){lawUnlock(le.id);if(os[j]===le){G.inv.coffee++;G.inv.donut++;await say(sp.name,`${le.ref}: ${le.t}. ${le.x}`);await say(e.n,'Right there in the law. Impressive. Take a coffee and a donut.');if(woundOwn(sp,le))await ownLaw(sp,le)}else await say(lawWho(),`Close, but no. It is ${le.ref}: ${le.t}. ${le.x}`)}}return}
   await say(e.n,INT[k].wrong);miss++;if(miss===1)await say(e.n,ARGCL[cur]);
   if(miss>=2)await say(e.n,`Let me put it plainly: what I need is ${INT[cur].hint}.`)}}
@@ -2907,6 +2937,7 @@ async function ending(){
   if(has('marl'))L.push(['Marl','Thirty-one years in Accounts. Today somebody asked me to read the numbers. I did.'],['Marl','Somebody called me back.']);
   if(has('clementine'))L.push(['Clem','Stand-up is cancelled. Forever.']);
   if(has('joan'))L.push(['Joan','Redistribute v1.0 ships Monday.']);
+  for(let bi=0;bi<BOSSES.length;bi++){const k=G.lead&&G.lead[bi];if(k&&LEADEND[k])L.push(['',LEADEND[k].replace('@',BOSSES[bi].name)])}
   L.push(['','Kaj turns his phone face down on the table. Nobody pings.'],['Kaj','Let us go home.']);await talk(L)}
  await wipe(1);G.mode='end';G.end={t:0,done:0};music('end');await wipe(-1);UI.wipe=null;
  while(!G.end.done)await sleep(200);
@@ -2916,11 +2947,11 @@ async function ending(){
 
 /* ================= SAVE / START ================= */
 const SAVEK='crunchtime-last-overtime-v2';
-function save(){try{localStorage.setItem(SAVEK,JSON.stringify({law:G.law,wound:G.wound,rest:G.rest,signed:G.signed,boss:G.boss,flags:G.flags,inv:G.inv,interns:G.interns,vend:G.vend,doors:G.doors,ot:G.ot,rul:G.rul,dec:G.dec,mem:G.members.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp})),ben:G.bench.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp}))}));return true}catch(e){return false}}
+function save(){try{localStorage.setItem(SAVEK,JSON.stringify({v:3,dues:G.dues||0,lead:G.lead||{},law:G.law,wound:G.wound,rest:G.rest,signed:G.signed,boss:G.boss,flags:G.flags,inv:G.inv,interns:G.interns,vend:G.vend,doors:G.doors,ot:G.ot,rul:G.rul,dec:G.dec,mem:G.members.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{}})),ben:G.bench.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{}}))}));return true}catch(e){return false}}
 function hasSave(){try{return!!localStorage.getItem(SAVEK)}catch(e){return false}}
-function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVEK));Object.assign(G,{law:s.law||{},wound:s.wound||{},signed:s.signed,boss:s.boss,flags:s.flags,inv:s.inv,interns:s.interns,vend:s.vend,doors:s.doors,rest:s.rest,rul:s.rul||{},dec:s.dec||{},ot:s.ot||0});const lm=d=>{const m=mkM(d.id,d.lv);m.exp=d.exp;m.hp=d.hp;m.mp=d.mp;return m};G.members=s.mem.map(lm);G.bench=(s.ben||[]).map(lm);G.bench=G.members.splice(PARTY_MAX).concat(G.bench);return true}catch(e){return false}}
+function loadSave(){try{const s=migrate(JSON.parse(localStorage.getItem(SAVEK)));Object.assign(G,{dues:s.dues,lead:s.lead,law:s.law||{},wound:s.wound||{},signed:s.signed,boss:s.boss,flags:s.flags,inv:s.inv,interns:s.interns,vend:s.vend,doors:s.doors,rest:s.rest,rul:s.rul||{},dec:s.dec||{},ot:s.ot||0});const lm=d=>{const m=mkM(d.id,d.lv);m.pk=d.pk||{};calc(m);m.exp=d.exp;m.hp=d.hp;m.mp=d.mp;return m};G.members=s.mem.map(lm);G.bench=(s.ben||[]).map(lm);G.bench=G.members.splice(PARTY_MAX).concat(G.bench);return true}catch(e){return false}}
 async function newGame(){G.busy=true;
- Object.assign(G,{rul:{},dec:{},ot:0,flags:{},signed:{},boss:{},law:{},wound:{},inv:{coffee:3,donut:2},interns:0,vend:{},doors:{},rest:{f:0,x:0,y:0},members:[mkM('kaj',1)],bench:[]});const F0=FLOORS[0];F0.build();G.rest={f:0,x:F0.rest.x,y:F0.rest.y};
+ Object.assign(G,{rul:{},dec:{},ot:0,flags:{},signed:{},boss:{},law:{},wound:{},inv:{coffee:3,donut:2},interns:0,dues:0,lead:{},vend:{},doors:{},rest:{f:0,x:0,y:0},members:[mkM('kaj',1)],bench:[]});const F0=FLOORS[0];F0.build();G.rest={f:0,x:F0.rest.x,y:F0.rest.y};
  await wipe(1);G.mode='field';loadFloor(0,{x:F0.dx,y:F0.mh-4,dir:'down'});const hen={id:'hen0',n:'Henrietta',x:F0.dx,y:F0.mh-2,look:CH.henrietta.look,dir:'up'};G.ents.push(hen);await wipe(-1);UI.wipe=null;G.busy=false;
  await run(async()=>{await talk([['','Neddiscorp Exploitations Tower, 1993. Forty floors of fluorescent light, stale coffee and unpaid overtime. From the Cubicle Farm up to the Corporate Kingdom.'],['','CEO Alis Neddis has announced a "voluntary" 80-hour crunch. Again.'],['Kaj','Another weekend gone. My last raise was a pizza party.'],['Kaj','Somebody should organize this place. A union. A real one, with a collective bargaining agreement.'],['Kaj','...Somebody. Right. Nobody else is going to do it.'],['Henrietta','Sorry to interrupt. I emptied the bins and noticed your build was failing on line 12. I fixed it.'],['Kaj','You fixed the build? With a mop?'],['Henrietta','I wrote the compiler they use upstairs. Nobody ever asks the janitor anything.'],['Kaj','I am forming a union. Want in?'],['Henrietta','I have waited ten years for someone to ask.']]);
   hen.gone=1;G.members.push(mkM('henrietta',1));sfx('lvl');await talk([['','Henrietta joined the party! GOAL: convince a majority of your coworkers to become union members, then win the Collective Bargaining Agreement.'],['','Talk to coworkers with A/Z and argue the case that fits what bothers them: fair wages, job security, worker influence, equal opportunity or employer transparency. Rest on couches to save. Press B/X for the menu. Bosses are won by NEGOTIATING. Allies are scattered through the tower. Look for the cyan speech bubble.']]);await lawScene('crunch')})}
@@ -2941,7 +2972,7 @@ function tick(){G.t++;srTick();ambTick();UI.fx=UI.fx.filter(f=>++f.t<40);UI.fx.f
  if(G.mode==='field'&&!G.busy)fieldUpdate();else if(G.busy)for(const k in q)q[k]=0}
 let last=0,acc=0;
 function frame(ts){const dt=Math.min(.1,(ts-last)/1000||0);last=ts;acc+=dt;while(acc>=1/60){tick();acc-=1/60}draw();requestAnimationFrame(frame)}
-window.__dbg={G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,citeLaw,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
+window.__dbg={perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,citeLaw,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
 boot();requestAnimationFrame(frame);
 })();
 </script>
