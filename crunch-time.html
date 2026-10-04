@@ -82,7 +82,7 @@ function fit(){const t=document.body.classList.contains('touch'),ph=t?150:0,d=wi
 window.addEventListener('resize',fit);fit();
 
 /* ================= AUDIO ================= */
-let MM=null,MF=null,AUDCH='f';const VOLS=[0,.25,.5,.75,1];function applyVol(){if(MM)MM.gain.value=VOLS[OPT.vm];if(MF)MF.gain.value=VOLS[OPT.vf]}
+let MM=null,MF=null,AUDCH='f';const VOLS=[0,.25,.5,.75,1];function applyVol(){if(MM){if(AC)MM.gain.cancelScheduledValues(AC.currentTime);MM.gain.value=VOLS[OPT.vm]}if(MF)MF.gain.value=VOLS[OPT.vf]}
 let AC=null,MG=null,muted=false,trk='none',stp=0,nxt=0;
 function aInit(){if(AC)return;try{AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=muted?0:.22;MG.connect(AC.destination);MM=AC.createGain();MF=AC.createGain();MM.connect(MG);MF.connect(MG);applyVol();nxt=AC.currentTime+.1;setInterval(()=>{AUDCH='m';try{sched()}finally{AUDCH='f'}},40)}catch(e){AC=null}}
 function toggleMute(){muted=!muted;if(MG)MG.gain.value=muted?0:.22}
@@ -90,27 +90,209 @@ function tone(f,d,ty,v,t,sl){if(!AC)return;t=t||0;const s=AC.currentTime+t,o=AC.
 function noise(d,v,t){if(!AC)return;t=t||0;const s=AC.currentTime+t,len=Math.floor(AC.sampleRate*d),b=AC.createBuffer(1,len,AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<len;i++)a[i]=Math.random()*2-1;const n=AC.createBufferSource(),g=AC.createGain();n.buffer=b;g.gain.setValueAtTime(v||.1,s);g.gain.exponentialRampToValueAtTime(.0008,s+d);n.connect(g);g.connect(AUDCH==='m'?MM:MF);n.start(s)}
 const mf=m=>440*Math.pow(2,(m-69)/12);
 const TR={
-office:{bpm:92,drums:1,bass:[45,0,0,45,0,0,45,0,41,0,0,41,0,0,41,0,43,0,0,43,0,0,43,0,40,0,0,40,0,43,0,0],lead:[69,0,72,0,71,0,69,0,65,0,0,0,69,0,72,0,67,0,71,0,74,0,72,0,71,0,0,0,0,0,0,0],arp:[57,60,64,60,57,60,64,60,53,57,60,57,53,57,60,57,55,59,62,59,55,59,62,59,52,56,59,56,52,56,59,56]},
-battle:{bpm:150,drums:1,full:1,bass:[38,38,0,38,38,0,38,0,38,38,0,38,41,0,43,0,34,34,0,34,34,0,34,0,36,36,0,36,36,0,38,38],lead:[74,0,77,0,81,0,77,0,74,0,77,0,81,0,84,0,70,0,74,0,77,0,74,0,72,0,76,0,79,0,76,0],arp:[62,65,69,65,62,65,69,65,62,65,69,65,62,65,69,74,58,62,65,62,58,62,65,62,60,64,67,64,60,64,67,64]},
-table:{bpm:84,full:1,bass:[40,0,0,0,40,0,0,0,36,0,0,0,36,0,0,0,38,0,0,0,38,0,0,0,35,0,0,0,35,0,0,0],lead:[64,0,0,67,0,0,71,0,0,69,0,0,67,0,0,0,62,0,0,65,0,0,69,0,0,67,0,0,64,0,0,0],arp:[52,55,59,55,52,55,59,55,48,52,55,52,48,52,55,52,50,53,57,53,50,53,57,53,47,51,54,51,47,51,54,51]},
-intro:{bpm:56,full:1,bass:[33,0,0,0,0,0,0,0,33,0,0,0,0,0,0,0,29,0,0,0,0,0,0,0,28,0,0,0,0,0,0,0],lead:[69,0,0,0,0,0,0,0,0,0,0,0,68,0,0,0,65,0,0,0,0,0,0,0,64,0,0,0,0,0,0,0],arp:[57,60,64,60,57,60,64,60,57,60,64,60,57,60,64,60,53,57,60,57,53,57,60,57,52,56,59,56,52,56,59,56]},
-citadel:{bpm:122,drums:1,bass:[45,0,45,0,45,0,45,0,43,0,43,0,43,0,43,0,41,0,41,0,41,0,41,0,43,0,43,0,40,0,43,0],lead:[69,72,76,72,69,72,76,72,67,71,74,71,67,71,74,71,65,69,72,69,65,69,72,69,67,71,74,71,64,67,71,67],arp:[57,60,64,60,57,60,64,60,55,59,62,59,55,59,62,59,53,57,60,57,53,57,60,57,55,59,62,59,52,55,59,55]},
-hell:{bpm:70,full:1,bass:[36,0,0,0,0,0,0,0,36,0,0,0,37,0,0,0,35,0,0,0,0,0,0,0,35,0,0,0,36,0,0,0],lead:[60,0,0,0,63,0,0,0,62,0,0,0,61,0,0,0,59,0,0,0,62,0,0,0,60,0,0,0,0,0,0,0],arp:[48,51,54,51,48,51,54,51,47,50,53,50,47,50,53,50,48,51,54,51,48,51,54,51,49,52,55,52,48,51,54,51]},
-kingdom:{bpm:80,drums:1,bass:[38,0,45,0,38,0,45,0,36,0,43,0,36,0,43,0,41,0,48,0,41,0,48,0,38,0,45,0,38,0,0,0],lead:[62,0,64,65,0,67,0,65,64,0,62,0,60,0,0,0,65,0,67,69,0,67,0,65,64,0,62,0,62,0,0,0],arp:[50,53,57,53,50,53,57,53,48,52,55,52,48,52,55,52,53,57,60,57,53,57,60,57,50,53,57,53,50,53,57,53]},
-memory:{bpm:58,full:1,bass:[45,0,0,0,0,0,0,0,41,0,0,0,0,0,0,0,43,0,0,0,0,0,0,0,40,0,0,0,0,0,0,0],lead:[76,0,0,0,74,0,0,0,72,0,0,0,69,0,0,0,71,0,0,0,72,0,0,0,67,0,0,0,0,0,0,0],arp:[57,64,60,64,57,64,60,64,53,60,57,60,53,60,57,60,55,62,59,62,55,62,59,62,52,59,55,59,52,59,55,59]},
-boss:{bpm:134,drums:1,full:1,bass:[38,38,0,38,38,0,41,0,38,38,0,38,43,0,41,0,34,34,0,34,34,0,38,0,36,36,0,36,40,0,41,0],lead:[74,0,74,77,0,74,0,72,70,0,70,74,0,70,0,69,67,0,67,70,0,67,0,65,64,0,67,0,69,0,0,0],arp:[62,65,69,74,62,65,69,74,58,62,65,70,58,62,65,70,55,58,62,67,55,58,62,67,57,60,64,69,57,60,64,69]},
-throne:{bpm:100,drums:1,full:1,bass:[38,0,38,0,38,0,38,38,34,0,34,0,34,0,34,34,36,0,36,0,36,0,36,36,33,0,33,0,40,0,41,0],lead:[74,0,0,77,0,0,81,0,79,0,0,77,0,0,74,0,72,0,0,76,0,0,79,0,77,0,76,0,74,0,0,0],arp:[50,57,62,57,50,57,62,57,46,53,58,53,46,53,58,53,48,55,60,55,48,55,60,55,45,52,57,52,52,57,60,57]},
-end:{bpm:108,drums:1,full:1,bass:[48,0,48,0,55,0,55,0,53,0,53,0,55,0,55,0,48,0,48,0,55,0,55,0,53,0,55,0,48,0,0,0],lead:[72,0,76,0,79,0,76,0,77,0,81,0,79,0,76,0,72,0,76,0,79,0,84,0,83,0,79,0,72,0,0,0],arp:[60,64,67,64,60,64,67,64,65,69,72,69,67,71,74,71,60,64,67,64,60,64,67,64,65,69,72,69,60,64,67,64]}};
-function music(n){trk=n;stp=0;if(AC)nxt=AC.currentTime+.05}
-function sched(){if(!AC||!TR[trk])return;const t=TR[trk],sd=60/t.bpm/2;if(nxt<AC.currentTime-.5)nxt=AC.currentTime;let g=0;while(nxt<AC.currentTime+.25&&g++<8){step(t,stp,Math.max(0,nxt-AC.currentTime),sd);stp++;nxt+=sd}}
-function step(t,i,o,sd){const L=t.full?4:Math.min(4,Math.floor(cn()/3));const b=t.bass[i%t.bass.length],l=t.lead[i%t.lead.length],a=t.arp[i%t.arp.length];
+office:{bpm:92,fn:officeCue},
+battle:{bpm:272,full:1,fn:battleCue,bpmf:battleBpm},
+table:{bpm:100,full:1,fn:tableCue},
+intro:{bpm:80,full:1,fn:introCue},
+title:{bpm:80,full:1,fn:titleCue},
+citadel:{bpm:122,fn:citadelCue},
+hell:{bpm:70,fn:hellCue},
+kingdom:{bpm:92,fn:kingdomCue},
+memory:{bpm:58,full:1,fn:memoryCue},
+boss:{bpm:96,full:1,fn:(i,o,sd)=>negCue(i,o,sd,0)},
+throne:{bpm:84,full:1,fn:(i,o,sd)=>negCue(i,o,sd,1)},
+end:{bpm:108,full:1,fn:endCue}};
+function music(n){if(AC&&MM&&n!==trk){const now=AC.currentTime,b=VOLS[OPT.vm];MM.gain.cancelScheduledValues(now);MM.gain.setValueAtTime(MM.gain.value,now);MM.gain.setTargetAtTime(0,now,.04);MM.gain.setTargetAtTime(b,now+.28,.05);if(n==='battle')BX=Math.max(0,1-partyHp())}
+ trk=n;stp=0;if(AC)nxt=AC.currentTime+(n==='none'?.05:.3)}
+// sustained voice with a soft attack and release (tone() only decays), through a lowpass so it sits under the lead
+function pad(ms,d,v,o,ty,fq){if(!AC)return;const s=AC.currentTime+(o||0),g=AC.createGain(),f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=fq||1200;
+ g.gain.setValueAtTime(.0001,s);g.gain.linearRampToValueAtTime(v,s+Math.min(.8,d*.3));g.gain.setValueAtTime(v,s+d*.7);g.gain.linearRampToValueAtTime(.0001,s+d);f.connect(g);g.connect(AUDCH==='m'?MM:MF);
+ for(const m of ms){const os=AC.createOscillator();os.type=ty||'sawtooth';os.frequency.value=mf(m);os.detune.value=(Math.random()-.5)*14;os.connect(f);os.start(s);os.stop(s+d+.05)}}
+// filtered noise for rain and cymbals
+function hiss(d,v,o,fq,hp){if(!AC)return;const s=AC.currentTime+(o||0);
+ const n=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();n.buffer=nbuf();n.loop=true;f.type=hp?'highpass':'lowpass';f.frequency.value=fq||1500;g.gain.setValueAtTime(.0001,s);g.gain.linearRampToValueAtTime(v,s+d*.25);g.gain.exponentialRampToValueAtTime(.0008,s+d);n.connect(f);f.connect(g);g.connect(AUDCH==='m'?MM:MF);n.start(s,Math.random()*1.5);n.stop(s+d+.05)}
+// thunder ducks the music bus so it cuts through, then the music comes back up
+function duck(){if(!AC||!MM)return;const now=AC.currentTime,base=VOLS[OPT.vm];MM.gain.cancelScheduledValues(now);MM.gain.setValueAtTime(MM.gain.value,now);MM.gain.setTargetAtTime(base*.4,now,.03);MM.gain.setTargetAtTime(base,now+.45,.3)}
+/* The opening cue follows the camera up the tower in four phrases, one per caption (step = 0.375 s):
+   street (0-15) rain and a low drone with the title motif far off; fluorescent floors (16-27) the office clock starts ticking;
+   wages (28-39) bass and kick come in and the motif plays plainly; the top (40-53) it climbs an octave over a snare roll
+   and lands on one hit at step 51 (19.1 s), on "iron fist". The clock stops there. */
+const ICH=[[0,[45,52,57,60],16],[16,[45,52,57,60],4],[20,[41,48,53,57],4],[24,[43,50,55,59],4],[28,[45,52,57,60],4],[32,[41,48,53,57],4],[36,[40,47,52,56],4],[40,[41,48,53,57],4],[44,[43,50,55,59],4],[48,[40,47,52,56],3]];
+const IROOT={0:33,16:33,20:29,24:31,28:33,32:29,36:28,40:29,44:31,48:28};
+const ILEAD={4:69,7:72,10:71,12:69,28:69,30:72,31:71,32:69,34:65,36:64,38:68,39:71,40:81,42:84,43:83,44:81,46:77,48:76};
+/* Title screen: picks up where the opening's hit leaves off, at the same tempo and with the same rain, clock and motif,
+   as a calm 24-second loop (64 steps). Bars 1-4 state the motif (A C B A F), bars 5-8 answer it and turn back on E. */
+const TCH=[[45,52,57,60],[41,48,53,57],[43,50,55,59],[40,47,52,56],[45,52,57,60],[41,48,53,57],[38,45,50,53],[40,47,52,56]],TROOT=[33,29,31,28,33,29,26,28];
+const TLEAD={0:69,3:72,5:71,6:69,8:65,16:67,19:71,21:74,22:72,24:71,32:69,35:72,37:71,38:69,40:74,48:76,51:72,53:71,54:69,56:68};
+function titleCue(i,o,sd){const j=i%64,b=j>>3,ch=TCH[b],r=TROOT[b];
+ if(j%2===0)hiss(sd*2.4,.042,o,1500);
+ if(j%8===0){pad(ch,sd*8+.4,.036,o,'sawtooth',1000);tone(mf(r),sd*3,'triangle',.17,o)}
+ if(j%8===4)tone(mf(r+12),sd*2,'triangle',.1,o);
+ if(j%8===6)tone(mf(r+7),sd*1.5,'triangle',.05,o);
+ tone(j&1?1500:2000,.022,'sine',.022,o);
+ if(j>=32)tone(mf(ch[j%4]+12),sd*.9,'square',.012,o);
+ const l=TLEAD[j];if(l){tone(mf(l),sd*2.6,'sine',.07,o);tone(mf(l),sd*2,'sine',.022,o+sd*.75);if(j>=32)tone(mf(l-12),sd*1.8,'triangle',.03,o)}}
+function introCue(i,o,sd){if(i>53)return;
+ if(i%2===0)hiss(sd*2.4,.05+i*.0006,o,1600);
+ const ch=ICH.find(c=>c[0]===i);if(ch)pad(ch[1],sd*ch[2]+.3,i<16?.018:i<40?.034:.05,o,'sawtooth',i<16?700:i<28?1000:1500);
+ let r=0;for(const k in IROOT)if(+k<=i)r=IROOT[k];
+ let cc=ICH[0][1];for(const c of ICH)if(c[0]<=i)cc=c[1];
+ if(i>=16&&i<51)tone(mf(cc[i%4]+(i<40?12:24)),sd*.9,'square',i<28?.016:i<40?.022:.026,o);
+ if(i<16){if(i%8===0)pad([r],sd*8,.06,o,'triangle',400)}
+ else if(i<28){if(i%2===0)tone(mf(r+12),sd*1.8,'triangle',.12,o)}
+ else if(i<40){tone(mf(i%4===3?r+12:r),sd*.9,'triangle',.17,o);if(i%4===0)tone(110,.14,'sine',.24,o,.4);if(i%8===6)noise(.08,.05,o)}
+ else if(i<51){tone(mf(i&1?r+12:r),sd*.9,'triangle',.19,o);if(i%2===0)tone(110,.14,'sine',.26,o,.4);if(i%4===2)tone(mf(r+24),sd*.6,'square',.03,o);if(i>=46)noise(.06,.02+(i-46)*.012,o);if(i>=48)noise(.05,.02+(i-48)*.014,o+sd/2)}
+ else if(i===51){pad([33,45,52,57,60,64,69],sd*7,.05,o,'sawtooth',1800);tone(mf(33),sd*6,'triangle',.22,o);tone(80,.5,'sine',.32,o,.35);hiss(2.6,.09,o,3000,1)}
+ if(i>=16&&i<51)tone(i&1?1500:2000,.025,'sine',i<28?.035:.045,o);
+ const l=ILEAD[i];if(l){const far=i<16;tone(mf(l),sd*(far?3:1.6),far?'sine':'square',far?.05:i<40?.045:.05,o);tone(mf(l),sd*(far?3:1.4),far?'sine':'square',far?.018:.014,o+sd*.75);if(i>=40)tone(mf(l-12),sd*1.5,'triangle',.04,o)}}
+/* ---- Soundtrack: every cue is a variation on the opening's theme ----
+   Theme: the motif A C B A F over Am F G E, with the office clock and the rain as recurring colours.
+   Field cues still gain layers as the union grows (L from cn(), as before). Step = one 8th note unless a cue says otherwise. */
+let NB=null;const nbuf=()=>{if(!NB){const n=AC.sampleRate*2;NB=AC.createBuffer(1,n,AC.sampleRate);const a=NB.getChannelData(0);for(let i=0;i<n;i++)a[i]=Math.random()*2-1}return NB};
+const bus=()=>AUDCH==='m'?MM:MF;
+// synth bass: saw plus a sine sub an octave down, through a lowpass whose cutoff falls from cut*3 to cut (the "pluck")
+function bassv(m,d,v,o,cut,grit){if(!AC)return;const s=AC.currentTime+(o||0),f=AC.createBiquadFilter(),g=AC.createGain();f.type='lowpass';f.Q.value=grit?6:2;f.frequency.setValueAtTime(cut*3,s);f.frequency.exponentialRampToValueAtTime(cut,s+d*.6);
+ g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.0008,s+d);f.connect(g);g.connect(bus());
+ const a=AC.createOscillator();a.type='sawtooth';a.frequency.value=mf(m);a.connect(f);a.start(s);a.stop(s+d+.03);
+ if(grit){const b=AC.createOscillator();b.type='sawtooth';b.frequency.value=mf(m);b.detune.value=18;b.connect(f);b.start(s);b.stop(s+d+.03)}
+ const sb=AC.createOscillator(),sg=AC.createGain();sb.type='sine';sb.frequency.value=mf(m-12);sg.gain.setValueAtTime(v*1.4,s);sg.gain.exponentialRampToValueAtTime(.0008,s+d);sb.connect(sg);sg.connect(bus());sb.start(s);sb.stop(s+d+.03)}
+function kick(o,v){tone(150,.22,'sine',v||.3,o,.28);tone(1200,.012,'square',.03,o)}
+function hat(o,v,open){hiss(open?.14:.035,v||.03,o,7000,1)}
+function snare(o,v){hiss(.16,v||.07,o,1800,1);tone(190,.08,'triangle',(v||.07)*1.2,o,.6)}
+function bell(m,d,v,o){tone(mf(m),d,'sine',v,o);tone(mf(m+19),d*.5,'sine',v*.25,o)}
+const chordAt=(T,j)=>{let c=T[0];for(const x of T)if(x[0]<=j)c=x;return c};
+const MOTIF=[69,72,71,69,65];
+
+/* Cubicle Farm (1-10F): office muzak. Walking bass, a soft electric-piano pad, the clock on every beat, the motif on a vibraphone. */
+const OF_CH=[[0,[45,52,57,60],33],[8,[41,48,53,57],29],[16,[43,50,55,59],31],[24,[40,47,52,56],28],[32,[45,52,57,60],33],[40,[41,48,53,57],29],[48,[38,45,50,53],26],[56,[40,47,52,56],28]];
+const OF_LD={0:69,3:72,5:71,6:69,8:65,16:67,19:71,21:74,22:72,24:71,32:69,35:72,37:71,38:69,40:74,42:72,44:69,48:68,50:71,52:76,56:74,58:71};
+function officeCue(i,o,sd){const j=i%64,L=Math.min(4,Math.floor(cn()/3)),c=chordAt(OF_CH,j),r=c[2];
+ if(j%8===0)pad(c[1],sd*8+.3,.024,o,'triangle',1400);
+ if(j%2===0)tone(mf([r,r+7,r+12,r+7][(j>>1)%4]),sd*1.7,'triangle',.13,o);
+ if(j%2===0)tone(j%4===0?2000:1500,.02,'sine',.02,o);
+ const l=OF_LD[j];if(l&&L>=1){bell(l,sd*2.4,.05,o)}
+ if(L>=2){if(j%4===0)kick(o,.12);if(j%4===2)hat(o,.018);if(j%8===4)tone(900,.03,'square',.025,o)}
+ if(L>=3)tone(mf(c[1][j%4]+12),sd*.8,'triangle',.018,o);
+ if(L>=4&&l)tone(mf(l+12),sd*1.6,'sine',.025,o)}
+
+/* Sales Citadel (11-20F): glossy synth-pop sales pitch. The motif becomes a bright hook over F G Am Am, 16th arps, four-on-the-floor. */
+const CI_CH=[[0,[41,48,53,57,60],29],[8,[43,50,55,59,62],31],[16,[45,52,57,60,64],33],[24,[45,52,57,60,64],33],[32,[41,48,53,57,60],29],[40,[43,50,55,59,62],31],[48,[40,47,52,56,59],28],[56,[40,47,52,56,59],28]];
+const CI_LD={0:69,2:72,3:71,4:69,6:65,8:67,10:71,11:74,12:72,16:76,18:72,19:71,20:69,22:72,24:69,32:69,34:72,35:71,36:69,38:65,40:67,42:71,43:74,44:76,48:76,50:74,52:71,54:68,56:69};
+function citadelCue(i,o,sd){const j=i%64,L=Math.min(4,Math.floor(cn()/3)),c=chordAt(CI_CH,j),r=c[2];
+ if(j%8===0)pad(c[1].slice(0,4),sd*8+.2,.022,o,'sawtooth',1800);
+ bassv(j%2?r+12:r,sd*.9,.09,o,300);
+ tone(mf(c[1][(j*3)%5]+12),sd*.5,'square',.016,o);tone(mf(c[1][(j*3+2)%5]+12),sd*.5,'square',.012,o+sd/2);
+ const l=CI_LD[j];if(l&&L>=1){tone(mf(l),sd*1.4,'square',.04,o);tone(mf(l),sd*1.2,'square',.015,o+sd*.75)}
+ if(L>=2){if(j%2===0)kick(o,.2);if(j%2===1)hat(o,.025);if(j%4===2)snare(o,.04)}
+ if(L>=3&&l)tone(mf(l+12),sd*1.2,'triangle',.03,o);
+ if(L>=4&&j%16===15)hiss(sd*2,.04,o,5000,1)}
+
+/* HR Hellscape (21-30F): an infernal organ. The motif with a flattened second (A C Bb A F), Phrygian chords, low toms, distant choir. */
+const HE_CH=[[0,[45,52,57,60],33],[8,[46,53,58,62],34],[16,[45,52,57,60],33],[24,[44,50,56,59],32]];
+const HE_LD={0:69,4:72,6:70,8:69,12:65,16:64,20:65,22:70,24:69};
+function hellCue(i,o,sd){const j=i%32,L=Math.min(4,Math.floor(cn()/3)),c=chordAt(HE_CH,j),r=c[2];
+ if(j%8===0){pad(c[1],sd*8+.4,.03,o,'square',700);pad([r],sd*8,.06,o,'triangle',300)}
+ if(j%2===0)tone(j%4===0?1500:1200,.03,'sine',.016,o);
+ const l=HE_LD[j];if(l&&L>=1){tone(mf(l),sd*3,'sawtooth',.03,o,1);pad([l-12],sd*3,.02,o,'sawtooth',900)}
+ if(L>=2){if(j%8===0||j%8===3)tone(mf(r+12),.4,'sine',.18,o,.5);if(j%8===6)tone(mf(r+19),.3,'sine',.1,o,.5)}
+ if(L>=3&&j%16===8)pad([c[1][2]+12,c[1][3]+12],sd*6,.016,o,'sawtooth',1500);
+ if(L>=4&&j%4===0)hiss(sd*2,.022,o,900)}
+
+/* Corporate Kingdom (31-39F): a court dance in 6/8. Bagpipe drone on A and E, tabor drum, lute plucks; the motif turns modal (A C B A F#). */
+const KI_CH=[[0,[45,52,57],33],[6,[43,50,55],31],[12,[45,52,57],33],[18,[40,47,52],28],[24,[45,52,57],33],[30,[43,50,55],31],[36,[38,45,50],26],[42,[40,47,52],28]];
+const KI_LD={0:69,3:72,4:71,5:69,6:66,9:67,12:69,15:72,16:74,17:76,18:71,21:69,24:76,27:74,28:72,29:71,30:74,33:72,36:69,39:71,40:72,41:69,42:68,45:64};
+function kingdomCue(i,o,sd){const j=i%48,L=Math.min(4,Math.floor(cn()/3)),c=chordAt(KI_CH,j),r=c[2];
+ if(j%24===0)pad([33,40,45],sd*24+.2,.03,o,'sawtooth',600);
+ if(j%6===0)tone(mf(r+12),sd*2.6,'triangle',.12,o);if(j%6===3)tone(mf(r+19),sd*1.4,'triangle',.07,o);
+ if(j%3!==1)tone(mf(c[1][j%3]+12),sd*.6,'triangle',.03,o);
+ const l=KI_LD[j];if(l&&L>=1){tone(mf(l),sd*1.5,'square',.034,o);tone(mf(l+12),sd*1.2,'sine',.012,o)}
+ if(L>=2){if(j%6===0)tone(120,.18,'sine',.16,o,.5);if(j%6===3||j%6===5)tone(220,.06,'triangle',.05,o,.7)}
+ if(L>=3&&l)tone(mf(l-12),sd*1.4,'triangle',.03,o);
+ if(L>=4&&j%12===0)bell(81,sd*4,.03,o)}
+
+/* The top floor (40F): the march to Alis's table. Snare march, the motif in brass octaves, Am F Dm E. */
+const TA_CH=[[0,[45,52,57,60],33],[8,[41,48,53,57],29],[16,[38,45,50,53],26],[24,[40,47,52,56],28]];
+const TA_LD={0:69,2:72,3:71,4:69,6:65,8:69,10:72,11:74,12:76,16:74,18:72,19:71,20:69,24:68,26:71,28:76};
+function tableCue(i,o,sd){const j=i%32,c=chordAt(TA_CH,j),r=c[2];
+ if(j%8===0)pad(c[1],sd*8+.3,.03,o,'sawtooth',1300);
+ if(j%2===0)tone(mf(r),sd*1.6,'triangle',.16,o);
+ snare(o,j%4===0?.06:j%2?.018:.03);if(j%8===0)kick(o,.2);
+ if(j%2===1)tone(j%4===1?2000:1500,.02,'sine',.02,o);
+ const l=TA_LD[j];if(l){tone(mf(l),sd*1.6,'square',.04,o);tone(mf(l-12),sd*1.6,'sawtooth',.02,o)}}
+
+/* Flashbacks (sad): a music box over soft rain. The motif slowed right down, ending unresolved on E. */
+const ME_CH=[[0,[57,60,64],33],[8,[53,57,60],29],[16,[48,52,55],36],[24,[52,56,59],28]];
+const ME_LD={0:81,3:84,4:83,6:81,8:77,16:79,19:83,20:81,22:79,24:76};
+function memoryCue(i,o,sd){const j=i%32,c=chordAt(ME_CH,j),r=c[2];
+ if(j%2===0)hiss(sd*2.4,.022,o,1200);
+ if(j%8===0){pad(c[1],sd*8+.4,.02,o,'triangle',900);tone(mf(r),sd*6,'sine',.09,o)}
+ if(j%2===1)bell(c[1][(j>>1)%3]+12,sd*2,.018,o);
+ const l=ME_LD[j];if(l){bell(l,sd*4,.05,o);bell(l,sd*3,.016,o+sd*1.5)}}
+
+/* Ending (heroic): the motif in A major as an anthem (A C# B A F#), A E F#m D, full drums and bells. */
+const EN_CH=[[0,[45,52,57,61],33],[8,[40,47,52,56],28],[16,[42,49,54,57],30],[24,[38,45,50,54],26],[32,[45,52,57,61],33],[40,[40,47,52,56],28],[48,[38,45,50,54],26],[56,[40,47,52,56],28]];
+const EN_LD={0:69,2:73,3:71,4:69,6:66,8:68,10:71,11:76,12:73,16:73,18:76,19:74,20:73,22:69,24:74,26:73,28:71,32:69,34:73,35:71,36:69,38:66,40:68,42:71,43:76,44:81,48:78,50:76,52:74,54:73,56:71,58:73,60:76};
+function endCue(i,o,sd){const j=i%64,c=chordAt(EN_CH,j),r=c[2];
+ if(j%8===0)pad(c[1],sd*8+.3,.034,o,'sawtooth',2000);
+ tone(mf(j%2?r+12:r),sd*.9,'triangle',.15,o);
+ if(j%4===0)kick(o,.17);if(j%4===2)snare(o,.045);hat(o,j%2?.012:.02);
+ const l=EN_LD[j];if(l){tone(mf(l),sd*1.6,'square',.045,o);tone(mf(l+12),sd*1.4,'triangle',.025,o);if(j%8===0)bell(l+12,sd*3,.03,o)}}
+
+/* Battle: pumping electronic, one step = a 16th. Party health drives it every step (smoothed):
+   healthy = 136 BPM, bright chords (Am F C G), the motif as a confident hook;
+   worn down = faster and heavier, darker chords (Am F G E), 16th hats, gritty bass;
+   critical = up to 172 BPM, Phrygian dread (Am Bb Am E), a siren on A-Bb, snare build every bar. */
+let BX=0;
+function partyHp(){const M=G.members||[];let h=0,mh=0;for(const m of M){h+=Math.max(0,m.hp);mh+=m.mhp}return mh?h/mh:1}
+const BA_PROG=[[[45,52,57,60],[41,48,53,57],[48,55,60,64],[43,50,55,59]],[[45,52,57,60],[41,48,53,57],[43,50,55,59],[40,47,52,56]],[[45,52,57,60],[46,53,58,62],[45,52,57,60],[40,47,52,56]]];
+const BA_RT=[[33,29,36,31],[33,29,31,28],[33,34,33,28]];
+const BA_LD={0:69,2:72,3:71,4:69,6:65,8:69,10:72,12:76,14:74,16:72,18:71,20:69,24:65,26:67,28:68};
+function battleBpm(){if(G.B)BX+=((1-partyHp())-BX)*.05;return 2*(136+36*Math.min(1,BX*1.3))}
+function battleCue(i,o,sd){const j=i%64,bar=j>>4,x=Math.min(1,BX*1.3),lv=x<.35?0:x<.7?1:2,ch=BA_PROG[lv][bar],r=BA_RT[lv][bar],k=j%16;
+ if(k%4===0)kick(o,.32);
+ if(k%4!==0)bassv(k%4===2?r+12:r,sd*.95,.11+x*.03,o,lv===2?140:lv?200:260,lv>0);
+ if(k%4===0)pad(ch,sd*4,.022,o+sd*.6,'sawtooth',lv===2?900:1600);
+ if(k%4===2)hat(o,.03,1);if(lv>0&&k%2===1)hat(o,.018);
+ if(k===4||k===12)snare(o,.06);
+ if(lv===2&&k>=12)snare(o,.02+(k-12)*.012);
+ tone(mf(ch[k%4]+24),sd*.6,'square',lv===2?.008:.013,o);
+ const l=BA_LD[j%32];
+ if(lv<2&&l){tone(mf(l+(lv?0:12)),sd*1.8,'square',.035,o);tone(mf(l+(lv?0:12)),sd*1.4,'square',.012,o+sd*1.5)}
+ if(lv===2&&k%8===0)tone(mf(k?82:81),sd*3.6,'sawtooth',.026,o);
+ if(lv===2&&k===0&&bar===3)hiss(sd*14,.05,o,4000,1)}
+
+/* Negotiation: chess, not combat. The office clock ticks through the whole table.
+   The motif is asked as a question (A C B A ...) and only gets its answer as you win ground: past a third of the way the F
+   arrives, past two thirds it resolves upward in major. Low resolve brings in a heartbeat and a clashing flat second.
+   Alis (final=1) is slower, in D minor, with an organ. */
+function negProg(){const TB=G.TB;if(!TB||!TB.bd||!TB.ints)return 0;const nph=(TB.bd.ph||[1]).length,n=TB.ints.length||1;let s=0;for(const it of TB.ints)s+=Math.min(1,(it.p||0)/(TB.need||4));return Math.min(1,((TB.ph||0)+s/n)/nph)}
+const NG_CH=[[[45,52,57,60],[38,45,50,53],[41,48,53,57],[40,47,52,56]],[[38,45,50,53],[34,41,46,50],[31,38,43,46],[33,40,45,49]]];
+const NG_RT=[[33,26,29,28],[26,34,31,33]];
+function negCue(i,o,sd,fin){const j=i%32,bar=j>>3,k=j%8,p=negProg(),res=G.TB?G.TB.res:60,ch=NG_CH[fin][bar],r=NG_RT[fin][bar],tr=fin?-7:0;
+ tone(k%2?1500:2000,.022,'sine',res<35?.04:.024,o);
+ if(k===0){pad(ch,sd*8+.3,fin?.034:.032,o,fin?'square':'sawtooth',500+p*1700);if(fin)pad([ch[0]-12],sd*8,.05,o,'triangle',300)}
+ if(k%2===0)tone(mf(k===4?r+7:r+12),sd*.4,'triangle',fin?.13:.16,o);
+ if(res<35){if(k===0||k===1)tone(70,.2,'sine',.22,o,.6);if(k===0)pad([ch[0]+1],sd*8,.012,o,'sawtooth',900)}
+ if(res>=75&&p>.5&&k%2===1)hat(o,.015);
+ const q=[[0,69],[2,72],[3,71],[4,69]],a1=[[6,65]],a2=[[6,73],[7,76]],ans=p>.66?a2:p>.33?a1:[];
+ if(bar===0||bar===2)for(const[s,m]of q)if(k===s)tone(mf(m+tr),sd*1.3,fin?'triangle':'square',.032,o);
+ if(bar===1||bar===3)for(const[s,m]of ans)if(k===s){tone(mf(m+tr),sd*2,'square',.032,o);if(p>.66)bell(m+tr+12,sd*2,.03,o)}
+ if(p>.66&&k%2===0)tone(mf(ch[(k>>1)%4]+24),sd*.6,'triangle',.014,o)}
+
+/* Stingers: a short phrase on the effects bus while the music ducks under it. hero = the motif lifted into A major; sad = falling, slow. */
+const STING={hero:[[0,69,.3],[.14,73,.3],[.28,76,.3],[.42,81,1.1],[.42,57,1.1]],sad:[[0,76,.7],[.55,72,.7],[1.1,71,.7],[1.65,69,1.6],[1.65,53,1.6]]};
+function sting(k){if(!AC)return;const ph=STING[k];if(!ph)return;const len=Math.max(...ph.map(n=>n[0]+n[2]));
+ if(MM){const now=AC.currentTime,b=VOLS[OPT.vm];MM.gain.cancelScheduledValues(now);MM.gain.setValueAtTime(MM.gain.value,now);MM.gain.setTargetAtTime(b*.25,now,.05);MM.gain.setTargetAtTime(b,now+len,.4)}
+ for(const[t,m,d]of ph){if(k==='hero'){tone(mf(m),d,'square',.07,t);tone(mf(m+12),d,'triangle',.04,t)}else{bell(m,d*1.4,.09,t)}}}
+function sched(){if(!AC||!TR[trk])return;const t=TR[trk],sd=60/(t.bpmf?t.bpmf():t.bpm)/2;if(nxt<AC.currentTime-.5)nxt=AC.currentTime;let g=0;while(nxt<AC.currentTime+.25&&g++<8){step(t,stp,Math.max(0,nxt-AC.currentTime),sd);stp++;nxt+=sd}}
+function step(t,i,o,sd){if(t.fn){t.fn(i,o,sd);return}const L=t.full?4:Math.min(4,Math.floor(cn()/3));const b=t.bass[i%t.bass.length],l=t.lead[i%t.lead.length],a=t.arp[i%t.arp.length];
  if(b)tone(mf(b),sd*1.8,'triangle',.16,o);
  if(l)tone(mf(l),sd*1.5,'square',.05,o);
  if(a&&L>=1)tone(mf(a),sd*.9,'square',.026,o);
  if(t.drums&&L>=2){const k=i%8;if(k===0)tone(110,.12,'sine',.25,o,.4);if(k===4)noise(.1,.06,o);if(i%2===1)noise(.03,.025,o)}
  if(L>=3&&l)tone(mf(l+12),sd*1.2,'triangle',.035,o);
  if(L>=4&&l)tone(mf(l-12),sd*1.6,'square',.028,o)}
-const SFX={thunder:()=>{noise(1.4,.3);tone(52,1.2,'sawtooth',.13,0,.5)},blip:()=>tone(880,.04,'square',.07),ok:()=>{tone(660,.05,'square',.08);tone(990,.07,'square',.08,.05)},no:()=>tone(140,.15,'sawtooth',.1),hit:()=>{noise(.12,.18);tone(160,.1,'square',.1,0,.5)},heal:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.12,'triangle',.12,i*.07)),lvl:()=>[523,659,784,1047,1319].forEach((f,i)=>tone(f,.14,'square',.08,i*.08)),sign:()=>[784,988,1319].forEach((f,i)=>tone(f,.15,'square',.09,i*.09)),combo:()=>{for(let i=0;i<8;i++)tone(300+i*120,.1,'sawtooth',.07,i*.04)},ding:()=>{tone(1320,.5,'sine',.12);tone(990,.6,'sine',.1,.25)},law:()=>[659,784,988,1319].forEach((f,i)=>tone(f,.2,'triangle',.1,i*.06)),swap:()=>{tone(520,.07,'square',.07);tone(390,.07,'square',.07,.07);tone(620,.1,'square',.07,.14)},weak:()=>{noise(.1,.12);tone(1100,.12,'square',.08,0,.5);tone(1480,.14,'square',.08,.08)},sting:()=>[392,523,659,784,1047].forEach((f,i)=>tone(f,.35,'sine',.09,i*.1)),flash:()=>{tone(220,.9,'sine',.12,0,.6);tone(330,.9,'sine',.08,.1,.6)}};
+const SFX={thunder:()=>{duck();noise(1.4,.3);tone(52,1.2,'sawtooth',.13,0,.5)},blip:()=>tone(880,.04,'square',.07),ok:()=>{tone(660,.05,'square',.08);tone(990,.07,'square',.08,.05)},no:()=>tone(140,.15,'sawtooth',.1),hit:()=>{noise(.12,.18);tone(160,.1,'square',.1,0,.5)},heal:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.12,'triangle',.12,i*.07)),lvl:()=>[523,659,784,1047,1319].forEach((f,i)=>tone(f,.14,'square',.08,i*.08)),sign:()=>[784,988,1319].forEach((f,i)=>tone(f,.15,'square',.09,i*.09)),combo:()=>{for(let i=0;i<8;i++)tone(300+i*120,.1,'sawtooth',.07,i*.04)},ding:()=>{tone(1320,.5,'sine',.12);tone(990,.6,'sine',.1,.25)},law:()=>[659,784,988,1319].forEach((f,i)=>tone(f,.2,'triangle',.1,i*.06)),swap:()=>{tone(520,.07,'square',.07);tone(390,.07,'square',.07,.07);tone(620,.1,'square',.07,.14)},weak:()=>{noise(.1,.12);tone(1100,.12,'square',.08,0,.5);tone(1480,.14,'square',.08,.08)},sting:()=>[392,523,659,784,1047].forEach((f,i)=>tone(f,.35,'sine',.09,i*.1)),flash:()=>{tone(220,.9,'sine',.12,0,.6);tone(330,.9,'sine',.08,.1,.6)}};
 const sfx=n=>{if(AC&&SFX[n])SFX[n]()};
 
 /* ================= SPRITES ================= */
@@ -508,7 +690,7 @@ const CLEMEV=[['las7','Under a pile of HR forms: Clem\'s performance review from
  ['las34','A job ad, printed this morning: "Scrum Master wanted. Immediate start." Her role was never redundant. A dismissal like that can be declared void (LAS 34 §).']];
 const AFRAID=['(They glance at the door.) If they can fire Clem, they can fire me. Make it quick.','I heard about Clem. Fired by email. Is that what happens to union people?','Clem ran my onboarding. If she\'s gone, who\'s safe? ...Go on. I\'m listening.','(Whispering.) HR reads the badge logs. Don\'t stand too long at my desk.'];
 const clemOut=()=>!!(G.flags.fired&&!G.flags.rein);
-async function clemFired(){if(G.flags.fired||!roster().some(m=>m.id==='clementine'))return;
+async function clemFired(){if(G.flags.fired||!roster().some(m=>m.id==='clementine'))return;sting('sad');
  await talk([['','Friday, 4:58 p.m. Every phone in the party buzzes at once.'],['Email','From: Alis Neddis. Subject: Exciting changes! Clementine Piruetti\'s role has been made redundant, effective immediately. Thank you for your passion!'],['Clem','...Again. By email. At 4:58.'],['Kaj','Redundant? That isn\'t a reason. That\'s an error message. This is about the union.'],['Clem','Security\'s on the way up. I need to hand in my badge.'],['Kaj','Nobody may be punished for joining a union. MBL 8 §. And a dismissal needs a valid reason. LAS 7 §.'],['Clem','Then prove it. Find out why they really did it.'],['Clem','And tell people I\'m not scared. ...Tell them anyway.'],['','Clem leaves with a cardboard box. Behind her, the badge reader beeps red.'],['Kaj','This is my fault. I put her name on the sign-up sheet. I should have...'],['Henrietta','It\'s Alis\'s fault. And it\'s all of ours to fix. Not yours alone.']]);
  const i=G.members.findIndex(m=>m.id==='clementine'),j=G.bench.findIndex(m=>m.id==='clementine'),m=i>=0?G.members.splice(i,1)[0]:G.bench.splice(j,1)[0];
  if(i>=0&&G.bench.length)G.members.push(G.bench.shift());
@@ -524,14 +706,14 @@ async function clemTable(TB){if(!clemOut())return;const n=G.flags.ev||0,w=lawWho
  if(!n)L.push(['Kaj','We know why she was fired. So do you. Every member in this tower knows.']);
  L.push(['Garglr',n>=2?'...Where did you get that memo? That was in the culture drawer.':'Mm! I\'ll thoughtfully file that under Great Feedback.']);
  await talk(L);if(n){TB.res=Math.min(100,TB.res+n*5);toast('EVIDENCE: SOLIDARITY +'+n*5)}}
-async function clemBack(){if(!clemOut())return;const d=G.flags.fired,RR=roster(),av=Math.max(1,Math.round(RR.reduce((s,m)=>s+m.lv,0)/RR.length));
+async function clemBack(){if(!clemOut())return;sting('hero');const d=G.flags.fired,RR=roster(),av=Math.max(1,Math.round(RR.reduce((s,m)=>s+m.lv,0)/RR.length));
  await talk([['Garglr','...The dismissal is withdrawn. Clementine may have her badge back. Please ask her to tick Great.'],['','The elevator opens. Clem steps out, holding the cardboard box. She puts it down and takes out a pack of sticky notes.'],['Clem','Did somebody call a stand-up?'],['Kaj','Welcome back. I kept trying to hotfix this alone.'],['Clem','You never did. Look around.'],['Clem','They fired me by email. You brought me back with the law. ...And with everyone in this tower who wouldn\'t stop talking about it.']]);
  const m=mkM('clementine',Math.max(d.lv,av));m.pk=d.pk||{};calc(m);m.hp=m.mhp;m.mp=m.mmp;addMember(m);G.flags.rein=1;sfx('lvl');toast('CLEM IS REINSTATED')}
 /* ---- Kaj's arc: from "I'll do it myself" to "Not me. Us." ---- */
 async function kajSeed(){const has=id=>roster().some(m=>m.id===id),w=has('henrietta')?'Henrietta':has('joan')?'Joan':'Clem';
  await talk([['Kaj','Right. I\'ll go up first and scout the Citadel. Single-threaded, fastest way. You all rest.'],[w,'Kaj. Sit down.'],['Kaj','I\'m sitting.'],[w,'You\'re standing. You\'ve been standing since Tuesday.']])}
 const LEADL={henrietta:'I\'m the safety rep. I\'ll start with who gets hurt in this building, and how often.',clementine:'Agenda item one: everyone in this room gets heard. Including you, Alis.',joan:'I\'ve read every contract you ever issued. Let\'s start on page one.',ken:'Bro. Alis. Look around. We\'re all here. Every single one of us. Let\'s talk.',marl:'Thirty-one years of numbers. I\'ll start with what this company earns, and where it goes.'};
-async function kajLead(){const R=roster().filter(m=>m.id!=='kaj'&&LEADL[m.id]);if(!R.length)return;
+async function kajLead(){const R=roster().filter(m=>m.id!=='kaj'&&LEADL[m.id]);if(!R.length)return;sting('hero');
  await talk([['Alis','So! Mr Flack. The ringleader. Eleven minutes. Speak.'],['Kaj','...'],['Kaj','Not me. Us.']]);
  const i=await choose(R.map(m=>({t:m.name})),{x:0,y:160,w:116,title:'Who speaks first?',cancel:false});const m=R[i];G.flags.leader=m.id;
  await say(m.name,LEADL[m.id]);await say('Alis','...Oh. All of you, then. Lovely.')}
@@ -577,10 +759,10 @@ function markSeen(){const f=G.floor,m=G.map;if(!m)return;const a=SEENF[f]||(SEEN
 function drawFMap(){ctx.save();ctx.setTransform(1,0,0,1,0,0);R(0,0,W,H,'rgba(6,8,34,.92)');
  const m=G.map,a=SEENF[G.floor]||new Uint8Array(m.w*m.h),sc=Math.max(2,Math.floor(Math.min((W-24)/m.w,(H-44)/m.h))),ox=(W-m.w*sc)>>1,oy=30;
  T(`FLOOR MAP  ${G.floor+1}F  ${G.fl.name}`,12,10,'#ffd840');T('X: close',W-60,10,'#9aa4d8');
- for(let y=0;y<m.h;y++)for(let x=0;x<m.w;x++){if(!a[y*m.w+x])continue;const c=m.t[y][x];let col=c==='.'?'#5a6ab0':'#1c2260';const fk=FMK[c];if(fk)col=fk[OPT.cb?1:0];R(ox+x*sc,oy+y*sc,sc,sc,col);if(OPT.cb&&fk)fmPat(c,ox+x*sc,oy+y*sc,sc)}
+ for(let y=0;y<m.h;y++)for(let x=0;x<m.w;x++){if(!a[y*m.w+x])continue;const c=m.t[y][x];let col=c==='.'||c==='L'?'#5a6ab0':c==='#'?'#1c2260':'#3b4a8c';const fk=FMK[c];if(fk)col=fk[OPT.cb?1:0];R(ox+x*sc,oy+y*sc,sc,sc,col);if(OPT.cb&&fk)fmPat(c,ox+x*sc,oy+y*sc,sc)}
  for(const e of G.ents){if(e.gone||!a[e.y*m.w+e.x])continue;if(e.boss||e.join||e.term&&!e.done||e.k&&!G.signed[G.floor+':'+e.id]){R(ox+e.x*sc,oy+e.y*sc,sc,sc,e.boss?(OPT.cb?'#D55E00':'#ff4040'):e.join?(OPT.cb?'#56B4E9':'#60ffff'):e.term?'#ffb030':'#fff')}}
  if((G.t>>3)&1)R(ox+pl.x*sc-1,oy+pl.y*sc-1,sc+2,sc+2,'#ffffff');
- const cb=OPT.cb?1:0,lg=[[FMK.V[cb],'Snacks','V'],[FMK.C[cb],'Couch','C'],[FMK.E[cb],'Elevator','E'],['#fff','Co-worker'],[cb?'#56B4E9':'#60ffff','New friend'],[cb?'#D55E00':'#ff4040','Boss']];let lx=12;for(const [c,n,pk] of lg){R(lx,H-14,6,6,c);if(cb&&pk)fmPat(pk,lx,H-14,6);T(n,lx+9,H-15,'#c8d0ff');lx+=n.length*6+22}
+ const cb=OPT.cb?1:0,lg=[[FMK.V[cb],'Snacks','V'],[FMK.C[cb],'Couch','C'],[FMK.E[cb],'Elevator','E'],[FMK.D[cb],'Down','D'],['#fff','Co-worker'],[cb?'#56B4E9':'#60ffff','New friend'],[cb?'#D55E00':'#ff4040','Boss']];let lx=12;for(const [c,n,pk] of lg){R(lx,H-14,6,6,c);if(cb&&pk)fmPat(pk,lx,H-14,6);T(n,lx+9,H-15,'#c8d0ff');lx+=n.length*6+22}
  ctx.restore()}
 async function floorMap(){markSeen();UI.fmap=1;try{for(;;){const k=await key();if(k==='cancel'||k==='ok')return}}finally{UI.fmap=0}}
 async function searchSpot(c,tx,ty){const k='s'+G.floor+':'+tx+','+ty;if(G.flags[k])return;if('fbdB'.indexOf(c)<0)return;G.flags[k]=1;{const fv=FAVS.find(v=>(favG()[v.id]||{}).st===1&&v.f+1===G.floor);if(fv){favG()[fv.id].st=2;sfx('lvl');await say('',`There it is: the ${fv.item}. Take it back down to ${fv.f+1}F.`);return}}if(await clemEvidence())return;const r=hh(G.floor,tx*31+ty,7);
@@ -1933,6 +2115,16 @@ function roomFill(m,rng,x0,y0,x1,y1,kind,o){if(x1<x0+1||y1<y0+1)return;const are
  default:scatFill(m,rng,x0,y0,x1,y1,o.s,Math.round(area/9));wallFill(m,rng,x0,y0,x1,y1,o.w||'p',.3)}}
 function closet(m,x0,y0){for(let y=y0;y<=y0+4;y++)for(let x=x0;x<=x0+6;x++)m[y][x]='#';for(let y=y0+1;y<=y0+3;y++)for(let x=x0+1;x<=x0+5;x++)m[y][x]='.';m[y0+4][x0+3]='L';m[y0+1][x0+1]='s';m[y0+1][x0+2]='s';m[y0+1][x0+4]='s';m[y0+1][x0+5]='s';m[y0+3][x0+1]='s';m[y0+3][x0+5]='s'}
 function reachFrom(m,sx,sy){const h=m.length,w=m[0].length,seen=new Uint8Array(w*h),q=[sx,sy];seen[sy*w+sx]=1;for(let i=0;i<q.length;i+=2){const x=q[i],y=q[i+1];for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=w||ny>=h)continue;const c=m[ny][nx];if((c==='.'||c==='L')&&!seen[ny*w+nx]){seen[ny*w+nx]=1;q.push(nx,ny)}}}return seen}
+const BANKI=SPEC.map((s,i)=>s[7]==='bank'?i:-1).filter(i=>i>=0);
+// level pacing: target walk (steps from the way in to the elevator) per floor. Each section starts short to teach its layout,
+// climbs in a sawtooth with a dip after each peak, is longest on the floor before the boss, then opens up for the boss floor.
+const PACE=[0,6,4,10,8,14,12,18,22,6],routeT=n=>26+2*dunOf(n)+PACE[n%10];
+function fRoute(g){const m=g.t,w=g.w,h=g.h,d=new Int32Array(w*h).fill(-1),q=[g.dx,h-2];d[(h-2)*w+g.dx]=0;for(let i=0;i<q.length;i+=2){const x=q[i],y=q[i+1];for(const[a,b]of[[1,0],[-1,0],[0,1],[0,-1]]){const X=x+a,Y=y+b;if(X<0||Y<0||X>=w||Y>=h)continue;const c=m[Y][X];if((c==='.'||c==='L')&&d[Y*w+X]<0){d[Y*w+X]=d[y*w+x]+1;q.push(X,Y)}}}return g.ex>0?d[2*w+g.ex]:-1}
+const FBEST={};
+function pickFloor(n){if(FBEST[n]!==undefined)return FBEST[n]<0?null:genFloor(n,FBEST[n]);
+ let best=null,ba=-1,bs=1e9,c=0;const tg=routeT(n);
+ for(let a=0;a<60&&c<18;a++){const g=genFloor(n,a);if(!g)continue;c++;if(n>=NF-1){best=g;ba=a;break}const r=fRoute(g);if(r<0)continue;const sc=Math.abs(r-tg);if(sc<bs){bs=sc;best=g;ba=a}}
+ FBEST[n]=ba;return best}
 function genFloor(n,att){
  const sp=SPEC[n],D=dunOf(n),rng=mkRng(n*7919+att*104729+11),w=sp[8],h=sp[9],m=blank(w,h),o=sp.o,last=n===NF-1,RI=(a,b)=>a+((rng()*(b-a+1))|0);
  let ex=RI(5,w-6),dx=RI(5,w-6);while(Math.abs(ex-dx)<8)dx=RI(5,w-6);if(n===0)dx=w>>1;if(last){ex=-9;dx=w>>1}
@@ -1983,6 +2175,20 @@ function genFloor(n,att){
   for(const y of [15,19])for(const x of [4,w-5]){m[y][x]='h'}
   for(let x=3;x<w-3;x+=5)m[1][x]=m[1][x]==='.'?'h':m[1][x];
   rugs.push({x:cx-1,y:2,w:3,h:h-3,k:'red'});bossAt={x:cx,y:2}}
+ // building shape: open-plan floors get a lift core, a cut-away wing or structural columns, so they aren't all plain rectangles
+ if(lay==='bank'&&!last){const bi=BANKI.indexOf(n),cw=(w>>1)-1,rr=o.rug==='rose'||o.rug==='pent',onRug=(x,y)=>o.rug&&(rr?Math.abs(x-(w>>1))<=5&&Math.abs(y-(h>>1))<=4:x>=cw-1&&x<=cw+3);
+  const sh=['core','wing','core','wing','cols'][bi%5],cwd=bi&2?8:6,chg=bi&2?5:6;
+  if(sh==='core'){const cx0=o.rug?((bi&1?w>>2:(w*3)>>2)-(cwd>>1)):(w>>1)-(cwd>>1)+(bi%3-1)*4,cy0=(h>>1)-(chg>>1);for(let y=cy0;y<cy0+chg;y++)for(let x=cx0;x<cx0+cwd;x++)m[y][x]='#';
+   for(let x=cx0-1;x<=cx0+cwd;x++){if(m[cy0-1][x]!=='#')m[cy0-1][x]='.';if(m[cy0+chg][x]!=='#')m[cy0+chg][x]='.'}put(m,cx0-1,cy0+chg,'p');put(m,cx0+cwd,cy0+chg,'p')}
+  else if(sh==='wing'){const ww=Math.round(w/4),wh=Math.round(h/3),L=dx>(w>>1),x0=L?1:w-1-ww,y0=h-1-wh;for(let y=y0;y<h-1;y++)for(let x=x0;x<x0+ww;x++)m[y][x]='#';
+   for(let x=x0-1;x<=x0+ww;x++)if(m[y0-1][x]!=='#')m[y0-1][x]='.';for(let y=y0;y<h-1;y++){const xe=L?x0+ww:x0-1;if(m[y][xe]!=='#')m[y][xe]='.'}}
+  else for(let y=6;y<h-5;y+=5)for(let x=5;x<w-5;x+=7)if(!onRug(x,y)&&Math.abs(x-ex)>2&&Math.abs(x-dx)>2)m[y][x]='#'}
+ // open floors: 0-2 partition walls with a gap at alternating ends, so the walk up zigzags (pickFloor picks the count that fits the pacing curve).
+ // On floors with a central runner the gap sits on the runner instead, so it reads as a doorway and the rug still leads the way.
+ if(lay==='bank'&&!last){const K=att%3,rc=o.rug==='rose'||o.rug==='pent',pm=o.w||'p';let side=dx<(w>>1)?1:0;
+  for(let k=K;k>=1;k--){let y=Math.round(1+k*(h-2)/(K+1));if(rc&&Math.abs(y-(h>>1))<=4)y=k===1?(h>>1)-5:(h>>1)+5;if(y<5||y>h-6)continue;
+   const run=o.rug&&!rc,g0=run?(w>>1)-1:side?w-5:2;for(let x=1;x<w-1;x++)if(x<g0||x>g0+2){m[y][x]='#';if(rng()<.22&&!(run&&x>=g0-1&&x<=g0+3))put(m,x,y+1,pm[(rng()*pm.length)|0])}else{m[y][x]='.';if(m[y-1][x]!=='#')m[y-1][x]='.';if(m[y+1][x]!=='#')m[y+1][x]='.'}
+   side^=1}}
  // perimeter props and clusters for open layouts
  if(lay==='bank'||lay==='ring'||lay==='corr'){const pm=o.pm||o.w||'p';for(let y=4;y<h-3;y++){if(rng()<.3)put(m,1,y,pm[(rng()*pm.length)|0]);if(rng()<.3)put(m,w-2,y,pm[(rng()*pm.length)|0])}
   for(let x=2;x<w-2;x++)if(Math.abs(x-dx)>2&&rng()<.22)put(m,x,h-2,pm[(rng()*pm.length)|0])}
@@ -2024,7 +2230,7 @@ function genFloor(n,att){
  return{t:m,w,h,ex,dx,rugs,rest,npcs,boss:bossAt}}
 function makeFloor(n){const sp=SPEC[n],D=dunOf(n);
  const F={n,name:sp[0].toUpperCase(),dun:D,th:{fa:sp[1],fb:sp[2],wall:sp[3],wt:sp[4],desk:sp[5],ft:sp[6],dark:sp.o.dark||0,ser:n===5,ac:NAC[n]},
- build(){let g=null;for(let a=0;a<60&&!g;a++)g=genFloor(n,a);if(!g){g={t:blank(sp[8],sp[9]),w:sp[8],h:sp[9],ex:5,dx:sp[8]>>1,rugs:[],rest:{x:3,y:2},npcs:[],boss:null};g.t[0][5]='E';g.t[g.h-1][g.dx]='D'}
+ build(){let g=pickFloor(n);if(!g){g={t:blank(sp[8],sp[9]),w:sp[8],h:sp[9],ex:5,dx:sp[8]>>1,rugs:[],rest:{x:3,y:2},npcs:[],boss:null};g.t[0][5]='E';g.t[g.h-1][g.dx]='D'}
   F.ex=g.ex;F.dx=g.dx;F.rugs=g.rugs;F.rest=g.rest;F.npcs=g.npcs;F.boss=g.boss;F.start={x:g.dx,y:g.h-2,dir:'up'};F.back={x:g.ex,y:1,dir:'down'};F.mw=g.w;F.mh=g.h;
   F.rugs.forEach(r=>{r.tex=null});return g.t}};
  return F}
@@ -2924,7 +3130,13 @@ function loadFloor(n,sp){G.floor=n;const F=FLOORS[n],t=F.build();G.map={t,w:t[0]
  (G.doors[n]||[]).forEach(([x,y])=>{t[y][x]='.'});
  G.ents=[];F.npcs.forEach(d=>{if(d.join&&roster().some(m=>m.id===d.join))return;G.ents.push(Object.assign({},d))});
  if(F.boss&&!G.boss[F.dun])G.ents.push({boss:1,bi:F.dun,x:F.boss.x,y:F.boss.y,n:BOSSES[F.dun].name});
- widenChokes(n);placeProps(n);G.lmT=G.t;if(OPT.sr&&LM[n])setTimeout(()=>SRM('Landmark: '+LM[n]+'.'),600);pl.x=sp.x;pl.y=sp.y;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;pl.dir=sp.dir||'up';pl.mv=0;G.steps=0;music(floorMus(n))}
+ widenChokes(n);placeProps(n);G.lmT=G.t;if(OPT.sr&&LM[n])setTimeout(()=>SRM('Landmark: '+LM[n]+'.'),600);{const q=safeSpot(t,sp.x,sp.y,F);if(q.x!==sp.x||q.y!==sp.y){if(G.rest&&G.rest.f===n&&G.rest.x===sp.x&&G.rest.y===sp.y){G.rest.x=q.x;G.rest.y=q.y}sp={x:q.x,y:q.y,dir:sp.dir}}}
+ pl.x=sp.x;pl.y=sp.y;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;pl.dir=sp.dir||'up';pl.mv=0;G.steps=0;music(floorMus(n))}
+// A save made before a floor's layout changed can point at a tile that is now furniture or wall.
+// Move to the nearest open tile that connects to the way in, so the player is never stuck.
+function safeSpot(t,x,y,F){const h=t.length,w=t[0].length,open=(X,Y)=>t[Y]&&(t[Y][X]==='.')&&!G.ents.some(e=>!e.gone&&e.x===X&&e.y===Y);
+ const ok=reachFrom(t,F.start.x,F.start.y);if(open(x,y)&&ok[y*w+x])return{x,y};
+ let best=null,bd=1e9;for(let Y=1;Y<h-1;Y++)for(let X=1;X<w-1;X++)if(ok[Y*w+X]&&open(X,Y)){const d=Math.abs(X-x)+Math.abs(Y-y);if(d<bd){bd=d;best={x:X,y:Y}}}return best||{x:F.start.x,y:F.start.y}}
 function fieldUpdate(){
  if(pl.mv){pl.rx+=pl.dx*2;pl.ry+=pl.dy*2;if(--pl.mv===0){pl.x+=pl.dx;pl.y+=pl.dy;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;afterStep()}return}
  const d=held.up?'up':held.down?'down':held.left?'left':held.right?'right':null;
@@ -2933,7 +3145,7 @@ function fieldUpdate(){
 function afterStep(){markSeen();srStep();if(G.floor>=NF-1)return;const jn=G.ents.find(e=>e.join&&e.join!=='joan'&&!e.gone&&Math.max(Math.abs(e.x-pl.x),Math.abs(e.y-pl.y))<=3&&clearLine(pl.x,pl.y,e.x,e.y));if(jn&&!G.busy){run(()=>joinScene(jn));return}if(++G.steps>14&&Math.random()<.055){G.steps=0;run(encounter)}}
 async function run(fn){if(G.busy)return;G.busy=true;try{await fn()}catch(e){console.error(e)}finally{G.busy=false;for(const k in q)q[k]=0}}
 async function encounter(){const f=G.floor,D=dunOf(f),lo=f%10,n=ri(1,(D===0&&lo<3)?2:3),arr=ENC[D],mx=Math.min(arr.length-1,2+((lo*arr.length/10)|0)),kinds=Array.from({length:n},()=>arr[ri(0,mx)]);const r=await battle(kinds,f);if(r==='lose')await burnout();else if(r==='win')await otAdd(f)}
-async function burnout(){await wipe(1);G.B=null;G.mode='black';UI.ban=null;await say('','BURNOUT. The crunch claimed you... but your coworkers carry you back to the nearest couch.');roster().forEach(m=>{m.hp=m.mhp;m.mp=m.mmp;m.st={}});{const c0=G.inv.coffee,d0=G.inv.donut;G.inv.coffee=c0>>1;G.inv.donut=d0>>1;if(c0+d0>0)await say('','You lost '+(c0-G.inv.coffee)+' coffee and '+(d0-G.inv.donut)+' donut in the scramble.')}const r=G.rest;loadFloor(r.f,{x:r.x,y:r.y,dir:'up'});G.mode='field';await wipe(-1);UI.wipe=null}
+async function burnout(){await wipe(1);G.B=null;G.mode='black';UI.ban=null;music('none');sting('sad');await say('','BURNOUT. The crunch claimed you... but your coworkers carry you back to the nearest couch.');roster().forEach(m=>{m.hp=m.mhp;m.mp=m.mmp;m.st={}});{const c0=G.inv.coffee,d0=G.inv.donut;G.inv.coffee=c0>>1;G.inv.donut=d0>>1;if(c0+d0>0)await say('','You lost '+(c0-G.inv.coffee)+' coffee and '+(d0-G.inv.donut)+' donut in the scramble.')}const r=G.rest;loadFloor(r.f,{x:r.x,y:r.y,dir:'up'});G.mode='field';await wipe(-1);UI.wipe=null}
 async function interact(){const [dx,dy]=DV[pl.dir],tx=pl.x+dx,ty=pl.y+dy;const e=G.ents.find(e=>!e.gone&&e.x===tx&&e.y===ty);if(e){const r=await talkEnt(e);await tierCheck();return r}
  const c=G.map.t[ty]&&G.map.t[ty][tx],D=dunOf(G.floor);
  if(c&&!'VCLED'.includes(c)){const px=PTXT[D][c];if(px){await say('',Array.isArray(px)?pick(px):px)}await searchSpot(c,tx,ty);if(c==='w'&&!G.flags['wc'+G.floor]){G.flags['wc'+G.floor]=1;await lawTip(['aml3_2','aml1_1','aml3_3','aml6_2','aml6_6a','aml6_7','osa'],'Notice board')}if(c==='w')waterBreak();return}
@@ -3021,7 +3233,7 @@ async function talkEnt(e){
    if(j<3){lawUnlock(le.id);if(os[j]===le){G.inv.coffee++;G.inv.donut++;await say(sp.name,`${le.ref}: ${le.t}. ${le.x}`);await say(e.n,'Right there in the law. Impressive. Take a coffee and a donut.');if(woundOwn(sp,le))await ownLaw(sp,le)}else await say(lawWho(),`Close, but no. It is ${le.ref}: ${le.t}. ${le.x}`)}}return}
   await say(e.n,INT[k].wrong);miss++;if(miss===1)await say(e.n,ARGCL[cur]);
   if(miss>=2)await say(e.n,`Let me put it plainly: what I need is ${INT[cur].hint}.`)}}
-async function joinScene(e){
+async function joinScene(e){sting('hero');
  if(e.join==='joan')await talk([['Joan','...Shh. Compiler\'s almost done.'],['Kaj','Joan Marx? They said you never leave this closet.'],['Joan','I\'m writing Redistribute v1.0. Software that moves wealth from those who hoard it to those who earn it.'],['Clem','We\'re forming a union, Joan.'],['Joan','A union. Legally protected collective bargaining. I\'ve read every statute. I\'m in. Quietly. Then loudly.'],['Joan','Take my Lagboken, in your menu. Every paragraph we use goes in it. MBL 7 §: you may join a union. MBL 8 §: nobody may punish you for it.']]);
  else if(e.join==='clementine')await talk(CLEM_JOIN);
  else if(e.join==='marl')await talk(clemOut()?MARL_JOIN.map(([n,t])=>n==='Clem'?['Henrietta',t]:[n,t]):MARL_JOIN);
@@ -3049,7 +3261,7 @@ async function ending(){
  await wipe(1);G.mode='end';G.end={t:0,done:0};music('end');await wipe(-1);UI.wipe=null;
  while(!G.end.done)await sleep(200);
  for(;;){const k=await key();if(k==='ok')break}
- await wipe(1);G.mode='title';G.end=null;UI.wipe=null;music('office');G.members=[];G.bench=[];G.signed={};G.interns=0;
+ await wipe(1);G.mode='title';G.end=null;UI.wipe=null;music('title');G.members=[];G.bench=[];G.signed={};G.interns=0;
  await sleep(200);boot(true)}
 
 /* ================= SAVE / START ================= */
@@ -3062,7 +3274,7 @@ async function newGame(plus){G.busy=true;
  await wipe(1);G.mode='field';loadFloor(0,{x:F0.dx,y:F0.mh-4,dir:'down'});const hen={id:'hen0',n:'Henrietta',x:F0.dx,y:F0.mh-2,look:CH.henrietta.look,dir:'up'};G.ents.push(hen);await wipe(-1);UI.wipe=null;G.busy=false;
  await run(async()=>{await talk([['','ACT I: Organize.'],['','Neddiscorp Exploitations Tower. Forty floors of fluorescent light, stale coffee and unpaid overtime. From the Cubicle Farm up to the Corporate Kingdom.'],['','CEO Alis Neddis has announced a "voluntary" 80-hour crunch. Again.'],['Kaj','Another weekend gone. My last raise was a pizza party.'],['Kaj','Somebody should file a bug report on this whole place. No, wait. Somebody should organize it. Like, a union. A real one, with a collective agreement and everything.'],['Kaj','...Somebody. Right. Nobody else is going to do it.'],['Henrietta','Sorry, didn\'t mean to listen in. I was doing the bins. Your fire door\'s chained shut, by the way. Was. I unchained it.'],['Kaj','You cut the chain? On your break?'],['Henrietta','Twelve years as an electrician at the shipyard. I know what a fire code is. Nobody ever asks the janitor anything.'],['Kaj','I\'m, uh. I\'m forming a union. Want in?'],['Henrietta','Ten years I\'ve waited for someone to ask me that.'],['Kaj','Great! Okay. I\'ll write the leaflets, do the sign-ups, talk to every floor... tonight, probably.'],['Henrietta','All by yourself? That\'s how they got you into the 80-hour week.'],['Henrietta','Lesson one: sit down. A worker sitting down is the strongest thing in this building.'],['Kaj','...Sit-Down Strike. Noted.']]);
   hen.gone=1;G.members.push(mkM('henrietta',1));sfx('lvl');await talk([['','Henrietta joined the party! GOAL: convince a majority of your coworkers to become union members, then win the Collective Bargaining Agreement.'],['','Talk to coworkers with A/Z and argue the case that fits what bothers them: fair wages, job security, worker influence, equal opportunity or employer transparency. Rest on couches to save. Press B/X for the menu. Bosses are won by NEGOTIATING. Allies are scattered through the tower. Look for the cyan speech bubble.']]);await lawScene('crunch')})}
-async function boot(skip){if(!skip)await playIntro();G.mode='title';music('office');
+async function boot(skip){if(!skip)await playIntro();G.mode='title';music('title');
  for(;;){const items=[{t:'NEW GAME'}];if(hasSave())items.push({t:'CONTINUE'});try{if(localStorage.getItem(NGK))items.push({t:'NEW GAME+'})}catch(e){}items.push({t:muted?'SOUND: OFF':'SOUND: ON'});items.push({t:PX>1?'PIXELS: CHUNKY':'PIXELS: SMOOTH'});items.push({t:OPT.lg?'LARGE TEXT: ON':'LARGE TEXT: OFF'});items.push({t:OPT.sr?'SCREEN READER: ON':'SCREEN READER: OFF'});items.push({t:'OPTIONS'});
   const i=await choose(items,{x:296,y:80,w:146,cancel:false});const t=items[i].t;
   if(t==='NEW GAME'){await newGame();return}
@@ -3080,7 +3292,7 @@ function tick(){G.t++;srTick();ambTick();UI.fx=UI.fx.filter(f=>++f.t<40);UI.fx.f
  if(G.mode==='field'&&!G.busy)fieldUpdate();else if(G.busy)for(const k in q)q[k]=0}
 let last=0,acc=0;
 function frame(ts){const dt=Math.min(.1,(ts-last)/1000||0);last=ts;acc+=dt;while(acc>=1/60){tick();acc-=1/60}draw();requestAnimationFrame(frame)}
-if(/[?&]debug\b/.test(location.search))window.__dbg={favStory,STAR,ORGL,organize,kajSeed,kajLead,clemFired,clemBack,clemEvidence,clemTable,bestiary,kitMenu,KIT,FAVS,favG,teamItem,addDues,decOn,seenEnc,NGK,itemMenu:typeof itemMenu!=='undefined'?itemMenu:null,enemyTurn,perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,citeLaw,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
+if(/[?&]debug\b/.test(location.search))window.__dbg={TR,BXg:()=>BX,partyHp,negProg,sting,genFloor,SPEC,pickFloor,fRoute,routeT,FBEST,favStory,STAR,ORGL,organize,kajSeed,kajLead,clemFired,clemBack,clemEvidence,clemTable,bestiary,kitMenu,KIT,FAVS,favG,teamItem,addDues,decOn,seenEnc,NGK,itemMenu:typeof itemMenu!=='undefined'?itemMenu:null,enemyTurn,perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,citeLaw,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
 boot();requestAnimationFrame(frame);
 })();
 </script>
