@@ -647,11 +647,11 @@ kaj:{title:'The Release',floor:5,laws:['atl13','atl14','atl8','osa'],own:['atl5'
  cite:'That one is mine. Rest isn\'t a perk. It\'s the law.',
  scene:[['','KAJ: THE RELEASE'],['','Three years ago. Release night. 3 a.m. The office smells of cold pizza.'],['Manager','Great work, team. One last push. Just until Monday.'],['Kaj','It\'s Sunday. I haven\'t been home since Thursday.'],['Manager','Think of the equity!'],['','The product shipped. The all-hands email thanked leadership. A week later, half of the team got a different email.'],['Kaj','I still wake up at night and check Slack. Just in case.'],['Kaj','Eleven hours of rest every day. Thirty-six every week. It\'s in the law. Why did nobody ever tell us?']],
  conf:{1:[['Kaj','Vance, I know your type. You promised equity and delivered a pizza party.'],['Kaj','Eleven hours of rest, thirty-six every week. ATL 13 and 14. You don\'t own my nights.']],3:[['Kaj','Rest isn\'t a perk, Alis. It\'s a right.']]}},
-clementine:{title:'The Reorganization',floor:4,laws:['mbl11','mbl19','mbl15'],own:['mbl11','mbl15','mbl19','mbl19a'],
+clementine:{title:'The Reorganization',floor:4,laws:['mbl13','mbl19a','mbl15'],own:['mbl11','mbl13','mbl15','mbl19','mbl19a'],
  sum:'Clem ran stand-ups for two years. Her team was "reorganized" by a single email at 4:58 on a Friday. Nobody was asked. She ran the last retro anyway.',
  cite:'My paragraph. They have to negotiate BEFORE the change. Not after.',
- scene:[['','CLEM: THE REORGANIZATION'],['','Last spring. A Friday, 4:58 p.m. One email, forty recipients.'],['Email','Subject: Exciting changes! Your team is now part of a new, more agile structure.'],['Clem','I read it twice. My team was gone. The retrospective was on Monday. I ran it anyway.'],['Clem','Nobody asked us. Not one question.'],['','Somewhere in a binder, a rule says the employer must negotiate with the union before a major change. Nobody had opened that binder.'],['Clem','MBL 11 §. Negotiate first. I should have known.']],
- conf:{1:[['Clem','Your efficiency program reorganized forty people by email. Did anyone ask them?'],['Clem','MBL 11 §. Negotiate first. We\'re here to do it properly.']],3:[['Clem','You moved my whole team by email. Today we do it at the table.']]}},
+ scene:[['','CLEM: THE REORGANIZATION'],['','Last spring. A Friday, 4:58 p.m. One email, forty recipients.'],['Email','Subject: Exciting changes! Your team is now part of a new, more agile structure.'],['Clem','I read it twice. My team was gone. The retrospective was on Monday. I ran it anyway.'],['Clem','Nobody asked us. Not one question.'],['','There was no union on Clem\'s floor. So nobody had any right to be asked.'],['Clem','MBL 13 §. If we\'d had a union, they\'d have had to negotiate with us first. We didn\'t. I should\'ve known.']],
+ conf:{1:[['Clem','Your efficiency program reorganized forty people by email. Did anyone ask them?'],['Clem','They\'ve got a union now. MBL 13 §: you negotiate with us before changes that hit our members. We\'re here to do it properly.']],3:[['Clem','You moved my whole team by email. Today we do it at the table.']]}},
 henrietta:{title:'The Ladder',floor:7,laws:['aml3_2','aml6_2','aml6_6a','aml6_7'],own:['aml3_2','aml6_2','aml6_6a','aml6_7','aml3_3'],
  sum:'Henrietta cleaned at night for a contractor. Her friend Marit fell from a borrowed ladder with no harness. The contractor and the company blamed each other. Henrietta had asked for the harness twice.',
  cite:'That\'s why I\'m the safety rep now. Nobody else slips.',
@@ -673,8 +673,6 @@ marl:{title:'The Box',floor:22,laws:['las7','las22','las25','las11'],own:['las4'
  scene:[['','MARL: THE BOX'],['','Thirty-one years in Accounts. A Tuesday, 10:15. A meeting room with one jug of water.'],['HR','Marl, your position has been identified as redundant. Lack of work.'],['Marl','Last in, first out? I\'m the longest in.'],['HR','We have taken that into account.'],['','A month later, a consultant sat at her desk. Nobody phoned her.'],['Marl','For a year I thought it was my fault. I did the sums every night.'],['Marl','LAS 22 §: the longest-serving stay. LAS 25 §: the ones sent away get the first call. I wrote both on a card and kept it in my wallet.']],
  conf:{2:[['Marl','Thirty-one years in this company. Your culture never once asked how I was, Mr Garglr.'],['Marl','LAS 22 §. LAS 25 §. I\'ve brought the card.']],3:[['Marl','Thirty-one years, Alis. I know where every number went.']]}}};
 const woundG=()=>G.wound||(G.wound={});
-const woundOwn=(sp,le)=>!!(sp&&WOUND[sp.id]&&WOUND[sp.id].own.includes(le.id));
-async function ownLaw(sp,le){G.inv.coffee++;toast('PERSONAL PARAGRAPH: +1 COFFEE');sfx('sting');await say(sp.name,WOUND[sp.id].cite)}
 async function woundScene(late){const wg=woundG(),fl=G.floor;
  const c=roster().find(m=>{const w=WOUND[m.id];return w&&!wg[m.id]&&fl>=w.floor+late});if(!c)return false;
  const w=WOUND[c.id];wg[c.id]={seen:1};
@@ -1479,7 +1477,7 @@ function kingPad(th,t){const ac=th.ac||'#ffd040',el=(rx,ry,c)=>{for(let y=-ry;y<
 const NTS=[FARM,NEO,HELL,KING];
 
 
-/* ================= DUNGEON RULES, FLOOR SCENES, CITE LAW, AMBIENCE ================= */
+/* ================= DUNGEON RULES, FLOOR SCENES, AMBIENCE ================= */
 const OTCAP=8;
 const LM=['The grain silo and windmill through the windows','A maze of felt cubicle walls with seedlings on every desk','The mail chute and the sorting wall','The water cooler and the notice board','Rows of tall archive shelves','The blinking server racks','Towers of stacked supplies','Water pooling across the carpet','The one flickering lamp','The long executive corridor',
 'The sealed lead gate and kanban wall','Funnel kiosks and territory tables','The pit of stalled deal cards','Rows of key-account desks','The big brass closing bell','The round vault door with its key lock','The forecast wall with its hockey-stick chart','Stacks of approval trays','The quota board glowing red','The Sales Director\'s eleven blazers',
@@ -1530,12 +1528,20 @@ const VIG=[
 const DECREES=[
  {id:'famine',nm:'DECREE OF FAMINE',t:'No coffee, no donuts, no breaks.',law:'atl15',ef:'Items are banned'},
  {id:'chains',nm:'DECREE OF CHAINS',t:'Nobody leaves their desk, not even to swap.',law:'aml6_7',ef:'No fleeing or swapping'},
- {id:'gloom',nm:'DECREE OF GLOOM',t:'Morale is a privilege. Crying is paid per hour.',law:'mbl11',ef:'Party starts demoralised'},
+ {id:'gloom',nm:'DECREE OF GLOOM',t:'Morale is a privilege. Crying is paid per hour.',law:'mbl13',ef:'Party starts demoralised'},
  {id:'haste',nm:'DECREE OF HASTE',t:'Productivity targets doubled by royal order.',law:'mbl26',ef:'Foes start fired up'},
  {id:'gag',nm:'DECREE OF THE GAG',t:'No talking union on company time.',law:'mbl7',ef:'Organize is banned'}];
+/* decrees are documents: mark the lines that break the law */
+const DRULE=['No rule broken','Breaks: 5 hours max','Daily rest: 11 hours','Overtime caps','Schedule notice: 2 weeks','Negotiate first','Right to organise','Safety: prevent harm','Safety rep can stop work','Degrading treatment'];
+const DRLAW=[null,'atl15','atl13','atl8','atl12','mbl13','mbl8','aml3_2','aml6_7','osa'];
+const DECDOC={famine:[['1.','Breaks are suspended until targets are met.',1],['2.','The coffee machines are closed for maintenance.',0],['3.','Friday donuts are cancelled.',0],['4.','Shifts run 08:00-16:00 straight through.',1]],
+ chains:[['1.','Fire exits stay locked during work hours.',7],['2.','Safety reps may not halt work for any reason.',8],['3.','Desks are assigned by the Crown.',0],['4.','Leaving your desk needs a written pass.',0]],
+ gloom:[['1.','Teams merge Monday. The union hears afterwards.',5],['2.','Crying at your desk is docked from your pay.',9],['3.','Team-building is on Thursday.',0],['4.','Morale reports are due every week.',0]],
+ haste:[['1.','Productivity targets are doubled.',0],['2.','Everyone works 60-hour weeks until further notice.',3],['3.','Weekend shifts are posted the Friday before.',4],['4.','Overtime is logged in the royal ledger.',0]],
+ gag:[['1.','Joining a union earns a written warning.',6],['2.','The great hall is closed on Sundays.',0],['3.','Leave the union and get a bonus.',6],['4.','Meetings must end by 17:00.',0]]};
 const decOf=f=>f>=30&&f<NF-1?DECREES[(f-30)%5]:null;
 const decOn=id=>{const d=decOf(G.floor);return!!d&&d.id===id&&!(G.dec&&G.dec[G.floor])};
-const PIPE=[['INFORM','Step 1: Inform. The employer must keep the union informed about changes (MBL 19 §).','mbl19'],['NEGOTIATE','Step 2: Negotiate BEFORE deciding. Not after. Not "in parallel" (MBL 11 §).','mbl11'],['SIGN','Step 3: Sign the collective agreement. It binds both sides (MBL 23 §).','mbl23']];
+const PIPE=[['INFORM','Step 1: Inform. The employer must keep the union informed about changes, agreement or not (MBL 19 a §).','mbl19a'],['NEGOTIATE','Step 2: Negotiate BEFORE deciding. Not after. Not "in parallel" (MBL 13 §).','mbl13'],['SIGN','Step 3: Sign the collective agreement. It binds both sides (MBL 23 §).','mbl23']];
 const FORMS=[['VALID REASON','A dismissal needs a valid reason: lack of work, or personal reasons that justify it (LAS 7 §).','las7'],['WRITTEN NOTICE','The notice has to be given in writing, with the right information on challenging it (LAS 8 §).','las8'],['NOTICE PERIOD','Then the notice period starts to run: from one month up to six, depending on service (LAS 11 §).','las11']];
 async function tipOnce(k,t){if(G.flags['tip'+k])return false;G.flags['tip'+k]=1;await say('','TIP: '+t);return true}
 async function tipBan(k,t){if(G.flags['tip'+k])return;G.flags['tip'+k]=1;await say('','TIP: '+t)}
@@ -1543,7 +1549,6 @@ async function otAdd(f){if(dunOf(f)!==0)return;const o=G.ot||0;if(o>=OTCAP)retur
  if(G.ot===OTCAP){sfx('no');await say('','OVERTIME CAP REACHED. The party is running on fumes. Foes now hit a tired team until you rest on a couch. Menu > Stand together also clears it, once per dungeon (ATL 8 §: overtime is capped; ATL 13 §: daily rest).');lawUnlock('atl8');lawUnlock('atl13')}}
 function waterBreak(){if(dunOf(G.floor)!==0||(G.ot||0)<=0||G.flags['wcr'+G.floor])return;G.flags['wcr'+G.floor]=1;G.ot=Math.max(0,G.ot-2);sfx('heal');toast('BREAK TAKEN: overtime -2 (ATL 15 §)');lawUnlock('atl15')}
 async function ruleBattleStart(B){const f=G.floor,D=dunOf(f);
- await tipBan('cite','Choose CITE and pick the right paragraph of the law. A right answer stuns every foe. The Lagboken in the menu helps.');
  if(D===1||D===2)await tipBan('st','Stuck at a locked door? Menu > Stand together tells you the next step (once per dungeon).');
  if(D===0&&(G.ot||0)>=OTCAP){for(const m of aliveP())m.st.slow=3;await ban('OVERTIME CAP: your team is exhausted and slow! Rest on a couch.',1100)}
  const d=decOf(f);if(d&&!(G.dec&&G.dec[f])){await tipBan('dec','A decree is in force on this floor. Menu > Stand together can repeal it, once per dungeon.');if(d.id==='gloom'){for(const m of aliveP())m.st.demor=2;await ban(d.nm+': the party starts demoralised!',1000)}else if(d.id==='haste'){for(const e of B.en)e.st.buff=3;await ban(d.nm+': the foes are fired up!',1000)}else if(d.id==='famine')await ban(d.nm+': no items this fight!',900);else if(d.id==='chains')await ban(d.nm+': no fleeing, no swapping!',900);else if(d.id==='gag')await ban(d.nm+': no organizing on company time!',900)}}
@@ -1572,8 +1577,9 @@ function placeProps(n){const F=FLOORS[n],M=G.map,w=M.w,h=M.h,D=dunOf(n),rng=mkRn
  const want=[];if(n>0&&n<NF-1){if(D===1)for(let s=0;s<3;s++)want.push({prop:'kiosk',term:1,stage:s,n:`DEAL DESK ${s+1}: ${PIPE[s][0]}`});
   else if(D===2){const ord=[0,1,2];for(let i=2;i>0;i--){const j=Math.floor(rng()*(i+1));[ord[i],ord[j]]=[ord[j],ord[i]]}ord.forEach(s=>want.push({prop:'form',term:1,stage:s,n:`FORM: ${FORMS[s][0]}`}))}
   else if(D===3&&decOf(n))want.push({prop:'decree',term:1,stage:0,n:decOf(n).nm})}
+ {const cs=caseAt(n);if(cs)cs.facts.forEach(([cf,prop,nm,l])=>want.push({prop,cf,cid:cs.id,n:nm,l}))}
  const v=VIG[n];if(v&&n>0)want.push({prop:v[0],vig:1,n:v[1],l:v[2],law:v[3]});
- const placed=[];for(const wnt of want){let ok=false;for(const[x,y]of cands){if(placed.some(p=>Math.abs(p.x-x)+Math.abs(p.y-y)<6)||near(x,y,1))continue;const e=Object.assign({x,y},wnt);G.ents.push(e);const b1=bfs();if(b1.q.length>=total-placed.length-1){placed.push(e);ok=true;break}G.ents.pop()}if(!ok&&wnt.term){/* fall back: put terminals anywhere safe */for(const[x,y]of b0.q){if(near(x,y,1)||placed.some(p=>Math.abs(p.x-x)+Math.abs(p.y-y)<3)||special(x,y))continue;const e=Object.assign({x,y},wnt);G.ents.push(e);const b1=bfs();if(b1.q.length>=total-placed.length-1){placed.push(e);ok=true;break}G.ents.pop()}}};G.ents.forEach(e=>{if(e.term){const r=G.rul[n];e.done=e.prop==='decree'?!!(G.dec&&G.dec[n]):!!r&&e.stage<r.st}})}
+ const placed=[];for(const wnt of want){let ok=false;for(const[x,y]of cands){if(placed.some(p=>Math.abs(p.x-x)+Math.abs(p.y-y)<6)||near(x,y,1))continue;const e=Object.assign({x,y},wnt);G.ents.push(e);const b1=bfs();if(b1.q.length>=total-placed.length-1){placed.push(e);ok=true;break}G.ents.pop()}if(!ok&&(wnt.term||wnt.cf)){/* fall back: put terminals anywhere safe */for(const[x,y]of b0.q){if(near(x,y,1)||placed.some(p=>Math.abs(p.x-x)+Math.abs(p.y-y)<3)||special(x,y))continue;const e=Object.assign({x,y},wnt);G.ents.push(e);const b1=bfs();if(b1.q.length>=total-placed.length-1){placed.push(e);ok=true;break}G.ents.pop()}}};G.ents.forEach(e=>{if(e.term){const r=G.rul[n];e.done=e.prop==='decree'?!!(G.dec&&G.dec[n]):!!r&&e.stage<r.st}})}
 function drawProp(e,sx,sy){const k=e.prop,t=G.t,gl=e.term&&!e.done,done=!!e.done;R(sx+4,sy+27,24,3,'rgba(0,0,0,.28)');
  const tbl=()=>{R(sx+4,sy+17,24,3,'#7a5a3a');R(sx+4,sy+17,24,1,'#a07a50');R(sx+6,sy+20,3,8,'#5a3e28');R(sx+23,sy+20,3,8,'#5a3e28')};
  if(k==='kiosk'){const A=done?'#7dff9a':'#38e0d0';R(sx+10,sy+18,12,10,'#243252');R(sx+9,sy+27,14,2,'#141c30');R(sx+5,sy+3,22,16,'#0a1020');R(sx+6,sy+4,20,14,'#141c30');R(sx+7,sy+5,18,12,gl&&((t>>4)&1)?'#1a4a5a':'#10303c');for(let i=0;i<3;i++)R(sx+8,sy+6+i*3,6+((t>>3)+i*2)%7,1,A);T(String((e.stage||0)+1),sx+19,sy+8,A,null);R(sx+5,sy+3,22,1,A);if(gl)R(sx+4,sy+2,24,1,'rgba(56,224,208,.5)')}
@@ -1596,39 +1602,26 @@ function drawProp(e,sx,sy){const k=e.prop,t=G.t,gl=e.term&&!e.done,done=!!e.done
  else if(k==='scroll'){R(sx+4,sy+18,24,8,'#e8d8a8');R(sx+3,sy+17,3,10,'#c8a868');R(sx+26,sy+17,3,10,'#c8a868');for(let i=0;i<3;i++)R(sx+8,sy+20+i*2,16-i*2,1,'#8a7a50');R(sx+20,sy+22,5,5,'#a02020')}
  else if(k==='candle'){R(sx+4,sy+20,24,6,'#3a2820');R(sx+4,sy+20,24,1,'#6a4a38');R(sx+13,sy+13,6,9,'#e8e0c0');flame(sx+13,sy+13,6,7,e.x*5+e.y)}
  else if(k==='hardhat'){R(sx+12,sy+18,8,10,'#6a5a40');R(sx+9,sy+17,14,2,'#8a7a5a');R(sx+9,sy+10,14,7,'#e8c020');R(sx+7,sy+16,18,2,'#c8a010');R(sx+13,sy+8,6,3,'#f0d848')}
- else{R(sx+8,sy+14,16,14,'#888')}}
+ else{R(sx+8,sy+14,16,14,'#888')}if(e.cf&&csOn(e.cid,e.cf))caseGlint(sx,sy)}
 async function termUse(e){const f=G.floor,D=dunOf(f),r=G.rul[f]||(G.rul[f]={st:0});
- if(e.prop==='decree'){const d=decOf(f);if(G.dec&&G.dec[f]){await say(d.nm,'The decree lies torn on the stand. The law was on your side. REPEALED.');return}
-  await say(d.nm,`"${d.t}" (Effect on this floor: ${d.ef}.)`);const i=await ask('',`Challenge the decree by citing the law?`,['Cite the paragraph','Leave it']);if(i!==0)return;
-  const right=LAWI[d.law],os=lawOpts(right,3);await say('',`Which paragraph answers this decree? Hint: ${right.x.replace(/\s*\([^)]*\)/g,'')}`);
-  const j=await choose(os.map(o=>({t:lawLabel(o)})),{x:0,y:160,w:236,h:92,title:'Cite the paragraph',cancel:true});if(j<0)return;lawUnlock(right.id);
-  if(os[j]===right){sfx('combo');(G.dec=G.dec||{})[f]=1;e.done=1;await say('',`${right.ref}: ${right.t}. The decree is void. REPEALED for this whole floor.`)}
-  else{sfx('no');await say('',`That paragraph doesn't apply. The right one was ${right.ref}: ${right.t}. The decree stands. Try again.`)}return}
+ if(e.prop==='decree'){const d=decOf(f);if(G.dec&&G.dec[f]){await say(d.nm,'The decree lies torn on the stand. Nobody would carry it out. REPEALED.');return}
+  await say(d.nm,`"${d.t}" (Effect on this floor: ${d.ef}.)`);const i=await ask('','The full decree is pinned below, line by line. Challenge it?',['Read and challenge','Leave it']);if(i!==0){await say('','You can also Stand together (in the menu) and refuse to carry it out.');return}
+  const rows=DECDOC[d.id],ok=await docPuzzle({title:d.nm,rows,rules:DRULE,tipKey:'decdoc',tip:'Mark every line of the decree that breaks the law, and pick which rule. Some lines are just petty, not illegal. Pick Done when you\'re finished.',hint:'Petty isn\'t the same as illegal.'});
+  if(!ok){await say('','The decree stands for now. Read it again any time, or Stand together.');return}
+  (G.dec=G.dec||{})[f]=1;e.done=1;for(const r of rows)if(r[2])await lawRaise(DRLAW[r[2]],2);
+  await say('',`Every illegal line is marked and sent back up the tower. Nobody's willing to carry out an unlawful decree. ${d.nm} is REPEALED for this whole floor.`);return}
  if(D===1){const s=e.stage;if(r.st>=3){await say(e.n,'The deal is closed. This desk has nothing left to do.');return}
   if(s<r.st){await say(e.n,'This stage is already done.');return}
-  if(s===r.st){r.st++;e.done=1;sfx('sign');lawUnlock(PIPE[s][2]);await say(e.n,PIPE[s][1]);if(r.st===3){sfx('lvl');await say('','DEAL CLOSED. The elevator is released.')}return}
-  sfx('no');r.st=0;await say(e.n,`STALLED! This deal skipped a stage. It goes back to the start of the pipeline. (Deciding before you negotiate is the kind of thing MBL 11 § forbids.) An Alert Drone arrives to check on the stalled deal!`);
+  if(s===r.st){r.st++;e.done=1;sfx('sign');lawUnlock(PIPE[s][2]);await say(e.n,PIPE[s][1]);if(r.st===3){sfx('lvl');await say('','DEAL CLOSED. The elevator is released.');for(const p of PIPE)await lawRaise(p[2],2)}return}
+  sfx('no');r.st=0;await say(e.n,`STALLED! This deal skipped a stage. It goes back to the start of the pipeline. (Deciding before you negotiate is the kind of thing MBL 13 § forbids.) An Alert Drone arrives to check on the stalled deal!`);
   G.ents.forEach(q=>{if(q.term)q.done=0});const kinds=[ENC[1][0],ENC[1][Math.min(1,ENC[1].length-1)]];const res=await battle(kinds,f);if(res==='lose')await burnout();return}
  if(D===2){const s=e.stage;if(r.st>=3){await say(e.n,'All forms are filed. The stamp has lifted.');return}
   if(e.done){await say(e.n,'Already filed.');return}
   await say(e.n,FORMS[s][1]);const i=await ask('',`File the ${FORMS[s][0]} form now?`,['File it','Not yet']);if(i!==0)return;
-  if(s===r.st){r.st++;e.done=1;sfx('sign');lawUnlock(FORMS[s][2]);await say('',`FILED: ${FORMS[s][0]}. Stamp! (${r.st}/3)`);if(r.st===3){sfx('lvl');await say('','ALL FORMS FILED IN ORDER. The door stamp lifts. The elevator is released.')}}
+  if(s===r.st){r.st++;e.done=1;sfx('sign');lawUnlock(FORMS[s][2]);await say('',`FILED: ${FORMS[s][0]}. Stamp! (${r.st}/3)`);if(r.st===3){sfx('lvl');await say('','ALL FORMS FILED IN ORDER. The door stamp lifts. The elevator is released.');for(const p of FORMS)await lawRaise(p[2],2)}}
   else{sfx('hit');const hint=!G.flags['formhint'];G.flags['formhint']=1;r.st=0;G.ents.forEach(q=>{if(q.term)q.done=0});for(const m of roster())m.hp=Math.max(1,m.hp-Math.round(m.mhp*.1));
    await say('',`VOID! Filed out of order. The red tape tightens and every form is returned (LAS 34 §: a dismissal that breaks the rules is void). Everyone loses 10% HP.`+(hint?` A valid dismissal goes: a valid REASON first, then WRITTEN NOTICE, then the NOTICE PERIOD.`:''))}}}
 async function vigUse(e){await say('',e.l);if(e.law)await lawTip([e.law],lawWho())}
-/* ---- Cite Law in ordinary battles ---- */
-async function citeLaw(a){const B=G.B,D=dunOf(G.floor),THS=[['HOURS','ENV'],['OPEN','WAGES'],['SECURITY','EQUAL'],['VOICE','WAGES']][D];
- const right=lawPick(pick(THS),D),os=lawOpts(right,3);
- await say(a.name,`"Which paragraph says this? ${right.x.replace(/\s*\([^)]*\)/g,'')}"`);
- const card=(G.inv.card||0)>0;if(card)G.inv.card--;const i=await choose(os.map(o=>({t:(card&&o===right?'>> ':'')+lawLabel(o),col:card&&o===right?'#ffd840':undefined})),{x:0,y:160,w:236,h:92,title:card?'Cite (card used)':'Cite the paragraph',cancel:true});if(i<0){if(card)G.inv.card++;return false}
- B.cited=1;lawUnlock(right.id);
- if(os[i]===right){sfx('combo');G.stats=G.stats||{};G.stats.cite=(G.stats.cite||0)+1;B.par={t:0,ref:right.ref,nm:right.t};for(const e of aliveE()){e.st.stun=1;e.flash=10}const ow=aliveP().find(m=>m===a&&woundOwn(m,right))||aliveP().find(m=>woundOwn(m,right)),own=!!ow,g=25+(own?20:0);B.meter=Math.min(100,B.meter+g);if(own)toast(ow.name+': THAT ONE IS MINE! extra SOLIDARITY');await ban(`${a.name} cites ${right.ref}: ${right.t}! Every foe is on strike for a turn. SOLIDARITY +${g}.`,1700);if(ow&&WOUND[ow.id]&&WOUND[ow.id].cite)await say(ow.name,WOUND[ow.id].cite)}
- else{sfx('no');await ban(`Not that one. It was ${right.ref}: ${right.t}. ${tierOn(3)?'The shop steward covers for you: your turn isn\'t lost.':'The turn is lost.'}`,1700);if(tierOn(3))return false}
- return true}
-function drawCite(B){const p=B&&B.par;if(!p)return;if(++p.t>78){B.par=null;return}const a=p.t<60?1:1-(p.t-60)/18,r=8+p.t*2.4,cy=74;ctx.save();ctx.globalAlpha=Math.max(0,a);
- ring(224,cy,r,3,'#9fe8ff');ring(224,cy,r*.62,2,'#fff');ctx.globalAlpha=Math.max(0,a);
- const sc=p.ref.length>9?3:4,tw=p.ref.length*6*sc,k=Math.min(1,p.t/10);R(224-tw/2-8,cy-6*sc*k-4,tw+16,12*sc*k+8,'rgba(6,10,30,.82)');if(k>=1)TS(p.ref,224-tw/2,cy-4.5*sc,'#ffd840',sc,'#000');
- const nm=p.nm||'';if(k>=1){R(224-nm.length*3-6,cy+6*sc+6,nm.length*6+12,12,'rgba(6,10,30,.82)');T(nm,224-nm.length*3,cy+6*sc+9,'#9fe8ff',null)}ctx.restore()}
 const WSFX={keyboard:'clack',sticky:'sticky',mop:'squelch',paper:'flutter',foam:'fwump',stamp:'stamp'};
 Object.assign(SFX,{clack:()=>{for(let i=0;i<4;i++)tone(1800+i*90,.025,'square',.06,i*.045);noise(.05,.08,.18)},sticky:()=>{for(let i=0;i<5;i++)noise(.03,.06,i*.04);tone(900,.05,'triangle',.06,.2)},squelch:()=>{tone(180,.18,'sawtooth',.09,0,.4);noise(.14,.1,.03)},flutter:()=>{for(let i=0;i<6;i++)noise(.04,.05,i*.035)},fwump:()=>{tone(90,.2,'sine',.25,0,.5);noise(.08,.1)},stamp:()=>{tone(120,.08,'square',.2,0,.5);noise(.05,.15);tone(70,.12,'sine',.18,.05)}});
 /* ---- ambient loops, one per dungeon ---- */
@@ -1696,12 +1689,12 @@ async function standTogether(){const D=dunOf(G.floor),f=G.floor,n=roster().lengt
  G.flags['wo'+D]=1;sfx('combo');await say('',msg);if(law)lawUnlock(law)}
 
 /* ---- RPG layer: union tiers, perks, dues shop, grievance log, lead demands ---- */
-const TIERS=[{n:10,nm:'Break room',d:'After each won fight, the party recovers 10% HP.'},{n:20,nm:'Strike fund',d:'Every fight starts with +10 SOLIDARITY.'},{n:35,nm:'Shop steward',d:'A wrong Cite no longer costs your turn.'},{n:50,nm:'General assembly',d:'Combos cost 75 SOLIDARITY instead of 100.'}];
+const TIERS=[{n:10,nm:'Break room',d:'After each won fight, the party recovers 10% HP.'},{n:20,nm:'Strike fund',d:'Every fight starts with +10 SOLIDARITY.'},{n:35,nm:'Shop steward',d:'Organize always wins over a foe who listens.'},{n:50,nm:'General assembly',d:'Combos cost 75 SOLIDARITY instead of 100.'}];
 const tierOn=i=>cards()>=TIERS[i-1].n;
 const comboCost=()=>tierOn(4)?75:100;
 async function tierCheck(){for(let i=1;i<=TIERS.length;i++){if(tierOn(i)&&!G.flags['tier'+i]){G.flags['tier'+i]=1;const t=TIERS[i-1];sfx('lvl');await say('',`UNION STRENGTH: ${t.n} MEMBERS. ${t.nm.toUpperCase()} unlocked! ${t.d}`)}}}
 async function unionPage(){let sel=0;for(;;){const i=await choose(TIERS.map((t,k)=>({t:t.nm,r:tierOn(k+1)?'ON':t.n+' members',col:tierOn(k+1)?'#9fff9f':'#9aa4d8'})),{x:40,y:14,w:330,sel,title:`MEMBERS ${cards()}/${CT}   DUES ${G.dues||0}`,foot:i=>TIERS[i].d});if(i<0)return;sel=i;const t=TIERS[i];await say('',`${t.nm.toUpperCase()} (${t.n} members): ${t.d} ${tierOn(i+1)?'Active.':'You have '+cards()+'. Sign co-workers and organize foes to grow the union.'}`)}}
-const SHOP=[['coffee','Lukewarm Coffee',8,'Heals 25% HP (min 45).'],['donut','Stale Donut',10,'Restores 25% MP (min 14).'],['ibu','Ibuprofen',12,'In battle: cures despair and slow.'],['agenda','Meeting Agenda',15,'In battle: leave the fight. Not bosses.'],['card','Paragraph Card',25,'Your next Cite shows the right answer.'],['ccoffee','Collective Coffee',40,'Heals the whole party 50% HP.'],['lunch','Team Lunch',45,'Restores the whole party 50% MP.'],['respec','Focus Respec',60,'Re-choose one character\'s focuses.']];
+const SHOP=[['coffee','Lukewarm Coffee',8,'Heals 25% HP (min 45).'],['donut','Stale Donut',10,'Restores 25% MP (min 14).'],['ibu','Ibuprofen',12,'In battle: cures despair and slow.'],['agenda','Meeting Agenda',15,'In battle: leave the fight. Not bosses.'],['ccoffee','Collective Coffee',40,'Heals the whole party 50% HP.'],['lunch','Team Lunch',45,'Restores the whole party 50% MP.'],['respec','Focus Respec',60,'Re-choose one character\'s focuses.']];
 async function shopMenu(){await say('Union rep','Dues at work. What does the team need?');let sel=0;for(;;){const i=await choose(SHOP.map(([k,n,c])=>({t:n+(k==='respec'?'':' x'+(G.inv[k]||0)),r:c+'',dis:(G.dues||0)<c})),{x:40,y:14,w:330,sel,title:`UNION DUES: ${G.dues||0}`,foot:i=>SHOP[i][3]});if(i<0)return;sel=i;const [k,n,c]=SHOP[i];if((G.dues||0)<c){sfx('no');continue}if(k==='respec'){const R=roster().filter(m=>Object.keys(m.pk||{}).length);if(!R.length){await say('Union rep','Nobody has a focus to change yet.');continue}const j=await choose(R.map(m=>({t:m.name})),{x:60,y:40,w:200,title:'RESPEC WHO?'});if(j<0)continue;G.dues-=c;const m=R[j],ph=m.mhp,pm=m.mmp;m.pk={};calc(m);m.hp=Math.min(m.hp,m.mhp);m.mp=Math.min(m.mp,m.mmp);await perkCheck();continue}G.dues-=c;G.inv[k]=(G.inv[k]||0)+1;sfx('heal');toast(`BOUGHT: ${n}`)}}
 const PERK={
 kaj:{5:[{n:'Sysadmin',m:{mag:3,mp:6}},{n:'Debugger',m:{atk:3,spd:1}}],10:[{n:'Whistleblower',m:{mag:4,spd:2}},{n:'Senior Dev',m:{atk:4,hp:20}}],15:[{n:'Architect',m:{mag:6,mp:10}},{n:'Full Stack',m:{atk:5,def:3}}]},
@@ -1745,9 +1738,9 @@ const FAVS=[{id:'ts',f:1,item:'signed timesheet'},{id:'hn',f:5,item:'spare harne
 /* ---- favours as small stories ---- */
 const FAVST={ts:{who:['kaj'],law:'atl8',L:[['@','Forty-six hours, signed by your manager. And they paid you for forty?'],['@','Keep this. It\'s proof. Every hour over forty is overtime, and overtime is paid (ATL 8 §).']]},
  hn:{who:['henrietta'],law:'aml6_7',L:[['','Henrietta takes the harness first. She checks every buckle herself before she hands it over.'],['@','Use it. Every time. And if anyone says a harness is "on order", you come and find me.']]},
- rc:{who:['marl','joan'],law:'mbl19',L:[['@','Receipts don\'t go missing. They get put somewhere.'],['@','Make a copy for yourself and one for the union. The company has to show us the numbers (MBL 19 §). We\'ll compare.']]},
- oc:{who:['clementine','kaj'],law:'mbl11',L:[['@','Look at this chart. Twelve names on that team. Now there are four.'],['@','Nobody was asked. Next time they negotiate first (MBL 11 §).']]},
- fm:{who:['joan','kaj'],law:'mbl11',L:[['@','"Form 27-B: Request to be consulted. Filed on your behalf." So HR consulted you by filling in a form for you.'],['@','Being consulted isn\'t a form. It\'s a negotiation, before the decision (MBL 11 §).']]},
+ rc:{who:['marl','joan'],law:'mbl19a',L:[['@','Receipts don\'t go missing. They get put somewhere.'],['@','Make a copy for yourself and one for the union. The company has to show us the numbers (MBL 19 a §). We\'ll compare.']]},
+ oc:{who:['clementine','kaj'],law:'mbl13',L:[['@','Look at this chart. Twelve names on that team. Now there are four.'],['@','Nobody was asked. Next time they negotiate first (MBL 13 §).']]},
+ fm:{who:['joan','kaj'],law:'mbl13',L:[['@','"Form 27-B: Request to be consulted. Filed on your behalf." So HR consulted you by filling in a form for you.'],['@','Being consulted isn\'t a form. It\'s a negotiation, before the decision (MBL 13 §).']]},
  sn:{who:['henrietta','kaj'],law:'aml3_2',L:[['@','A sick note, and they still told you to come in?'],['@','Working sick is a work environment problem, and preventing it\'s the employer\'s job (AML 3 kap 2 §). Go home. That\'s an order from your safety rep.']]},
  pt:{who:['marl','joan'],law:'mbl7',L:[['@','This petition is from 1979. I know some of these names.'],['@','They were let go the next spring, one by one. ...We finish it this time. With the law behind us (MBL 7 §).']]},
  ps:{who:['joan','ken'],law:'dl3',L:[['@','Your pay slip and your colleague\'s. Same job, same start year. Look at the difference.'],['@','This is why employers must map pay gaps every year (DL 3 kap). Bring both slips to the table.']]}};
@@ -1762,6 +1755,7 @@ async function fieldMenu(){let sel=0;for(;;){
   ['Party',partyMenu],
   ['Union',unionPage],
   ['Grievances',grievLog],
+  ...(caseList().length?[['Cases',caseBook]]:[]),
   ['Kit',kitMenu],
   ['Bestiary',bestiary],
   [standLabel(),standTogether],
@@ -1778,13 +1772,352 @@ async function fieldMenu(){let sel=0;for(;;){
 const CLEM_JOIN=[['Clem','Good morning, team! Stand-up time! Yesterday I... ...okay. Nobody. Right.'],['Kaj','Clem? Clementine Piruetti, the Scrum Master?'],['Clem','Former Scrum Master. My team got "reorganized". By email. 4:58 on a Friday. I kept doing the stand-up anyway. Habit, I guess.'],['Kaj','Nobody asked you before they moved everyone around?'],['Clem','Nobody asked anyone. That\'s the whole problem.'],['Kaj','We\'re forming a union. Collective bargaining, and a say before the big changes, not after.'],['Clem','A seat at the table before the change instead of after? ...Is that on the board? I\'m adding it. Put me down.']];
 function clearLine(ax,ay,bx,by){const n=Math.max(Math.abs(bx-ax),Math.abs(by-ay));for(let i=1;i<n;i++){const x=Math.round(ax+(bx-ax)*i/n),y=Math.round(ay+(by-ay)*i/n);if(G.map.t[y][x]!=='.')return false}return true}
 
+/* ================= CASES: worker problems you investigate and build ================= */
+/* Each case: a coworker on one floor, facts placed on that floor (they glint), a document puzzle on one of them,
+   then building the case at the coworker: pick the evidence, pick who takes it to the employer.
+   Speakers in lines: '!' = the coworker, '@' = Joan or Kaj, '%' = Henrietta or "The safety rep". */
+const CASES=[
+{id:'sam',co:{henrietta:{open:[['&','A socket that sparks, and a roll of tape. I\'ve seen how this kind of thing ends. Not again.']],beat:[['&','My friend Marit fell off a ladder because nobody wanted to pay for a harness. This was a socket. Same story, smaller budget.'],['!','...I didn\'t know that. Thanks for not letting it slide.']]}},nm:'The Scorched Socket',f:2,who:'Sam',th:'ENV',
+ sum:'A socket under desk 14 sparks every morning. The answer so far: a roll of tape.',
+ lead:'Oh, and Sam on 3F keeps sniffing the air. Says the socket by their desk smells like burnt toast.',
+ table:'the scorched socket, the tape email and the safety rep\'s demand',
+ intro:[['!','Can you smell that? That\'s my socket. It sparks when the heaters come on. Every morning.'],['!','I told my manager. He sent an email that says "use tape". So, uh. There\'s tape on it now.'],['@','Tape. On a sparking socket. Okay, we\'re looking into this.'],['!','The floor checklist\'s on the wall somewhere. Nobody\'s filled it in since I started.']],
+ facts:[['check','sign','Risk checklist','The floor\'s risk checklist, half filled in by someone who gave up. Somebody\'s written "LOL" next to "fire exits".','The floor\'s risk checklist'],
+  ['tape','note','Tape email','A printed email from the manager: "Budget\'s frozen till Q3. Put tape on it and stop calling facilities."','Manager\'s email: "put tape on it"'],
+  ['scorch','box','Scorch marks','A box of extension cords, daisy-chained. One plug is black and melted at the prongs.','A melted plug from the cord chain'],
+  ['menu','lunch','Lunch order','Sam\'s lunch order, taped to the monitor: "NO onions. I mean it this time."','Sam\'s lunch order']],
+ doc:'check',need:['check','tape'],bonus:'scorch',herring:'menu',
+ puz:{title:'3F RISK CHECKLIST',rules:['No rule broken','Employer must prevent harm','Training on the risks','Need a safety rep'],
+  rows:[['A.','Socket at desk 14: sparks, still in use',1],['B.','New hires never shown the fire exits',2],['C.','The chairs are ugly',0],['D.','Nine people on the floor, no safety rep',3],['E.','Coffee tastes like the carpet',0]],
+  tip:'Mark every line on the checklist that breaks the Work Environment Act, and pick which rule. Bad taste isn\'t illegal.',hint:'Ask what could actually hurt someone.',
+  laws:['aml3_2','aml3_3','aml6_2'],done:[['','Three real problems: a live fire risk, nobody trained on the exits, and no safety rep on a floor of nine.'],['@','"Put tape on it" isn\'t a safety plan.']]},
+ waitDoc:'The checklist\'s on the wall somewhere on this floor. Did you find it?',
+ routes:[['Sam keeps unplugging the heater','A drafty desk isn\'t a fix. The socket\'s still live.'],['% sends a written demand as safety rep','win'],['Put more tape on it','...No.'],['Sam calls the fire brigade','For a socket? They\'ll tell you to call your employer. Fair, but that\'s the job of a safety rep.']],
+ missDoc:[['Manager','What checklist? Nobody showed me anything about risks.'],['@','We need the checklist itself.']],missProof:[['Manager','I never knew about any socket.'],['@','We need the email where he told Sam to use tape.']],
+ her:[['!','Uh... why\'s my lunch order in there?'],['@','Yeah, okay. Let\'s keep it to the facts.']],
+ win:[['%','Written demand, dated today. Fix the socket, train people on the exits, and let this floor choose a safety rep. You have to confirm this in writing right away.'],['','By Friday there\'s an electrician on 3F. And a new checklist on the wall, filled in properly.'],['!','No sparks. No tape. Okay, I\'m in. Somebody had to say it.']],
+ winBonus:['@','And here\'s the melted plug, so nobody can say it was "minor".'],used:['aml3_2','aml3_3','aml6_2','aml6_6a'],
+ after:'Still no sparks. I check every morning anyway.',done:'Won. 3F got an electrician, real training and a safety rep.'},
+
+{id:'robin',nm:'The Clopen',f:6,who:'Robin',th:'HOURS',
+ sum:'Robin keeps getting a closing shift followed by an opening one: out at eleven, back at six.',
+ lead:'Oh, and go talk to Robin up on 7F. They look wrecked. Something about the rota.',
+ table:'the rota, the door log and the safety rep\'s written demand',
+ intro:[['!','Oh, hey. Sorry, I\'m kinda out of it. They keep putting me on closing and then opening.'],['!','Like, I leave at eleven and I\'m back at six. It\'s fine. I\'m fine. Everyone does it, right?'],['@','Hang on. That doesn\'t sound legal. Mind if we look into it?'],['!','I mean... sure? The rota\'s on the board somewhere on this floor. Just don\'t make a big thing of it, okay?']],
+ facts:[['rota','sign','Shift rota','Pinned to the board: this week\'s rota for the night desk. Robin\'s on every single day.','Robin\'s rota for this week'],
+  ['badge','note','Badge log','A printout from the door scanner, left in the tray. R. LIND: OUT 23:04, IN 06:02. OUT 23:11, IN 06:05.','Door log: out after 23:00, back before 06:10, twice'],
+  ['chat','phone','Team chat','A phone left face up, the team chat open: "can anyone take Robin\'s opening shift?? they closed again lol". Nobody answered.','Team chat: everyone knows about the clopens'],
+  ['parking','mug','Parking note','A note under a mug: "Robin, your parking permit runs out Friday. /Facilities"','Robin\'s parking permit runs out Friday']],
+ doc:'rota',need:['rota','badge'],bonus:'chat',herring:'parking',
+ puz:{title:'ROBIN\'S ROTA, WEEK 12',rules:['No rule broken','11 h daily rest','36 h weekly rest','Break within 5 h'],
+  rows:[['Mon','14:00-23:00  break 18:00',0],['Tue','06:00-14:00  break 10:00',1],['Wed','14:00-23:00  break 18:00',0],['Thu','06:00-15:00  break 11:00',1],['Fri','15:00-23:00  no break',3],['Sat','10:00-14:00  no break',0],['Sun','10:00-14:00  no break',0],['Week','The whole week',2]],
+  tipKey:'rota',tip:'Mark every shift that breaks a rule and pick which rule. Check the gaps between shifts, the breaks, and the week as a whole. Pick Done when you\'re finished.',hint:'Count the hours between one shift ending and the next starting.',
+  laws:['atl13','atl14','atl15'],file:'Rota: four broken rules',done:[['','Every mark checks out. Tuesday and Thursday: seven hours of rest after a closing shift. Friday: eight hours with no break. And there\'s no 36-hour stretch off anywhere in the week.'],['@','Four broken rules in one week. That\'s not a favour, that\'s a pattern.']]},
+ waitDoc:'Did you find the rota? It\'s pinned up somewhere on this floor.',
+ routes:[['Robin asks the shift manager about it',[['!','He said he\'d "look into it". He won\'t, will he?'],['@','One worker asking nicely is easy to ignore. Let\'s try that again.']]],['% sends a written demand as safety rep','win'],['Post about it on the intranet',[['','The post gets taken down in ten minutes. Nothing changes.'],['@','Venting isn\'t a demand. Let\'s try that again.']]],['Wait until we have a collective agreement',[['@','No, wait. The rest rules apply right now, agreement or not. Robin can\'t wait that long.']]]],
+ missDoc:[['Shift manager','Broken rules? Which shifts? I don\'t see a rota here.'],['@','We need the rota itself in there.']],missProof:[['Shift manager','That\'s the rota, sure. Who says Robin actually worked those hours?'],['@','We need proof of when Robin actually clocked in and out.']],
+ her:[['!','Uh... why\'s my parking permit in there?'],['@','Yeah, okay. That\'s got nothing to do with it. Let\'s keep it to the facts.']],
+ win:[['%','Written demand, dated today. The rota breaks the rules on daily rest, weekly rest and breaks. Fix it.'],['%','And you have to confirm this in writing right away and answer without delay. If not, the Work Environment Authority gets a call.'],['','Two days later the 7F rota is redone. Eleven hours between every shift. A day and a half off every week. Breaks on the long ones.'],['!','Wait, seven hours wasn\'t even close? ...Okay. Where do I sign?']],
+ winBonus:['@','And it\'s not just Robin. The whole team chat knows about the clopens.'],used:['atl13','atl14','atl15','aml6_6a'],
+ after:'Eleven hours between shifts. I actually slept. Thanks, you guys.',done:'Won. The 7F rota was redone and Robin joined the union.'},
+
+{id:'noor',co:{kaj:{open:[['&','Voluntary weekends. I did those for three years. Ask me how voluntary they were.']],beat:[['&','I shipped a whole product on weekends nobody "made" me work. A week later they cut half my team.'],['&','Two weeks\' notice and a real no. Don\'t ever give that back to them, Noor.']]}},
+ fav:{id:'ts',file:'The signed timesheet from 3F: 46 hours, paid for 40',L:[['&','Remember that timesheet we found on 3F? Same company, same habit. Hours nobody pays for.']]},nm:'The Voluntary Weekend',f:8,who:'Noor',th:'HOURS',
+ sum:'Weekend shifts are "voluntary". Skipping one shows up in your review.',
+ lead:'Ask Noor on 9F about the "voluntary" weekends. Their face when you say it. Wow.',
+ table:'the overtime sheet, the Thursday rota email and the union\'s demand to negotiate',
+ intro:[['!','Weekends are voluntary here. Totally voluntary. Says so in the email.'],['!','Also, if you skip one, your review says "lacks commitment". So. Voluntary.'],['@','How many hours are you doing?'],['!','Dunno. A lot? My overtime sheet\'s somewhere on this floor. I stopped looking at it.']],
+ facts:[['sheet','sigform','Overtime sheet','Noor\'s overtime sheet for the last four weeks, signed off by a manager who clearly didn\'t read it.','Noor\'s overtime sheet, four weeks'],
+  ['email','note','Thursday email','An email sent Thursday at 16:55: "Reminder! Saturday shift 09-17 is VOLUNTARY :) See you there!"','Email: Saturday shift, announced Thursday'],
+  ['review','box','Review notes','Draft review notes in a box: "Noor: skipped 1 weekend. Lacks commitment."','Review draft: "skipped 1 weekend, lacks commitment"'],
+  ['plant','plant','Sad plant','A plant on Noor\'s desk. It\'s doing about as well as Noor is.','Noor\'s plant is dying']],
+ doc:'sheet',need:['sheet','email'],bonus:'review',herring:'plant',
+ puz:{title:'NOOR\'S OVERTIME, 4 WEEKS',rules:['No rule broken','Overtime cap broken','Schedule notice: 2 weeks','Daily rest: 11 h'],
+  rows:[['1.','Ordinary hours: 40 a week',0],['2.','Overtime these four weeks: 54 hours',1],['3.','Overtime this year so far: 130 hours',0],['4.','Saturday shift told on Thursday',2],['5.','Friday ends 17:00, Saturday starts 09:00',0]],
+  tip:'Mark every line that breaks the Working Hours Act and pick which rule. Some numbers are high but still legal.',hint:'Check the caps: per four weeks and per year are different.',
+  laws:['atl8','atl12','atl5'],done:[['','Two problems: 54 hours of overtime in four weeks when the cap is 48, and a schedule change with two days\' notice instead of two weeks.'],['@','Voluntary my foot.']]},
+ waitDoc:'The overtime sheet\'s around here somewhere. Probably under a pile of other sheets.',
+ routes:[['Noor quietly skips the next weekend',[['!','And gets "lacks commitment" again. Great.'],['@','One person saying no alone is easy to punish. Let\'s do this together.']]],['The union demands to negotiate overtime and rota changes','win'],['Noor works faster so the weekends aren\'t needed',[['@','That\'s how you get 60 hours AND weekends. No.']]],['Tip off the Work Environment Authority first',[['@','They do check working hours. But they\'ll ask if we tried talking to the employer first. Let\'s do that.']]]],
+ missDoc:[['Manager','Over the cap? Says who? Show me the hours.'],['@','We need the overtime sheet.']],missProof:[['Manager','Nobody ever got short notice. Everything\'s planned weeks ahead.'],['@','We need the Thursday email.']],
+ her:[['!','Is my plant evidence now?'],['@','...No. Sorry, plant.']],
+ win:[['@','Noor\'s a union member. The overtime\'s over the cap and the rota changes come with two days\' notice. Before you schedule another weekend, you negotiate with us.'],['','The next week, weekend shifts come with two weeks\' notice and a real way to say no. The review note disappears.'],['!','I\'m gonna spend Saturday asleep. On purpose. Count me in.']],
+ winBonus:['@','And skipping a "voluntary" shift doesn\'t go in anybody\'s review. We\'ve got the draft.'],used:['atl8','atl12','mbl13'],
+ after:'I went to a picnic on Saturday. An actual picnic.',done:'Won. Weekend shifts on 9F now come with notice and a real choice.'},
+
+{id:'leila',co:{ken:{open:[['&','Bro. I\'ve never looked at anyone\'s pay slip. Never had to.']],beat:[['&','Bro, I\'m basically Mats. Same targets, same years. Nobody ever paid me less for it, and I never even thought about it.'],['&','That\'s kinda the whole problem, huh. Okay. I\'m seeing it now.']]}},nm:'The Secret Bonus',f:14,who:'Leila',th:'WAGES',
+ sum:'Same targets, same years, smaller pay. Nobody will say why.',
+ lead:'Leila on 15F found out what the guys on her team make. She hasn\'t said a word since. Go talk to her.',
+ table:'the pay slips, the overdue pay mapping and the union\'s request',
+ intro:[['!','Somebody left the team\'s pay slips on the printer. I wasn\'t snooping. I just... read them.'],['!','Same job, same years, I beat my targets. And I\'m six thousand a month under the guys. Every month.'],['@','Did anyone ever explain the difference?'],['!','"Market conditions". The slips are still around here somewhere. I put them back. Mostly.']],
+ facts:[['slips','sigform','Pay slips','The team\'s pay slips, still warm from the printer.','The team\'s pay slips'],
+  ['mapping','note','Pay mapping memo','An old memo: "Pay mapping completed. Next review: 2020." It\'s 2026.','Memo: last pay mapping was 2019'],
+  ['targets','trophy','Sales board','The sales board: Leila\'s name on top three months running.','Sales board: Leila on top three months running'],
+  ['mug','mug','Novelty mug','A mug: "World\'s Okayest Employee". Nobody knows whose it is.','A novelty mug']],
+ doc:'slips',need:['slips','mapping'],bonus:'targets',herring:'mug',
+ puz:{title:'TEAM PAY SLIPS',rules:['No rule broken','Gap with no reason given','Pay mapping is overdue'],
+  rows:[['Mats','41 000, 6 years, 104% of target',0],['Leila','34 000, 6 years, 110% of target',1],['Anna','33 500, 7 years, 112% of target',1],['Erik','40 500, 5 years, 98% of target',0],['Memo','Pay mapping last done in 2019',2]],
+  tip:'Mark the lines that show a pay gap with no reason given, or another breach of the Discrimination Act. Different pay isn\'t always illegal. Unexplained gaps for equal work are.',hint:'Compare years and targets. And check the date on the memo.',
+  laws:['dl3','dl2_1'],done:[['','Leila and Anna are paid thousands less than Mats and Erik with more years and better results. And the pay mapping that should catch this every year hasn\'t happened since 2019.'],['@','"Market conditions" isn\'t a reason. It\'s a shrug.']]},
+ waitDoc:'The pay slips are near the printer. Or under it. Look around.',
+ routes:[['Leila asks her manager for a raise',[['!','He said "let\'s revisit in Q4". It\'s always Q4.'],['@','This isn\'t one raise. It\'s a pattern. Let\'s go at the pattern.']]],['The union asks for the pay mapping and its results','win'],['Post everyone\'s pay on the team chat',[['@','That\'ll start a fire, not fix the gap. Let\'s go through the employer.']]],['Leila reports it to the Equality Ombudsman',[['@','DO\'s a real option. But it takes months. The employer has to do the mapping every year anyway. Let\'s ask for it first.']]]],
+ missDoc:[['HR','What gap? Show me the numbers.'],['@','We need the pay slips.']],missProof:[['HR','We review pay regularly. It\'s all mapped.'],['@','We need that memo from 2019.']],
+ her:[['!','Why\'s that mug in my case?'],['@','Habit. Taking it out.']],
+ win:[['@','The law says you map pay every year to catch unfair gaps. You haven\'t since 2019. We want this year\'s mapping and its results. Leila and Anna are where we start.'],['','HR runs the mapping. The gap is there in black and white. Leila and Anna get a raise backdated to January.'],['!','Six thousand a month. ...I\'m buying the team cake. And I\'m signing up.']],
+ winBonus:['@','And she\'s top of the sales board three months running. Don\'t say performance.'],used:['dl3','dl2_1'],
+ after:'Backdated to January. I checked my slip twice.',done:'Won. The pay mapping was done and the gap on 15F was fixed.'},
+
+{id:'oskar',co:{clementine:{open:[['&','Confidential forever? That\'s not a policy, that\'s a hidden backlog.']],beat:[['&','The last time a company kept its plans secret from me, my whole team was gone by Friday at five.'],['&','Open books first. Then nobody gets surprised.']]},joan:{open:[['&','"Confidential." That\'s what they told me about section nine, too.']],beat:[['&','I asked about one clause, alone, and got restructured out. You asked as the union, in writing. That\'s the difference.']]}},
+ fav:{id:'rc',file:'The expense receipt from 13F: a "team dinner" for 40 000',L:[['&','And that receipt from 13F. Forty thousand on a "team dinner" in a year with "no money". Let\'s staple it to the request.']]},nm:'The Closed Books',f:16,who:'Oskar',th:'OPEN',
+ sum:'Record profits on the ticker. "No money for raises" in the memo. And the books are "confidential".',
+ lead:'Oskar on 17F asked to see the numbers. They told him they\'re "secret forever". Go figure.',
+ table:'the confidential memo, the record-profit ticker and the union\'s written request',
+ intro:[['!','The ticker in the lobby says record profits. The memo on my desk says no money for raises.'],['!','I asked to see the numbers. As the union rep on this floor, yeah? HR said they\'re "confidential". Forever.'],['@','Forever\'s a long time. Where\'s that memo?'],['!','Somewhere around here. I threw it. Kind of hard.']],
+ facts:[['memo','scroll','The memo','A crumpled memo, smoothed out again.','The "no money for raises" memo'],
+  ['ticker','sign','Profit ticker','A screen: "Q3 PROFIT UP 31%. RECORD QUARTER." with confetti.','Ticker: Q3 profit up 31%'],
+  ['reply','note','HR reply','A printed reply to the union: "Request denied. The figures are confidential."','HR\'s reply: request denied'],
+  ['coat','coat','Rain coat','A raincoat on the hook. Still dripping. It\'s been sunny all week.','A wet raincoat']],
+ doc:'memo',need:['memo','reply'],bonus:'ticker',herring:'coat',
+ puz:{title:'MEMO: NO RAISES THIS YEAR',rules:['No rule broken','Duty to inform the union','Secrecy must be negotiated','Negotiate first'],
+  rows:[['1.','Profits are up 31% on last year.',0],['2.','The union\'s request for the figures is denied.',1],['3.','Everything in this memo is secret forever.',2],['4.','Staff learn about the new bonus plan from the press.',3],['5.','The VP of Sales gets a two-million bonus.',0]],
+  tip:'Mark every line of the memo that breaks the Co-Determination Act, and pick which rule. Some lines are just annoying.',hint:'The employer has to keep the union informed, agreement or not. And it can\'t just decide what\'s secret.',
+  laws:['mbl19a','mbl21','mbl13'],done:[['','Three problems: refusing the union the figures, declaring everything secret without negotiating, and changing pay plans without talking to the union first.'],['@','A big bonus for the VP is gross. But it\'s not illegal. The rest is.']]},
+ waitDoc:'The memo\'s around here. Crumpled. You\'ll know it.',
+ routes:[['Oskar asks HR again, nicely',[['!','They sent the same reply. With a smiley this time.'],['@','Asking nicely without the law behind it is easy to ignore.']]],['The union sends a written request for the figures','win'],['Leak the memo to the press',[['@','Then the story\'s about us leaking, not about them hiding. Let\'s use what the law gives us.']]],['Wait for next year\'s numbers',[['@','They have to keep us informed all the time, not once a year.']]]],
+ missDoc:[['HR','What memo? We\'ve been completely open.'],['@','We need the memo itself.']],missProof:[['HR','Nobody ever asked us for figures.'],['@','We need HR\'s refusal in writing. We have it somewhere.']],
+ her:[['!','Why\'s my raincoat in there?'],['@','Long story. Never mind.']],
+ win:[['@','Written request. You have to keep the union informed about the finances and personnel policy, with or without an agreement. And secrecy\'s something you negotiate, not something you declare.'],['','Two days later the union gets the quarterly figures. Some pages are marked confidential, after a real negotiation. Most aren\'t.'],['!','Thirty-one percent. And "no money". Okay. I\'ll bring this to the table myself.']],
+ winBonus:['@','And let\'s pin the lobby ticker to the request. "Record quarter."'],used:['mbl19a','mbl21','mbl13'],
+ after:'I\'ve got the figures in a folder now. It\'s a thick folder.',done:'Won. The union on 17F got the figures it\'s entitled to.'},
+
+{id:'kim',co:{joan:{open:[['&','A clause that says joining a union ends your contract. I\'d like to read that one slowly.']],beat:[['&','Two years ago I signed whatever they put in front of me. I was alone.'],['&','Kim isn\'t. That\'s why this worked.']]}},nm:'The Endless Project',f:18,who:'Kim',th:'SECURITY',
+ sum:'Fifteen months of "project contracts", one after another. Still no permanent job.',
+ lead:'Kim on 19F is on contract number three. Of the same job. Ask them about it.',
+ table:'Kim\'s three contracts and the union\'s letter',
+ intro:[['!','I\'m on a "project contract". The project\'s me doing the same job as everyone else. For fifteen months.'],['!','Every few months they give me a new one. Sign or leave. So I sign.'],['@','Fifteen months? Got the contracts?'],['!','In my drawer. Somewhere on this floor. I move desks a lot. Hot-desking.']],
+ facts:[['contracts','sigform','Contracts','Three contracts, stapled together. Same job title, same desk, new dates.','Kim\'s three contracts'],
+  ['org','note','Team list','The team list: Kim\'s on it, same role as everyone permanent.','Team list: Kim in the same role as permanent staff'],
+  ['offer','box','Contract four','A box of blank contracts. One already has Kim\'s name on it. "Contract 4".','Contract four, already printed'],
+  ['shoe','shoe','Lost shoe','One sneaker under a desk. Just the one.','A single sneaker']],
+ doc:'contracts',need:['contracts','org'],bonus:'offer',herring:'shoe',
+ puz:{title:'KIM\'S CONTRACTS',rules:['No rule broken','Should be permanent by now','Right to organise'],
+  rows:[['No. 1','1 Jan - 30 Jun 2025, "project role"',0],['No. 2','1 Jul - 31 Dec 2025, "project role"',0],['No. 3','1 Jan - 31 Mar 2026, "project role"',1],['Clause','Joining a union ends this contract.',2],['Pay','26 000 a month',0]],
+  tip:'Add up the months. A special fixed-term job turns permanent after more than 12 months with the same employer. Mark the contract where Kim crossed the line, and any other line that breaks the law.',hint:'Exactly 12 months isn\'t "more than 12".',
+  laws:['las5a','las4','mbl7','mbl8'],done:[['','Contracts one and two make exactly twelve months. The third one tips it over: Kim\'s job turned permanent the day it started. And the union clause is a reprisal written in ink.'],['@','Contract four can go in the recycling.']]},
+ waitDoc:'My contracts are in some drawer on this floor. Hot-desking, sorry.',
+ routes:[['Kim signs contract four',[['!','And then contract five. I know how this goes.'],['@','Signing again doesn\'t change the law. Let\'s use it.']]],['The union tells the employer in writing Kim\'s job is permanent','win'],['Kim quits and finds something else',[['@','After fifteen months? No. Kim\'s already permanent. Let\'s say so.']]],['Ask for a fourth contract with more pay',[['@','Better pay on a job that should already be permanent is still the wrong job.']]]],
+ missDoc:[['HR','What contracts? Kim\'s on a project.'],['@','We need all three contracts.']],missProof:[['HR','Kim\'s project is completely separate work.'],['@','We need the team list. Same role as everyone else.']],
+ her:[['!','That\'s... not my shoe.'],['@','Right. Out it goes.']],
+ win:[['@','Kim\'s been on special fixed-term contracts for more than twelve months. By law that\'s a permanent job now. And that union clause is void.'],['','HR checks. HR checks again. Kim gets a letter: permanent employment, starting the day contract three began.'],['!','Permanent. I can sign a lease. I\'m signing this first, though.']],
+ winBonus:['@','And contract four was already printed. That\'s planning, not a project.'],used:['las5a','las4','mbl7','mbl8'],
+ after:'I\'ve got a desk now. My own. With a plant.',done:'Won. Kim\'s job on 19F is permanent.'},
+
+{id:'dana',co:{clementine:{open:[['&','Fired by text. I got mine by email at 4:58 on a Friday. They just keep finding new ways.']],beat:[['&','Nobody told me about the two weeks. I nearly missed it too.'],['!','You too? ...Okay. I\'m not the only one.']]},marl:{open:[['&','Ten days. Then we haven\'t got time to be upset. Upset comes later.']],beat:[['&','I took my box and went home quietly. Nobody told me I could object. I want you to have what I didn\'t.']]}},nm:'Fired by Text',f:22,who:'Dana',th:'SECURITY',
+ sum:'Fired by a text message, effective today. No reason, no notice. And the clock\'s ticking.',
+ lead:'Dana on 23F got fired. By text. Ten days ago. Hurry.',
+ table:'the text message, Dana\'s review and the written objection sent in time',
+ intro:[['!','"You\'re let go as of today. Badge at reception." That\'s the whole text. Ten days ago.'],['!','No reason. Three years here. My last review said "meets expectations". I\'m just... clearing my desk slowly.'],['@','Ten days. Okay. We need to move fast on this one.'],['!','Why fast?'],['@','I\'ll explain. Where\'s your phone?'],['!','On my desk somewhere. Under the box.']],
+ facts:[['text','phone','The text','Dana\'s phone: "You\'re let go as of today. Badge at reception." Sent ten days ago.','The dismissal text, ten days old'],
+  ['review','sigform','Dana\'s review','Last month\'s review: "Meets expectations. Reliable."','Review: "meets expectations"'],
+  ['cal','sign','Calendar','The wall calendar. Somebody\'s circled the date of the text in red. Ten days back.','Calendar: the text was ten days ago'],
+  ['gym','note','Gym card','A gym membership card. Expired in 2023.','An expired gym card']],
+ doc:'text',need:['text','review'],bonus:'cal',herring:'gym',
+ puz:{title:'THE DISMISSAL TEXT',rules:['No rule broken','Needs a valid reason','Must say how to challenge it','Ignores the notice period','Two weeks to object'],
+  rows:[['1.','"You\'re let go as of today."',3],['2.','No reason given.',1],['3.','Nothing on how to challenge it.',2],['4.','Sent from the manager\'s phone.',0],['5.','Sent ten days ago.',4]],
+  tip:'Mark everything about this dismissal that breaks the Employment Protection Act. One line isn\'t a breach, it\'s a deadline. Find it.',hint:'Three years of service means two months\' notice. And how long do you have to object?',
+  laws:['las7','las8','las11','las40','las41','las38'],done:[['','No valid reason, no information on how to challenge it, and no notice period. And the line that matters most today: Dana only has two weeks from the dismissal to say she wants it declared void. Four days left.'],['','Miss that, and all that\'s left is damages for lost pay and the insult, claimed within four months.'],['@','That\'s why we\'re moving fast.']]},
+ waitDoc:'My phone\'s on the desk somewhere. Under the box. Please hurry?',
+ routes:[['Dana emails HR asking why',[['!','HR said "it\'s been decided". Four days left now. Three.'],['@','Asking why doesn\'t stop the clock. Objecting does.']]],['Tell the employer in writing, today, Dana wants it declared void','win'],['Gather more evidence for a month first',[['@','In a month the two weeks are gone. Then all that\'s left is damages. We object first, today.']]],['Dana starts looking for a new job',[['@','She can. But first we object, or she loses the right to.']]]],
+ missDoc:[['HR','Fired? Dana resigned. Didn\'t she?'],['@','We need the text itself.']],missProof:[['HR','Dana had performance issues. Everyone knows.'],['@','We need her review. "Meets expectations".']],
+ her:[['!','My gym card? I haven\'t been since 2023. Don\'t judge me.'],['@','No judgement. Out it goes.']],
+ win:[['@','Written notice, today: Dana wants the dismissal declared void. No valid reason, no notice period, no information on how to challenge it. And we\'re inside the two weeks.'],['','The employer\'s lawyer calls back within the hour. By the next morning Dana\'s badge works again.'],['!','I was gonna sit on this for a month. A MONTH. ...Give me that form.']],
+ winBonus:['@','And here\'s the calendar. Ten days. We\'re on time.'],used:['las7','las8','las11','las40','las34'],
+ after:'My badge works. I swipe it twice every morning just because.',done:'Won. Dana objected in time and got her job back.'},
+
+{id:'ingrid',co:{marl:{open:[['&','Seventeen years and "lack of work". I had thirty-one. I know this list before I\'ve read it.']],beat:[['&','Last in, first out. And the first call back. I carried that card in my pocket for a year, and nobody ever called.'],['!','Then this time somebody will. I\'ll make sure of it.']]}},
+ fav:{id:'oc',file:'The old org chart from 17F: twelve names, now four',L:[['&','And the old org chart from 17F. Twelve names, then four. Same trick. Same "lack of work".']]},nm:'The Layoff List',f:24,who:'Ingrid',th:'SECURITY',
+ sum:'Lack of work, they say. The list sends away the longest-serving and keeps the manager\'s friends.',
+ lead:'There\'s a layoff list going round 25F. Ingrid\'s on it. Seventeen years, and she\'s on it.',
+ table:'the layoff list, the start dates and the union\'s demand to negotiate',
+ intro:[['!','Seventeen years. "Lack of work", they say. Fine. Except the list sends me home and keeps the new kids.'],['!','The ones who play padel with the manager. Funny, that.'],['@','There are rules for layoffs. Where\'s the list?'],['!','Pinned up, bold as anything. Somewhere on this floor.']],
+ facts:[['list','sign','Layoff list','The draft layoff list, pinned up like a lunch menu.','The draft layoff list'],
+  ['dates','sigform','Staff register','The staff register with start dates. Ingrid: 2009. Hassan: 2012. Lina: 2020. Tove: 2023.','Staff register with start dates'],
+  ['padel','trophy','Padel trophy','A padel trophy: "Manager\'s Cup". Every winner is on the "stays" list.','Padel trophy: the winners all stay'],
+  ['cactus','plant','Cactus','A cactus with a name tag: "Gary". Gary is thriving.','Gary the cactus']],
+ doc:'list',need:['list','dates'],bonus:'padel',herring:'cactus',
+ puz:{title:'DRAFT LAYOFF LIST, 25F',rules:['No rule broken','Breaks last in, first out','Only three can be exempted','Right to be rehired'],
+  rows:[['Ingrid','since 2009: out',1],['Tove','since 2023: out',0],['Hassan','since 2012: out',1],['Exempt','Pelle, Max, Jonna and Bo: "key people"',2],['Note','Laid-off staff won\'t be rehired.',3]],
+  tip:'Mark what breaks the layoff rules in the Employment Protection Act. Assume everyone could do the remaining work. Check the start dates.',hint:'Who started last? And how many people can be called "key"?',
+  laws:['las22','las25'],done:[['','Ingrid and Hassan are out while newer people stay. Four "key people" when the law allows three. And laid-off workers with over a year in the last three get first call when the company hires again.'],['@','Tove\'s the only one on that list in the right order.']]},
+ waitDoc:'The list\'s pinned up somewhere on this floor. Can\'t miss it.',
+ routes:[['Ingrid takes the severance and goes',[['!','Seventeen years and a cake. No.'],['@','Agreed. Not like this.']]],['The union demands to negotiate the list before notices go out','win'],['Complain at the Friday all-hands',[['','The manager says "great question" and moves to the next slide.'],['@','Let\'s put it on a table, not a slide.']]],['Ingrid challenges her own notice later',[['@','After the notices go out it\'s a fight for damages. Before, it\'s a negotiation. Let\'s be early.']]]],
+ missDoc:[['Manager','What list? We haven\'t decided anything.'],['@','We need the list itself.']],missProof:[['Manager','The list follows seniority. Obviously.'],['@','We need the register with the start dates.']],
+ her:[['!','Leave Gary out of this.'],['@','Fair. Sorry, Gary.']],
+ win:[['@','Ingrid and Hassan are union members, and this list breaks the order of redundancy. Before a single notice goes out, you negotiate with us.'],['','The list is redrawn by seniority. Three key people, not four. And everyone laid off gets the right to be rehired, in writing.'],['!','Seventeen years and I nearly went quietly. Not anymore. Where\'s the card?']],
+ winBonus:['@','And every padel winner is on the "stays" list. Let\'s not pretend.'],used:['las22','las25','mbl13'],
+ after:'Gary and I are staying. We\'ve got seniority.',done:'Won. The 25F layoff list was redrawn by the rules.'},
+
+{id:'amir',co:{ken:{open:[['&','Dude. I laughed at that joke once. Before I got it. ...I\'m sorry, man.']],beat:[['&','Being nice isn\'t enough. I sat in rooms like that and said nothing.'],['!','You said something today. That counts.']]}},nm:'The Jokes',f:27,who:'Amir',th:'EQUAL',
+ sum:'"Jokes" about Amir\'s prayer breaks, every week. Amir reported it. Then got moved to nights.',
+ lead:'Amir on 28F reported something to HR in March. Then they moved him to nights. Ask him why.',
+ table:'the HR log, the shift move and the union\'s demand that HR act',
+ intro:[['!','My team lead thinks my prayer breaks are hilarious. Every week, same joke. The team laughs. Some of them.'],['!','I reported it in March. No reply. In April I was moved to nights.'],['@','Moved after you reported it?'],['!','Two weeks after. Coincidence, apparently. My copy of the report\'s around here somewhere.']],
+ facts:[['log','sigform','HR report','Amir\'s copy of his HR report, dated March. "Received" stamp. No reply attached.','Amir\'s HR report from March'],
+  ['shift','sign','Night rota','The rota: Amir moved to nights in April, two weeks after his report.','Rota: Amir moved to nights in April'],
+  ['chat','phone','Team chat','A phone with the team chat. The lead\'s "joke" again, with three laughing emojis.','Team chat: the "joke", again'],
+  ['window','note','Desk note','A note: "Amir\'s desk moved to the window spot. Enjoy the view!" From 2024.','Old note: desk moved to the window']],
+ doc:'log',need:['log','shift'],bonus:'chat',herring:'window',
+ puz:{title:'AMIR\'S HR FILE',rules:['No rule broken','Harassment','Employer must investigate','Punished for speaking up'],
+  rows:[['1.','Weekly "jokes" about Amir\'s prayer breaks',1],['2.','Reported in March. No reply.',2],['3.','Moved to nights two weeks after reporting',3],['4.','Desk moved to the window in 2024',0]],
+  tip:'Mark every line that breaks the Discrimination Act and pick which rule. Religion is one of the seven protected grounds.',hint:'What does an employer have to do once it knows? And what can\'t it do to the person who told?',
+  laws:['dl1_4','dl2_3','dl2_18','dl1_5'],done:[['','Harassment tied to religion, an employer that knew and did nothing, and a move to nights that punishes Amir for reporting it.'],['@','The window desk is fine. The rest isn\'t.']]},
+ waitDoc:'My copy of the report\'s somewhere on this floor. In a folder. I think.',
+ routes:[['Amir stops praying at work',[['@','That\'s not a fix. That\'s giving up something you\'re entitled to.']]],['The union demands in writing that HR investigate and stop it','win'],['Laugh along next time',[['!','I\'ve tried that. It doesn\'t stop. It gets louder.']]],['Report the team lead on social media',[['@','Then it\'s about the post, not what the employer owes Amir. Let\'s go through the employer first.']]]],
+ missDoc:[['HR','What report? We\'d remember.'],['@','We need Amir\'s copy, with the stamp.']],missProof:[['HR','Nights was just scheduling.'],['@','We need the rota. Two weeks after the report.']],
+ her:[['!','The window desk\'s actually nice. Leave it.'],['@','Leaving it.']],
+ win:[['@','In writing: you\'ve known about harassment since March and done nothing. You have to investigate and stop it. And moving Amir to nights for reporting it is retaliation. Move him back.'],['','HR opens an investigation the same day. The team lead gets a final warning. Amir\'s back on days by Monday.'],['!','Back on days. And quiet at my desk at prayer time. Sign me up.']],
+ winBonus:['@','And here\'s the chat, three laughing emojis and all.'],used:['dl1_4','dl2_3','dl2_18','dl1_5'],
+ after:'Nobody\'s joked since. The lead won\'t even look at me. That\'s fine.',done:'Won. HR investigated, the jokes stopped and Amir is back on days.'},
+
+{id:'jonas',co:{clementine:{open:[['&','Decided Monday, told Friday. That\'s my reorganisation all over again. Except bigger. And with gold leaf.']],beat:[['&','Nobody stopped mine. This one we stopped before it started. That\'s what it should\'ve been like.']]}},
+ fav:{id:'fm',file:'Form 27-B from 23F: "consulted" by a form HR filled in',L:[['&','Remember Form 27-B on 23F? "Consulted" by a form somebody else filled in. They\'ll try that here too. Let\'s get ahead of it.']]},nm:'The Sudden Move',f:32,who:'Jonas',th:'VOICE',
+ sum:'The whole department moves to another city. Decided Monday, union told Friday.',
+ lead:'Jonas on 33F says his whole department is moving. To another city. Nobody asked them.',
+ table:'the move decree, the timeline and the union\'s demand to negotiate',
+ intro:[['!','The council\'s decided: our whole department moves to the coast office. Three weeks from now.'],['!','Decided Monday. We heard Friday. The union heard Friday. From the same announcement as the cleaners.'],['@','After it was decided? Got the announcement?'],['!','It\'s pinned up. Gold leaf and everything.']],
+ facts:[['decree','scroll','Move decree','A gilded decree: "By order of the Council, the Department relocates to the Coast Office."','The move decree'],
+  ['minutes','note','Council minutes','Council minutes, Monday: "Relocation approved." The union isn\'t listed anywhere.','Council minutes from Monday'],
+  ['ban','sign','Meeting notice','A notice: "Info meeting Thursday. Union representatives: not invited."','Notice: union reps banned from the meeting'],
+  ['cake','lunch','Cake','A cake for the info meeting: "EXCITING TIMES!" in blue icing.','The "Exciting times" cake']],
+ doc:'decree',need:['decree','minutes'],bonus:'ban',herring:'cake',
+ puz:{title:'DECREE OF RELOCATION',rules:['No rule broken','Negotiate first','Duty to inform the union','Right to organise'],
+  rows:[['1.','Approved by the Council on Monday.',0],['2.','The union is told on Friday, after.',1],['3.','The figures behind it are "Crown confidential".',2],['4.','Union reps may not attend the info meeting.',3],['5.','Free cake at the info meeting.',0]],
+  tip:'Mark every line that breaks the Co-Determination Act. There\'s no collective agreement yet, so think about what still applies.',hint:'No agreement still means: negotiate before changes that hit members, and keep the union informed.',
+  laws:['mbl13','mbl19a','mbl8'],done:[['','No negotiation before a change that hits every member in the department, the reasons kept from the union, and union reps shut out of the meeting.'],['@','The cake can stay. The rest goes back to the Council.']]},
+ waitDoc:'The decree\'s on the wall somewhere. Very shiny. Very gold.',
+ routes:[['Everyone signs a petition and hopes',[['','The Council thanks you for your feedback. The move date doesn\'t change.'],['@','Hoping isn\'t negotiating.']]],['The union demands negotiation before anything moves','win'],['Accept the move and ask for moving money',[['@','We can ask for that too. At the table. Before it\'s decided, not after.']]],['Ignore it and hope it gets cancelled',[['@','It won\'t. Let\'s make them talk to us.']]]],
+ missDoc:[['Courtier','What move? Nothing\'s been decided.'],['@','We need the decree.']],missProof:[['Courtier','The union was consulted at every step.'],['@','We need the Monday minutes. The union isn\'t in them.']],
+ her:[['!','The cake isn\'t evidence. It\'s cake.'],['@','Agreed. Somebody eat it.']],
+ win:[['@','This hits every one of our members in the department. You negotiate with us before you decide, and you give us the figures behind it. The move\'s on hold until you do.'],['','The move is paused. The Council has to sit down with the union. The figures turn out to be thinner than the gold leaf.'],['!','We actually stopped it. For now. That\'s a first. I\'m in.']],
+ winBonus:['@','And union reps don\'t get banned from meetings about our members.'],used:['mbl13','mbl19a','mbl8'],
+ after:'Still here. Still not at the coast. Still talking.',done:'Won. The 33F move is on hold until the Council negotiates.'},
+
+{id:'elsa',co:{kaj:{open:[['&','They can\'t just cancel summer. Rest isn\'t a perk. It\'s the law. Every bit of it.']],beat:[['&','The year I worked through July, I don\'t remember a single day of it. Go to the lake, Elsa.']]},henrietta:{open:[['&','Two weeks before? You\'d get more notice for a fire drill.']],beat:[['&','Rested people don\'t fall off ladders. Go to the lake, Elsa.']]}},nm:'Summer, Cancelled',f:34,who:'Elsa',th:'HOURS',
+ sum:'Four weeks of summer leave moved to November. Two weeks before it was supposed to start.',
+ lead:'Elsa on 35F had a summer cabin booked. Had. Ask her about November.',
+ table:'the vacation memo, the booking and the union\'s demand to negotiate the plan',
+ intro:[['!','I booked a cabin for July. Four weeks. My kid\'s been counting down on the fridge.'],['!','Two weeks before, a memo: all summer leave moves to November. "Business needs."'],['@','Two weeks before? Where\'s the memo?'],['!','On the board somewhere. I couldn\'t look at it anymore.']],
+ facts:[['memo','scroll','Vacation memo','A royal memo: "All summer leave moves to November. Business needs."','The vacation memo'],
+  ['booking','note','Cabin booking','A booking confirmation: cabin by a lake, four weeks in July. Paid.','Cabin booked and paid for July'],
+  ['days','sigform','Leave balance','Elsa\'s leave balance: "Vacation days this year: 20".','Leave balance: 20 days this year'],
+  ['drawing','plant','Kid\'s drawing','A child\'s drawing of a lake, a cabin and a very large fish.','A drawing of a lake']],
+ doc:'memo',need:['memo','booking'],bonus:'days',herring:'drawing',
+ puz:{title:'MEMO: SUMMER LEAVE',rules:['No rule broken','Four weeks in summer','Two months\' notice','25 days a year'],
+  rows:[['1.','All summer leave moves to November.',1],['2.','You\'re told two weeks before your leave.',2],['3.','Everyone gets 20 vacation days this year.',3],['4.','Leave requests go through the new form.',0]],
+  tip:'Mark every line that breaks the Annual Leave Act and pick which rule.',hint:'How many weeks in summer? How much notice? How many days a year?',
+  laws:['sem12','sem11','sem4'],done:[['','Summer leave scrapped without special reasons, two weeks\' notice instead of two months, and five vacation days missing for everyone.'],['@','The new form\'s annoying. But legal.']]},
+ waitDoc:'The memo\'s on a board somewhere. I turned it to face the wall.',
+ routes:[['Elsa just goes to the cabin anyway',[['@','Then she\'s absent without leave and they\'ve got her. Let\'s do it the right way.']]],['The union demands to negotiate the vacation plan','win'],['Ask Alis\'s assistant nicely',[['','The assistant says "I\'ll pass it on". It is not passed on.'],['@','Nicely isn\'t a plan.']]],['Swap the cabin to November',[['!','The lake\'s frozen in November.'],['@','Right. No.']]]],
+ missDoc:[['Courtier','What memo? Summer leave is a privilege granted by the Crown.'],['@','We need the memo.']],missProof:[['Courtier','Nobody had made plans anyway.'],['@','We need Elsa\'s booking. Paid.']],
+ her:[['!','That\'s my kid\'s. It stays on my desk.'],['@','Of course it does.']],
+ win:[['@','Everyone\'s entitled to four weeks in a row in summer, and two months\' notice of when they take leave. Twenty-five days a year, not twenty. You negotiate the vacation plan with us.'],['','The memo is withdrawn. Summer leave stands. The missing five days come back.'],['!','Four weeks. By the lake. My kid\'s gonna lose it. I\'m signing.']],
+ winBonus:['@','And that leave balance says twenty days. The law says twenty-five.'],used:['sem12','sem11','sem4'],
+ after:'We caught the big fish. Well. A fish.',done:'Won. Summer leave on 35F stands, with all 25 days.'},
+
+{id:'bo',co:{joan:{open:[['&','"Do not read. Just sign." Section nine all over again.']],beat:[['&','Last time I found the clause and nobody stood with me.'],['&','This time we all read it. Quietly, then loudly.']]}},
+ fav:{id:'pt',file:'The 1979 petition from 33F: finish it this time',L:[['&','And bring the petition from 33F. Those names from 1979 never got a real agreement. This one\'s for them too.']]},nm:'The Draft Agreement',f:37,who:'Bo',th:'WAGES',
+ sum:'The Crown wrote its own "collective agreement" and wants the union to sign it unread.',
+ lead:'Bo on 38F got hold of the agreement the Crown wants you to sign. You should read it before Alis does.',
+ table:'the marked-up draft of the agreement',
+ intro:[['!','Psst. This is the "collective agreement" the Crown wants us to sign at the top. They wrote it themselves.'],['!','They want it signed without reading. Like terms and conditions.'],['@','We read everything. Where is it?'],['!','I hid it. Around here somewhere. Don\'t tell the courtiers.']],
+ facts:[['draft','scroll','The draft','A thick scroll: "COLLECTIVE AGREEMENT (DRAFT). Do not read. Just sign."','The draft agreement'],
+  ['memo','note','Courtier memo','A memo: "Get the union to sign before they read section 4."','Memo: "sign before they read section 4"'],
+  ['old','sigform','Old agreement','A real collective agreement from another company, for comparison. Section 4 there is about pay.','A real agreement, for comparison'],
+  ['crown','box','Paper crown','A box of paper crowns from the last office party. One says "BO".','A paper crown']],
+ doc:'draft',need:['draft','memo'],bonus:'old',herring:'crown',
+ puz:{title:'DRAFT AGREEMENT',rules:['No rule broken','Agreement binds members','Union negotiates','Safety reps'],
+  rows:[['§ 1','Binds only members who sign it one by one.',1],['§ 2','The union may not negotiate for its members.',2],['§ 3','This agreement is in writing.',0],['§ 4','Safety reps are picked by management.',3],['§ 5','Pay is reviewed every April.',0]],
+  tip:'Mark every clause that breaks the law and pick which rule. Some clauses are fine. Some are just bad deals, and you fight those at the table, not here.',hint:'Who does an agreement bind? Who negotiates? Who picks safety reps?',
+  laws:['mbl26','mbl10','aml6_2'],done:[['','A collective agreement binds the union and all its members, not one signature at a time. The union negotiates, that\'s the point of it. And safety reps are chosen by the workers\' side, not by management.'],['@','Section 4 is the trap. And now we know.']]},
+ waitDoc:'I hid the draft somewhere on this floor. Behind something. Probably.',
+ routes:[['Sign it so the talks can start',[['@','Signing first is how you get section 4. No.']]],['Bring the marked-up draft to Alis\'s table','win'],['Rip it up in front of the courtiers',[['@','Satisfying. But then there\'s nothing on the table. Let\'s mark it up instead.']]],['Ask the courtiers to explain it',[['','The courtiers explain it. It takes an hour and explains nothing.']]]],
+ missDoc:[['Courtier','What draft? There\'s no draft.'],['@','We need the draft.']],missProof:[['Courtier','It\'s a fair, standard agreement.'],['@','We need the memo: "sign before they read section 4".']],
+ her:[['!','The crown\'s mine. I\'m keeping it.'],['@','It suits you.']],
+ win:[['@','We\'ve read it. Clause one, two and four don\'t hold up. We\'ll negotiate a real agreement. In writing, binding on both sides, with safety reps the workers choose.'],['','The courtiers take the draft back without a word. At the top of the tower, Alis will be expecting a different conversation now.'],['!','We read the fine print. Nobody ever reads the fine print. I\'m in, obviously.']],
+ winBonus:['@','And here\'s what a real agreement looks like. Section 4 is about pay.'],used:['mbl26','mbl10','aml6_2','mbl23'],
+ after:'Section 4. I still laugh about it.',done:'Won. The Crown\'s fake agreement is off the table.'}];
+const CASEF=6;
+const caseOf=id=>CASES.find(c=>c.id===id),caseAt=f=>CASES.find(c=>c.f===f);
+const csS=c=>G.flags['case_'+c.id];
+const caseWon=c=>{const s=csS(c);return!!s&&s.st>=3};
+const csOn=(cid,cf)=>{const c=caseOf(cid),s=c&&csS(c);return!!s&&s.st<3&&!s.f[cf]};
+function caseGlint(sx,sy){if((G.t>>4)&1){R(sx+26,sy+1,3,3,'#ffd840');R(sx+27,sy,1,5,'#fff6a0');R(sx+25,sy+2,5,1,'#fff6a0')}}
+async function useLaw(id,what){await lawRaise(id,3,what)}
+const coOf=c=>{if(!c.co)return null;const id=Object.keys(c.co).find(id=>roster().some(m=>m.id===id));return id?{id,...c.co[id]}:null};
+const favDone=c=>!!(c.fav&&(favG()[c.fav.id]||{}).st===3);
+function caseLines(c,L){const w=lawWho(),hn=byId('henrietta')?'Henrietta':'The safety rep',co=coOf(c),cn=co?CH[co.id].name:w;return L.map(([s,t])=>[s==='!'?c.who:s==='@'?w:s==='%'?hn:s==='&'?cn:s,t])}
+const docName=c=>{const n=c.facts.find(x=>x[0]===c.doc)[2].replace(/^The /,'');return/^.[a-z]/.test(n)?n[0].toLowerCase()+n.slice(1):n};
+const caseFile=(c,cf)=>{if(cf==='fav')return c.fav.file;const f=c.facts.find(x=>x[0]===cf),s=csS(c);return cf===c.doc&&s&&s.puz&&c.puz.file?c.puz.file:f[4]};
+async function caseTalk(e){const c=caseOf(e.cs),s=csS(c);
+ if(!s){const co=coOf(c);await talk(caseLines(c,co?c.intro.concat(co.open):c.intro));G.flags['case_'+c.id]={st:1,f:{}};delete G.flags['lead_'+c.id];c.puz.laws.forEach(lawUnlock);sfx('sting');toast('NEW CASE: '+c.nm.toUpperCase());
+  await tipOnce('case','A CASE is a problem a coworker has. Find the facts on this floor (they glint), then talk to them again to build the case. Menu > Cases shows what you have. The rules are in the Lagboken.');return}
+ if(s.st>=3){await say(c.who,c.after);return}
+ if(!s.f[c.doc]){await say(c.who,c.waitDoc);return}
+ if(s.st<2){const i=await ask('',`Go through the ${docName(c)} now?`,['Check it','Later']);if(i===0)await casePuzzle(c);if(csS(c).st<2)return}
+ const i=await ask('',`Build ${c.who}'s case now?`,['Build the case','Not yet']);if(i!==0)return;await caseBuild(e,c)}
+async function caseFact(e){const c=caseOf(e.cid),s=csS(c);await say(e.n,e.l);
+ if(!s){await say('','Huh. Might matter to somebody on this floor.');return}
+ if(s.st>=3)return;
+ if(!s.f[e.cf]){s.f[e.cf]=1;sfx('lvl');toast('CASE FACT: '+e.n.toUpperCase())}
+ if(e.cf===c.doc&&s.st<2){const i=await ask('','Go through it for broken rules now?',['Check it','Later']);if(i===0)await casePuzzle(c)}}
+async function casePuzzle(c){const s=csS(c),P=c.puz;
+ const ok=await docPuzzle({title:P.title,rows:P.rows,rules:P.rules,tipKey:P.tipKey||'puz_'+c.id,tip:P.tip,hint:P.hint});
+ if(!ok)return;s.st=2;s.puz=1;for(const id of P.laws)await lawRaise(id,2);await talk(caseLines(c,P.done));toast('CASE FACT: CHECKED')}
+async function rotaPuzzle(){await casePuzzle(caseOf('robin'))}
+async function caseBuild(e,c){const s=csS(c),w=lawWho();const fs=c.facts.filter(f=>s.f[f[0]]),pk={};let sel=0;if(favDone(c))fs.push(['fav']);
+ for(;;){const its=fs.map(f=>({t:(pk[f[0]]?'[x] ':'[ ] ')+caseFile(c,f[0])}));its.push({t:'That\'s our evidence',col:'#9fff9f'});
+  const j=await choose(its,{x:70,y:24,w:500,vis:6,sel,title:'WHAT DO WE SHOW THE BOSS?',foot:k=>k<fs.length?'Select to add or remove':'Move on'});if(j<0)return;sel=j;
+  if(j<fs.length){pk[fs[j][0]]^=1;continue}if(!Object.values(pk).some(Boolean)){await say(w,'We can\'t walk in there with nothing.');continue}break}
+ const hn=byId('henrietta')?'Henrietta':'The safety rep',R=c.routes.map(r=>r[0].replace('%',hn));
+ const r=await choose(R.map(t=>({t})),{x:70,y:60,w:500,title:'WHO TAKES IT TO THE EMPLOYER?'});if(r<0)return;
+ const res=c.routes[r][1];
+ if(res!=='win'){await talk(caseLines(c,typeof res==='string'?[['@',res]]:res));return}
+ if(!pk[c.need[0]]){await talk(caseLines(c,c.missDoc));return}
+ if(!pk[c.need[1]]){await talk(caseLines(c,c.missProof));return}
+ if(pk[c.herring]){await talk(caseLines(c,c.her));return}
+ s.st=3;G.stats=G.stats||{};G.stats.cases=(G.stats.cases||0)+1;
+ const W=c.win.slice(),co=coOf(c);if(pk[c.bonus])W.splice(Math.max(1,W.length-2),0,c.winBonus);if(pk.fav)W.splice(Math.max(1,W.length-2),0,...c.fav.L);if(co)W.splice(W.length-1,0,...co.beat);
+ await talk(caseLines(c,W));const tag=`${c.nm} (${c.who}, ${c.f+1}F)`;for(const id of c.used)await useLaw(id,tag);
+ G.signed[G.floor+':'+e.id]=1;{const du=10+G.floor;addDues(Math.round(du*(pk[c.bonus]?1.5:1))+(pk.fav?10:0))}sfx('sign');toast(`CASE WON. NEW MEMBER ${cards()}/${CT}`)}
+async function caseLead(sp,e){if(e&&e.cs)return;const c=CASES.find(c=>G.floor<c.f&&dunOf(G.floor)===dunOf(c.f)&&!csS(c)&&!G.flags['lead_'+c.id]);if(!c)return;
+ G.flags['lead_'+c.id]=1;await say(e?e.n:sp.name,c.lead);sfx('sting');toast('CASE LEAD: '+(c.f+1)+'F')}
+const caseList=()=>CASES.filter(c=>csS(c)||G.flags['lead_'+c.id]);
+async function caseBook(){const L=caseList();await bookView({title:'CASES  WON '+CASES.filter(caseWon).length+'/'+CASES.length,
+ items:L.map(c=>{const s=csS(c);return{t:s?c.nm:'Lead: '+(c.f+1)+'F',r:s&&s.st>=3?'WON':(c.f+1)+'F'}}),
+ detail(i,x,y,w,bot){const c=L[i],s=csS(c);y=bkHead(s?c.nm.toUpperCase():'LEAD',x,y,w,'#ffd840');y=bkT(s?c.who+', '+(c.f+1)+'F':(c.f+1)+'F',x,y,w,'#fff',16);bkRule(x,y,w);y+=9;
+  if(!s){y=bkLines(c.lead,x,y,w,'#e8ecff',14);return}
+  y=bkLines(c.sum,x,y,w,'#e8ecff',14);
+  y=bkT('Facts found:',x,y+4,w,'#a8b4f0',14);const fs=c.facts.filter(f=>s.f[f[0]]);if(favDone(c))fs.push(['fav']);
+  if(!fs.length)y=bkLines('None yet. Look for things that glint on '+(c.f+1)+'F.',x,y,w,'#c8d0ff',13);else for(const f of fs)y=bkLines('- '+caseFile(c,f[0]),x,y,w,'#e8ecff',13);
+  y=bkLines(s.st>=3?c.done:s.st>=2?'Next: talk to '+c.who+' and build the case.':s.f[c.doc]?'Next: go through the '+docName(c)+'.':'Next: look for facts on '+(c.f+1)+'F.',x,y+4,w,'#9fff9f',13)}})}
+const CFACTS=caseOf('robin').facts,CROTA=caseOf('robin').puz.rows;
+async function docPuzzle(o){const m=o.rows.map(()=>0);let sel=0,tries=0;if(o.tipKey)await tipOnce(o.tipKey,o.tip);
+ for(;;){const its=o.rows.map(([d,t],k)=>({t:d+'  '+t,r:m[k]?'X':'',col:m[k]?'#ffd840':undefined}));its.push({t:'Done',col:'#9fff9f'});
+  const j=await choose(its,{x:70,y:24,w:500,vis:9,sel,title:o.title,foot:k=>k<o.rows.length?(m[k]?'Marked: '+o.rules[m[k]]:'Select to mark a broken rule'):'Hand in your marks'});
+  if(j<0)return false;sel=j;
+  if(j<o.rows.length){const r=await choose(o.rules.map(t=>({t})),{x:180,y:50,w:260,vis:9,sel:m[j],title:o.rows[j][0]+': which rule?'});if(r>=0)m[j]=r;continue}
+  const bad=o.rows.map((x,k)=>m[k]!==x[2]?k:-1).filter(k=>k>=0);tries++;
+  if(!bad.length){sfx('combo');return true}
+  sfx('no');if(tries<2)await say('',`Not quite. ${bad.length} of the ${o.rows.length} rows don't add up. ${o.hint}`);
+  else await say('',`Not quite. Have another look at: ${bad.map(k=>o.rows[k][0]).join(', ')}.`)}}
+
 /* ================= LAGBOKEN (Swedish labour law lessons) ================= */
 const LAW=[
-{id:'mbl7',ref:'MBL 7 §',t:'Right of association',th:'VOICE',d:0,x:'You have the right to join a union, to stay out of one, and to use your membership. (Medbestämmandelagen: föreningsrätt.)'},
+{id:'mbl7',ref:'MBL 7 §',t:'Right of association',th:'VOICE',d:0,x:'You have the right to join a union, to use your membership, to work for the union and to help start one. (Medbestämmandelagen: föreningsrätt.)'},
 {id:'mbl8',ref:'MBL 8 §',t:'No reprisals',th:'VOICE',d:0,x:'Harming someone for using their right of association, or to stop them from using it, is a violation of the law.'},
 {id:'mbl10',ref:'MBL 10 §',t:'Right to negotiate',th:'VOICE',d:3,x:'The union, not the individual employee, holds the right to negotiate with the employer on matters involving its members.'},
 {id:'mbl11',ref:'MBL 11 §',t:'Negotiate first',th:'VOICE',d:3,x:'An employer bound by a collective agreement must negotiate with the union, on its own initiative, BEFORE any major change in the business or in working conditions.'},
-{id:'mbl15',ref:'MBL 15 §',t:'Negotiate for real',th:'VOICE',d:3,x:'In a negotiation you must show up, explain your position, share the facts the other side needs and suggest solutions. No agreement is required, but real effort is.'},
+{id:'mbl13',ref:'MBL 13 §',t:'Negotiate, no agreement',th:'VOICE',d:3,x:'Even with no collective agreement, the employer must negotiate with a union before changes that specifically affect its members.'},
+{id:'mbl15',ref:'MBL 15 §',t:'Negotiate for real',th:'VOICE',d:3,x:'Both sides must show up to negotiation meetings and, when needed, bring a written proposal with reasons. Nobody has to agree, but you can\'t skip the talks.'},
 {id:'aml2_1',ref:'AML 2 kap 1 §',t:'Influence over work',th:'VOICE',d:2,x:'Work must be adapted to people, and employees should be able to take part in shaping their own working conditions.'},
 {id:'aml3_3',ref:'AML 3 kap 3 §',t:'Know the risks',th:'OPEN',d:0,x:'The employer must make sure you understand the risks of your work and get the training you need.'},
 {id:'mbl19',ref:'MBL 19 §',t:'Right to information',th:'OPEN',d:1,x:'An employer bound by a collective agreement must continuously inform the union about how the business is doing, its finances and its personnel policy.'},
@@ -1793,47 +2126,58 @@ const LAW=[
 {id:'dl1_5',ref:'DL 1 kap 5 §',t:'Seven grounds',th:'EQUAL',d:0,x:'The Discrimination Act protects on seven grounds: gender, gender identity or expression, ethnicity, religion or belief, disability, sexual orientation and age.'},
 {id:'dl1_4',ref:'DL 1 kap 4 §',t:'Forms of discrimination',th:'EQUAL',d:1,x:'Direct and indirect discrimination, harassment, sexual harassment, lack of accessibility and orders to discriminate are all forbidden.'},
 {id:'dl2_1',ref:'DL 2 kap 1 §',t:'Equal at work',th:'EQUAL',d:1,x:'Employers may not discriminate against employees, job applicants, interns or temps.'},
+{id:'dl2_3',ref:'DL 2 kap 3 §',t:'Duty to investigate',th:'EQUAL',d:2,x:'An employer who finds out an employee feels harassed or sexually harassed at work must investigate and take steps to stop it.'},
+{id:'dl2_18',ref:'DL 2 kap 18 §',t:'No retaliation',th:'EQUAL',d:2,x:'An employer may not punish an employee for reporting or pointing out discrimination, or for taking part in an investigation of it.'},
 {id:'dl3',ref:'DL 3 kap',t:'Active measures, pay mapping',th:'EQUAL',d:1,x:'Employers must work actively against discrimination, and map pay and pay differences to catch unfair gaps for equal or equivalent work.'},
 {id:'mbl23',ref:'MBL 23 §',t:'Collective agreement',th:'WAGES',d:0,x:'A written agreement between an employer (or employer organization) and a union about the terms of employment, pay included.'},
 {id:'mbl26',ref:'MBL 26 §',t:'Agreement binds',th:'WAGES',d:3,x:'A collective agreement binds the organizations that signed it and their individual members.'},
 {id:'lgl',ref:'Lönegarantilagen',t:'Pay if employer fails',th:'WAGES',d:1,x:'If the employer goes bankrupt, the state wage guarantee can pay out wages you were owed. (Lönegarantilagen.)'},
 {id:'las4',ref:'LAS 4 §',t:'Permanent by default',th:'SECURITY',d:0,x:'Employment is permanent unless the law allows a fixed term. "At will" does not exist here.'},
 {id:'las7',ref:'LAS 7 §',t:'Valid reason needed',th:'SECURITY',d:0,x:'Dismissal needs a valid reason: lack of work (arbetsbrist) or personal reasons. Since 2022 the wording is "sakliga skäl".'},
-{id:'las8',ref:'LAS 8 §',t:'Notice in writing',th:'SECURITY',d:2,x:'A dismissal must be in writing, and must tell you how to challenge it and claim damages.'},
+{id:'las8',ref:'LAS 8 §',t:'Notice in writing',th:'SECURITY',d:2,x:'A dismissal must be in writing, must tell you how to challenge it or claim damages, and whether you have the right to be rehired.'},
 {id:'las11',ref:'LAS 11 §',t:'Notice period',th:'SECURITY',d:2,x:'The notice period is at least one month and grows to as much as six months with long service.'},
 {id:'las22',ref:'LAS 22 §',t:'Last in, first out',th:'SECURITY',d:2,x:'In layoffs the longest-serving employees keep their jobs. The employer may exempt up to three key people.'},
-{id:'las25',ref:'LAS 25 §',t:'Right to be rehired',th:'SECURITY',d:2,x:'Workers laid off for lack of work get first call when the employer hires again, if they are qualified.'},
-{id:'las34',ref:'LAS 34 §',t:'Void dismissal',th:'SECURITY',d:3,x:'If you challenge an unlawful dismissal, it can be declared void.'},
+{id:'las25',ref:'LAS 25 §',t:'Right to be rehired',th:'SECURITY',d:2,x:'Workers laid off for lack of work, who worked there more than 12 months in the last three years, get first call when the employer hires again, if they are qualified. It lasts until nine months after the job ended.'},
+{id:'las34',ref:'LAS 34 §',t:'Void dismissal',th:'SECURITY',d:3,x:'A dismissal without a valid reason is declared void if the worker asks for it. Breaking the layoff order (LAS 22 §) gives damages instead.'},
+{id:'las5a',ref:'LAS 5 a §',t:'Fixed-term turns permanent',th:'SECURITY',d:1,x:'A special fixed-term job (särskild visstidsanställning) turns permanent once you\'ve had it for more than 12 months in total with the same employer within five years.'},
+{id:'las40',ref:'LAS 40 §',t:'Two weeks to object',th:'SECURITY',d:3,x:'If you want a dismissal declared void, you must tell the employer within two weeks of being dismissed.'},
+{id:'las41',ref:'LAS 41 §',t:'Four months for damages',th:'SECURITY',d:3,x:'A claim for damages under LAS must be made to the other side within four months.'},
 {id:'las38',ref:'LAS 38 §',t:'Damages',th:'SECURITY',d:3,x:'An employer who breaks the law can owe damages for lost income and for violation of dignity (kränkning).'},
 {id:'aml1_1',ref:'AML 1 kap 1 §',t:'Purpose',th:'ENV',d:0,x:'The Work Environment Act exists to prevent ill health and accidents and to secure a good working environment.'},
 {id:'aml3_2',ref:'AML 3 kap 2 §',t:'Employer must prevent harm',th:'ENV',d:0,x:'The employer must take all necessary measures to prevent ill health and accidents at work.'},
 {id:'aml6_2',ref:'AML 6 kap 2 §',t:'Safety reps',th:'ENV',d:2,x:'Workplaces with five or more regular employees must have a skyddsombud, a safety representative.'},
-{id:'aml6_6a',ref:'AML 6 kap 6 a §',t:'Demand action',th:'ENV',d:2,x:'A safety rep can demand in writing that the employer fix a problem. If nothing happens, the Work Environment Authority can step in.'},
+{id:'aml6_6a',ref:'AML 6 kap 6 a §',t:'Demand action',th:'ENV',d:2,x:'A safety rep can demand that the employer fix a problem. The employer must confirm the request in writing right away and answer without delay. If nothing happens, the Work Environment Authority can step in.'},
 {id:'aml6_7',ref:'AML 6 kap 7 §',t:'Stop dangerous work',th:'ENV',d:2,x:'A safety rep can halt work that poses an immediate serious danger to life or health, without being liable for the result.'},
 {id:'osa',ref:'AFS 2023:2',t:'Workload and wellbeing',th:'ENV',d:3,x:'Employers must systematically handle unhealthy workload, working hours and degrading treatment (kränkande särbehandling). Report problems to your safety rep.'},
 {id:'atl5',ref:'ATL 5 §',t:'40-hour week',th:'HOURS',d:0,x:'Ordinary working time may be at most 40 hours a week. (Arbetstidslagen.)'},
-{id:'atl8',ref:'ATL 8 §',t:'Overtime cap',th:'HOURS',d:0,x:'General overtime is limited to 200 hours a year, and only when there is a special need.'},
-{id:'atl8a',ref:'ATL 8 a §',t:'Extra overtime limits',th:'HOURS',d:0,x:'Extra overtime of up to 150 more hours is possible in special cases. Overtime is also capped at 48 hours over four weeks, or 50 in a month.'},
-{id:'atl13',ref:'ATL 13 §',t:'Daily rest',th:'HOURS',d:2,x:'You are entitled to at least 11 hours of continuous rest in every 24 hours.'},
+{id:'atl8',ref:'ATL 8 §',t:'Overtime cap',th:'HOURS',d:0,x:'Overtime needs a special reason, and is capped at 48 hours over four weeks (or 50 in a calendar month) and 200 hours a year.'},
+{id:'atl8a',ref:'ATL 8 a §',t:'Extra overtime limits',th:'HOURS',d:0,x:'In special cases, up to 150 more hours of extra overtime a year are allowed, if nothing else can solve it. The 48-hour and 50-hour caps still apply.'},
+{id:'atl12',ref:'ATL 12 §',t:'Schedule notice',th:'HOURS',d:0,x:'Changes to your working hours must be announced at least two weeks ahead, unless something truly unforeseen happens.'},
+{id:'atl13',ref:'ATL 13 §',t:'Daily rest',th:'HOURS',d:2,x:'You are entitled to at least 11 hours of continuous rest in every 24 hours, and it should include midnight to 5 a.m.'},
 {id:'atl14',ref:'ATL 14 §',t:'Weekly rest',th:'HOURS',d:2,x:'You are entitled to at least 36 hours of continuous time off in every seven days.'},
 {id:'atl15',ref:'ATL 15 §',t:'Breaks',th:'HOURS',d:2,x:'You must get a break (rast) so that you never work more than five hours in a row.'},
 {id:'sem4',ref:'SemL 4 §',t:'25 vacation days',th:'HOURS',d:2,x:'Every employee is entitled to 25 paid vacation days each year. (Semesterlagen.)'},
+{id:'sem11',ref:'SemL 11 §',t:'Who decides when',th:'HOURS',d:3,x:'If you can\'t agree, and nothing else follows from an agreement or a negotiation, the employer decides when you take leave. You must be told at least two months ahead (one month in special cases).'},
 {id:'sem12',ref:'SemL 12 §',t:'Four weeks in summer',th:'HOURS',d:2,x:'You are entitled to at least four consecutive weeks off between June and August, unless special circumstances apply.'}];
 const LAWI={};LAW.forEach(e=>LAWI[e.id]=e);
-const TACLAW={stone:'mbl11',memo:'mbl8',divide:'mbl10',bad:'mbl15'};
 const lawG=()=>G.law||(G.law={});
 function lawUnlock(id){const g=lawG();if(g[id])return false;g[id]=1;toast('LAGBOKEN: '+LAWI[id].ref);sfx('law');return true}
-function lawPick(th,D){const g=lawG(),pool=LAW.filter(e=>e.th===th);let c=pool.filter(e=>!g[e.id]&&e.d===D);if(!c.length)c=pool.filter(e=>!g[e.id]);if(!c.length)c=pool;return pick(c)}
-function lawOpts(right,n){const d=LAW.filter(e=>e.id!==right.id&&e.th!==right.th&&e.th!=='ENV'&&e.th!=='HOURS');const o=[right];while(o.length<n&&d.length)o.push(d.splice(ri(0,d.length-1),1)[0]);return o.sort(()=>Math.random()-.5)}
+/* three levels: 1 heard of (picked up in the world), 2 understood (solved a puzzle or case with it), 3 used (won a case with it) */
+const LVN=['','HEARD OF','UNDERSTOOD','USED'],LVR=['','heard','got it','used'],LVC=['','#a8b4f0','#8ad0ff','#9fff9f'];
+const lawLv=id=>lawG()[id]||0,luseG=()=>G.luse||(G.luse={});
+const lawCount=lv=>LAW.filter(e=>lawLv(e.id)>=lv).length;
+const lawMask=(s,lv)=>lv>=2?s:s.replace(/\d+([.,]\d+)?/g,'__');
+async function lawRaise(id,lv,note){const g=lawG(),was=g[id]||0;if(note)luseG()[id]=note;if(was>=lv)return false;g[id]=lv;toast('LAGBOKEN: '+LAWI[id].ref+' '+LVN[lv]);sfx('law');
+ await tipOnce('lvl','Paragraphs in the Lagboken have three levels. HEARD OF: you picked it up somewhere, and the numbers are blanked out. UNDERSTOOD: you solved a puzzle or case with it. USED: you won a case with it.');return true}
 const lawLabel=e=>e.ref+' '+e.t;
 async function lawTip(list,who){const id=list.find(i=>!lawG()[i]);if(!id)return;lawUnlock(id);const e=LAWI[id];await say(who,`${e.ref}: ${e.t}. ${e.x}`)}
 const lawWho=()=>byId('joan')?'Joan':'Kaj';
 async function lawScene(key){const w=lawWho();
- if(key==='citadel'){['mbl19','mbl23','dl3'].forEach(lawUnlock);await talk([[w,'Sales Citadel. Everything here\'s numbers, so use numbers. MBL 19 §: the employer must keep the union informed about finances and personnel policy.'],['Clem','So when the ticker shows record profits, we\'re allowed to ask where it went?'],[w,'Yes. And a collective agreement (MBL 23 §) is how pay gets written down. DL 3 kap: employers must map pay gaps. Equal work, equal pay.']])}
+ if(key==='citadel'){['mbl19a','mbl23','dl3'].forEach(lawUnlock);await talk([[w,'Sales Citadel. Everything here\'s numbers, so use numbers. MBL 19 a §: even without a collective agreement, the employer has to keep the union informed about finances and personnel policy.'],['Clem','So when the ticker shows record profits, we\'re allowed to ask where it went?'],[w,'Yes. And a collective agreement (MBL 23 §) is how pay gets written down. DL 3 kap: employers must map pay gaps. Equal work, equal pay.']])}
  else if(key==='hell'){['las22','atl13','atl14'].forEach(lawUnlock);await talk([[w,'HR Hellscape. Here\'s what they don\'t want you to read. LAS 22 §: layoffs go last in, first out. No secret lists.'],['Henrietta','And nobody works around the clock. Eleven hours of rest every day, thirty-six every week. ATL 13 and 14 §.'],[w,'Safety reps can stop dangerous work (AML 6 kap 7 §). With lava in the break room, that matters.']])}
- else if(key==='kingdom'){['mbl11','mbl10','osa'].forEach(lawUnlock);await talk([[w,'Corporate Kingdom. Decrees, councils, tapestries. The law is simpler: MBL 11 §, the employer must negotiate BEFORE major changes.'],['Kaj','And the union holds the right to negotiate (MBL 10 §), so nobody speaks for us as individuals.'],[w,'Workload, hours and degrading treatment are work-environment issues too (AFS 2023:2). Report them to your safety rep.']])}
+ else if(key==='kingdom'){['mbl13','mbl10','osa'].forEach(lawUnlock);await talk([[w,'Corporate Kingdom. Decrees, councils, tapestries. The law is simpler: MBL 13 §, the employer has to negotiate with us BEFORE changes that hit our members. Agreement or not.'],['Kaj','And the union holds the right to negotiate (MBL 10 §), so nobody speaks for us as individuals.'],[w,'Workload, hours and degrading treatment are work-environment issues too (AFS 2023:2). Report them to your safety rep.']])}
  else if(key==='crunch'){['atl5','atl8','atl8a'].forEach(lawUnlock);await talk([['Kaj','Wait, wait. An 80-hour week? Normal working time is 40 hours. That\'s Arbetstidslagen, 5 §.'],['Kaj','Overtime is capped at 200 hours a year (8 §), plus 48 hours over four weeks. A "voluntary" crunch like this isn\'t even legal.'],['Henrietta','Then we aren\'t asking for favours. We\'re asking them to follow the law. Somebody write that down.']])}}
-async function lawBook0(){let sel=0;for(;;){const g=lawG();const items=LAW.map(e=>g[e.id]?{t:lawLabel(e)}:{t:'???',dis:true});const j=await choose(items,{x:100,y:14,w:300,vis:9,sel,title:'Lagboken '+Object.keys(g).length+'/'+LAW.length});if(j<0)return;sel=j;const e=LAW[j];await say('Lagboken: '+e.ref,e.t+'. '+e.x)}}
+async function lawBook0(){let sel=0;for(;;){const g=lawG();const items=LAW.map(e=>g[e.id]?{t:lawLabel(e),r:LVR[lawLv(e.id)]}:{t:'???',dis:true});const j=await choose(items,{x:100,y:14,w:300,vis:9,sel,title:'Lagboken '+Object.keys(g).length+'/'+LAW.length});if(j<0)return;sel=j;const e=LAW[j];await say('Lagboken: '+e.ref,e.t+'. '+lawMask(e.x,lawLv(e.id))+' ('+LVN[lawLv(e.id)]+')')}}
 
 const LIB_IDX='https://www.government.se/government-policy/labour-law-and-work-environment/';
 const LIB=[
@@ -1864,8 +2208,8 @@ const GLOSS=[
 ['Medbestämmande','Co-determination','Employees\' right to influence decisions at work through their union (MBL).'],
 ['Föreningsrätt','Right of association','The right to join a union and to use your membership (MBL 7 §).'],
 ['Förhandlingsrätt','Right to negotiate','The union\'s right to negotiate with the employer on matters involving its members (MBL 10 §).'],
-['Primär förhandlingsskyldighet','Duty to negotiate first','The employer must take the initiative and negotiate before a major change (MBL 11 §).'],
-['Informationsskyldighet','Duty to inform','The employer must keep the union informed about the business and personnel policy (MBL 19 §).'],
+['Primär förhandlingsskyldighet','Duty to negotiate first','An employer with a collective agreement must take the initiative and negotiate before a major change (MBL 11 §). Without one, it still has to negotiate changes that affect union members (MBL 13 §).'],
+['Informationsskyldighet','Duty to inform','The employer must keep the union informed about the business and personnel policy, with or without a collective agreement (MBL 19 and 19 a §§).'],
 ['Arbetstagarorganisation','Employee organization (union)','An organization of employees that negotiates and bargains for its members.'],
 ['Arbetsgivarorganisation','Employers\' organization','An organization of employers that bargains with unions.'],
 ['Förtroendeman','Union representative','A person elected by union members at a workplace to represent them. Protected by the Trade Union Representatives Act.'],
@@ -1890,6 +2234,7 @@ const GLOSS=[
 ['Omplacering','Redeployment','Moving an employee to another job instead of dismissing them. The employer has to consider it.'],
 ['Skadestånd','Damages','Money the employer can be ordered to pay for breaking the law (LAS 38 §).'],
 ['Ogiltig','Void','An unlawful dismissal can be declared void (LAS 34 §).'],
+['Avvikelse i kollektivavtal','Deviation by agreement','A collective agreement can swap many Working Hours Act rules for its own, as long as the EU minimums hold (ATL 3 §). So check the agreement too.'],
 ['Övertid','Overtime','Work beyond ordinary working time. Capped by law (ATL 8 §).'],
 ['Mertid','Extra hours (part-time)','Hours worked beyond a part-timer\'s agreed hours (ATL 10 §).'],
 ['Dygnsvila','Daily rest','At least 11 hours of rest in every 24 hours (ATL 13 §).'],
@@ -1910,10 +2255,11 @@ const THEMEL={VOICE:['INFLUENCE','#7ae07a'],OPEN:['TRANSPARENCY','#8ad0ff'],EQUA
 const DUNL=['Cubicle Farm','Sales Citadel','HR Hellscape','Corporate Kingdom'];
 const fitS=(s,n)=>s.length>n?s.slice(0,Math.max(1,n-3))+'...':s;
 function bkChip(x,y,txt,col){const w=txt.length*6+12;R(x,y,w,13,'rgba(0,0,0,.45)');R(x,y,w,1,col);R(x,y+12,w,1,col);R(x,y,1,13,col);R(x+w-1,y,1,13,col);T(txt,x+6,y+3,col);return w}
-async function bookParas(){const g=lawG();await bookView({title:'LAGBOKEN: PARAGRAPHS '+Object.keys(g).length+'/'+LAW.length,
- get items(){return LAW.map(e=>({t:lawLabel(e),lock:!g[e.id]}))},
- detail(i,x,y,w,bot){const e=LAW[i];if(!g[e.id]){y=bkHead('???',x,y,w,'#7a86d0');bkRule(x,y,w);bkLines('Not discovered yet. Recruit coworkers, cite the right paragraph in boss talks, rest on couches and read the notice boards by the water coolers to unlock it.',x,y+8,w,'#c8d0ff',13);return}
-  y=bkHead(e.ref,x,y,w,'#ffd840');y=bkT(e.t,x,y,w,'#fff',16);bkRule(x,y,w);y+=9;y=bkLines(e.x,x,y,w,'#e8ecff',14);
+async function bookParas(){const g=lawG();await bookView({title:'LAGBOKEN '+lawCount(1)+'/'+LAW.length+'  UNDERSTOOD '+lawCount(2)+'  USED '+lawCount(3),
+ get items(){return LAW.map(e=>({t:lawLabel(e),lock:!g[e.id],r:LVR[lawLv(e.id)]}))},
+ detail(i,x,y,w,bot){const e=LAW[i];if(!g[e.id]){y=bkHead('???',x,y,w,'#7a86d0');bkRule(x,y,w);bkLines('Not discovered yet. Find case files, rest on couches and read the notice boards by the water coolers to unlock it.',x,y+8,w,'#c8d0ff',13);return}
+  y=bkHead(e.ref,x,y,w,'#ffd840');y=bkT(e.t,x,y,w,'#fff',16);bkRule(x,y,w);y+=9;const lv=lawLv(e.id);y=bkLines(lawMask(e.x,lv),x,y,w,lv>=2?'#e8ecff':'#a8b4f0',14);
+  y=bkLines(LVN[lv]+(lv===1?'. Solve a puzzle or case with it to read it all.':lv===3&&luseG()[e.id]?': '+luseG()[e.id]:''),x,y+4,w,LVC[lv],13);
   const th=THEMEL[e.th];if(LG()>1){y=bkChipL(th[0],x,y+6,w,th[1]);bkT('Taught in: '+DUNL[e.d],x,y,w,'#a8b4f0',16)}else{bkChip(x,bot-44,th[0],th[1]);T('Taught in: '+DUNL[e.d],x,bot-24,'#a8b4f0')}}})}
 async function bookLib(){await bookView({title:'LAW LIBRARY: SWEDISH LABOUR LAW',okHint:'open on government.se',
  items:LIB.map(e=>({t:e.nm||e.en,r:e.sfs})),
@@ -1993,12 +2339,12 @@ const BOSSES=[
  intro:[['Vance','Vance Upward, Regional Vice President of Sales. Eleven promotions in nine years. I didn\'t get here by being nice.'],['Ken','Bro, we just want a fair deal for everyone!'],['Vance','Fair? Every rung of this ladder has someone under it. Your little union is a stepping stone, and I\'m about to step.'],['Kaj','Eleven promotions, and who counted the hours? Overtime is capped at 200 hours a year (ATL 8 §), 48 over four weeks.'],['Vance','Overtime is "voluntary", Associate. Strictly speaking. Eventually.']],
  ph:[{name:'PERFORMANCE REVIEW',need:4,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'VOICE'},{k:'SECURITY',hid:1}],tac:['stone','bad','divide','memo'],slip:'Every promotion cost me someone. I climbed past everyone I ever worked with. ...The view from up here\'s very quiet.',react:['That would look good in my next review. Hm.','If it helps my numbers, I can pretend to care.','Annoying. That\'s a better pitch than mine.']}],
  win:[['Vance','Backing the union looks great on my résumé. I was always for it, actually. Early adopter.'],['Kaj','Thank you, Vance.'],['Vance','Don\'t thank me. Put it in writing. With my name first.']],lose:'Review complete! You\'ve been passed over. Permanently!'},
-{name:'Alis Neddis',u:3,lawIntro:['mbl19','mbl21'],mood:1,look:lk('#7a3a2a','bun','#f4ece4','#2a6a5a','#2a2a40','#f0c0a0',{skirt:1,acc:'glass',det:'alis'}),
- intro:[['Alis','Oh, HELLO! Alis Neddis, Chief Executive Officer. Chief of Everything. I\'m the CEO, and I have eleven minutes for you. Please, sit! Can I get you a tea? Of course I can. I\'m lovely.'],['Kaj','We\'re here to bargain in good faith, Alis. It\'s the law.'],['Alis','The law! What a thoughtful point! ...SIT DOWN AND LISTEN TO ME WHEN I AM TALKING TO YOU!! ...Sorry. Where were we? Tea?'],['Kaj','Alis, before any major change you must negotiate with us (MBL 11 §), and keep us informed about the business (MBL 19 §).'],['Alis','OF COURSE! Lovely! ...HOW DARE YOU READ THE LAW AT ME?! ...Tea?']],
+{name:'Alis Neddis',u:3,lawIntro:['mbl19a','mbl21'],mood:1,look:lk('#7a3a2a','bun','#f4ece4','#2a6a5a','#2a2a40','#f0c0a0',{skirt:1,acc:'glass',det:'alis'}),
+ intro:[['Alis','Oh, HELLO! Alis Neddis, Chief Executive Officer. Chief of Everything. I\'m the CEO, and I have eleven minutes for you. Please, sit! Can I get you a tea? Of course I can. I\'m lovely.'],['Kaj','We\'re here to bargain in good faith, Alis. It\'s the law.'],['Alis','The law! What a thoughtful point! ...SIT DOWN AND LISTEN TO ME WHEN I AM TALKING TO YOU!! ...Sorry. Where were we? Tea?'],['Kaj','Alis, before any change that hits our members you have to negotiate with us (MBL 13 §), and keep us informed about the business (MBL 19 a §).'],['Alis','OF COURSE! Lovely! ...HOW DARE YOU READ THE LAW AT ME?! ...Tea?']],
  ph:[
   {name:'STONEWALLING',need:5,tn:2,ints:[{k:'VOICE'},{k:'EQUAL'},{k:'SECURITY',hid:1}],tac:['stone','stone','memo','divide'],slip:'...People were afraid. I suppose that was the point. I just never knew how to stop shouting once I started.',react:['What a LOVELY idea! Truly! ...WHO TOLD YOU THAT?!','Mm, I hear you. I really do. ...NO YOU DO NOT HEAR ME!','Wonderful, wonderful. Do go on. (twitch)'],
    post:[['Alis','Fine. I recognize you. *smiles* Now let\'s talk money, which you won\'t like. *keeps smiling*']]},
-  {name:'BAD-FAITH OFFER',need:5,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL',hid:1}],tac:['bad','bad','memo'],slip:'You want EQUAL OPPORTUNITY? ...I was passed over four times myself. Nobody ever gave me a fair shot either.',react:['Fascinating! Really! ...THAT IS EXCESSIVE!!','You\'re being SO constructive. ...STOP CITING EVIDENCE AT ME!','Your demands are... a fair starting point! (a vein pulses)'],
+  {name:'BAD-FAITH OFFER',need:5,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL',hid:1}],tac:['bad','bad','memo'],slip:'You want EQUAL OPPORTUNITY? ...I was passed over four times myself. Nobody ever gave me a fair shot either.',react:['Fascinating! Really! ...THAT IS EXCESSIVE!!','You\'re being SO constructive. ...STOP BEING REASONABLE AT ME!','Your demands are... a fair starting point! (a vein pulses)'],
    pre:[['Alis','Here\'s my offer, friends! A one percent raise, and a pizza party! Is that not generous? ...TAKE IT OR LEAVE IT!!'],['Joan','That\'s a bad-faith offer. Every word of it.']],
    post:[['Alis','...*breathes deeply* Very well. A FINAL offer. Gently.']]},
   {name:'THE FINAL OFFER',need:4,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL'},{k:'SECURITY'}],tac:['stone','bad','divide','memo'],react:['Gah! Reasonable, damn you!','Oh, that\'s airtight. How exciting for you! ...HOW DARE YOU!','Everyone in this room is standing together, huh. ...Lovely.'],
@@ -2238,7 +2584,7 @@ const FLOORS=Array.from({length:NF},(_,i)=>makeFloor(i));
 
 /* ================= STATE ================= */
 const pl={x:1,y:1,rx:16,ry:16,dir:'down',mv:0,dx:0,dy:0};
-const G={rul:{},dec:{},ot:0,mode:'title',floor:0,flags:{},signed:{},boss:{},law:{},wound:{},inv:{coffee:3,donut:2},interns:0,wound:{},members:[],bench:[],map:null,fl:null,ents:[],steps:0,busy:false,t:0,vend:{},doors:{},rest:{f:0,x:15,y:11},B:null,TB:null,el:null,end:null};
+const G={rul:{},dec:{},ot:0,mode:'title',floor:0,flags:{},signed:{},boss:{},law:{},luse:{},wound:{},inv:{coffee:3,donut:2},interns:0,wound:{},members:[],bench:[],map:null,fl:null,ents:[],steps:0,busy:false,t:0,vend:{},doors:{},rest:{f:0,x:15,y:11},B:null,TB:null,el:null,end:null};
 const UI={d:null,menus:[],cursor:null,ban:null,fx:[],wipe:null};
 const DV={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
 const mkM=(id,lv)=>{const m={id,name:CH[id].name,lv,exp:0,pk:{},kit:null,st:{},isP:true,w:32,h:44,x:0,y:0,flash:0};calc(m);m.hp=m.mhp;m.mp=m.mmp;return m};
@@ -2284,11 +2630,11 @@ async function itemMenu(a){const its=[['coffee','Lukewarm Coffee','Heal 25% HP (
  const i=await choose(items,{x:4,y:22,w:170,onMove:i=>{UI.ban=its[i][2]}});UI.ban=null;if(i<0)return false;if(its[i][0]==='ccoffee'||its[i][0]==='lunch'){const kk=its[i][0];G.inv[kk]--;for(const m of aliveP()){if(kk==='ccoffee')heal(m,m.mhp*.5);else{m.mp=Math.min(m.mmp,m.mp+Math.round(m.mmp*.5));pop(m,'+MP','#7ab8ff')}}await ban(`${a.name} shares the ${its[i][1]}.`,800);gain(a);return true}if(its[i][0]==='agenda'){if(decOn('chains')){await ban('The Chains decree is in force. Nobody may adjourn.',900);return false}if(G.B.boss){await ban('This meeting can\'t be adjourned.',800);return false}G.inv.agenda--;await ban(`${a.name} reads out the agenda. Item one: adjourn. Everyone leaves.`,1100);G.B.fled=1;return true}const t=await pickTarget(aliveP());if(!t)return false;
  const k=its[i][0];if(k==='ibu'){G.inv.ibu--;t.st.demor=0;t.st.slow=0;pop(t,'CURED','#7dff9a');sfx('heal');await ban(`${a.name} gives ${t.name} an Ibuprofen.`,700);gain(a);return true}G.inv[k]--;FXQ={k:'i_'+k,a,t};await ban(`${a.name} gives ${t.name} a ${its[i][1]}.`);if(k==='coffee')heal(t,Math.max(45,Math.round(t.mhp*.25)));else{const q=Math.max(14,Math.round(t.mmp*.25));t.mp=Math.min(t.mmp,t.mp+q);pop(t,'+'+q+'MP','#7ab8ff');sfx('heal')}await sleep(400);gain(a);return true}
 const ORGL={intern:['Wait. Interns can join? ...I get PAID now?','I\'ve been here six months. Nobody learned my name. ...You did.','I thought the coffee runs were the job. They aren\'t the job, are they?'],spineless:['I was always for it. Quietly. ...Okay. Loudly.','I agreed with everyone so nobody would notice me. I\'ll agree with you, on purpose.','(Uncurls.) Fine. I have a spine. It was on order.']};
-async function organize(a,t){FXQ={k:'org',a,t};await ban(`${a.name} pitches the union to ${t.name}...`);if(Math.random()<.8){t.gone=1;if(G.interns<7)G.interns++;addDues(3);sfx('sign');{const ol=ORGL[t.k];if(ol)await ban(t.name+': '+pick(ol),1300)}await ban(`${t.name} is convinced and joins the union! (${cards()}/${CT})`,900)}else await ban(`${t.name} is too scared to join yet.`);gain(a)}
+async function organize(a,t){FXQ={k:'org',a,t};await ban(`${a.name} pitches the union to ${t.name}...`);if(tierOn(3)||Math.random()<.8){t.gone=1;if(G.interns<7)G.interns++;addDues(3);sfx('sign');{const ol=ORGL[t.k];if(ol)await ban(t.name+': '+pick(ol),1300)}await ban(`${t.name} is convinced and joins the union! (${cards()}/${CT})`,900)}else await ban(`${t.name} is too scared to join yet.`);gain(a)}
 async function doAttack(a,t){const B=G.B;await ban(`${a.name}: ${CH[a.id].an}!`,450);B.anim={m:a,t,s:G.t,k:CH[a.id].look.wp};await sleep(330);dmgE(a,t,1);sfx(WSFX[CH[a.id].look.wp]||'hit');B.shake=9;await sleep(480);B.anim=null;gain(a)}
 async function partyTurn(a){const B=G.B;B.act=a;UI.ban=null;FXQ=null;{const ch=aliveE().filter(e=>e.charge);if(ch.length)await ban(`WARNING: ${ch.map(e=>e.name).join(' and ')} will strike hard. Defend?`,1000)}
  for(;;){const al=aliveE(),cbs=availCombos();
-  const c=await choose([{t:'Attack'},{t:'Skill'},{t:'Combo',dis:B.meter<comboCost()||!cbs.length,col:'#ffd840'},{t:'Organize',dis:decOn('gag')},{t:'Item',dis:decOn('famine')},{t:'Swap',dis:!G.bench.some(m=>m.hp>0)||decOn('chains')},{t:'Flee',dis:!!B.boss||decOn('chains')},{t:'Cite',dis:!!B.cited,col:'#9fe8ff'},{t:'Defend'}],{x:0,y:160,w:84,vis:7,cols:3,cancel:false,h:92,onMove:i=>{UI.ban=['Hit one foe with a plain attack.','Spend MP on a character skill.','Needs full SOLIDARITY: team attack.','Pitch the union to a foe that listens.','Use coffee (HP) or donut (MP).','Swap with a benched teammate.','Run away (not from bosses).','Cite a labour-law paragraph. A right answer puts every foe on strike for a turn.','Hold the line: half damage until your next turn. SOLIDARITY +10.'][i]}});UI.ban=null;
+  const c=await choose([{t:'Attack'},{t:'Skill'},{t:'Combo',dis:B.meter<comboCost()||!cbs.length,col:'#ffd840'},{t:'Organize',dis:decOn('gag')},{t:'Item',dis:decOn('famine')},{t:'Swap',dis:!G.bench.some(m=>m.hp>0)||decOn('chains')},{t:'Flee',dis:!!B.boss||decOn('chains')},{t:'Defend'}],{x:0,y:160,w:84,vis:7,cols:3,cancel:false,h:92,onMove:i=>{UI.ban=['Hit one foe with a plain attack.','Spend MP on a character skill.','Needs full SOLIDARITY: team attack.','Pitch the union to a foe that listens.','Use coffee (HP) or donut (MP).','Swap with a benched teammate.','Run away (not from bosses).','Hold the line: half damage until your next turn. SOLIDARITY +10.'][i]}});UI.ban=null;
   if(c===0){const t=await pickTarget(al);if(!t)continue;await doAttack(a,t);break}
   if(c===1){if(await skillMenu(a))break;continue}
   if(c===2){if(await comboMenu(a,cbs))break;continue}
@@ -2296,8 +2642,7 @@ async function partyTurn(a){const B=G.B;B.act=a;UI.ban=null;FXQ=null;{const ch=a
   if(c===4){if(await itemMenu(a))break;continue}
   if(c===5){if(await swapMenu(a))break;continue}
   if(c===6){await ban(`${a.name} tries to flee...`);if(Math.random()<.65)B.fled=1;else await ban("Couldn't get away!");break}
-  if(c===7){if(await citeLaw(a))break;continue}
-  if(c===8){a.st.shield=Math.max(a.st.shield||0,2);B.meter=Math.min(100,B.meter+10);pop(a,'DEFEND','#8ab8ff');sfx('ok');await ban(`${a.name} holds the line.`,600);break}}
+  if(c===7){a.st.shield=Math.max(a.st.shield||0,2);B.meter=Math.min(100,B.meter+10);pop(a,'DEFEND','#8ab8ff');sfx('ok');await ban(`${a.name} holds the line.`,600);break}}
  B.act=null}
 /* ---- enemy move lists: 'Name:type:form:glyph:colour:motion' ---- */
 const EACTS={
@@ -2400,10 +2745,12 @@ async function negotiate(bi){
    else if(tac==='divide')TB.iso=pick(G.members);
    const lines=(bd.lines&&bd.lines[tac])||DEFL[tac];
    TB.msg=`${bd.name}: "${pick(lines)}"`+(tac==='divide'?` (${TB.iso.name} is pulled aside!)`:'');
-   let done=false,ev=false,ctr=false;
+   let done=false,ctr=false,ev=false;TB.played=TB.played||{};
    while(!done){
     const sp=await chooseSpeaker(TB);
-    const mv=await choose([{t:'Demand'},{t:'Counteroffer'},{t:'Evidence'},{t:'Rally'}],{x:0,y:160,w:116,h:92,cancel:true,foot:i=>['Push an interest hard','Safe: always +1 progress','Cite the law: cancel tactic','Restore SOLIDARITY'][i]});
+    const evs=CASES.filter(c=>caseWon(c)&&!TB.played[c.id]);
+    const mv0=await choose([{t:'Demand'},{t:'Counteroffer'},{t:'Evidence',dis:!evs.length},{t:'Rally'}],{x:0,y:160,w:116,h:92,cancel:true,foot:i=>['Push an interest hard','Safe: always +1 progress',evs.length?'Play a case you\'ve won: the tactic fails':(CASES.some(caseWon)?'Every won case is already on the table':'Win a case first'),'Restore SOLIDARITY'][i]});
+    const mv=mv0===3?9:mv0;
     if(mv<0)continue;
     const c=CH[sp.id];
     if(mv===0||mv===1){
@@ -2415,12 +2762,12 @@ async function negotiate(bi){
       else{const g=2+(str?1:0)+(TB.res>=75?1:0);it.p=Math.min(TB.need,it.p+g);it.pulse=30;sfx('sign');TB.msg=`${bd.name}: "${pick(ph.react)}" (${INT[it.k].n} +${g}${str?' strong!':''})`;await sleep(1300)}}
      else{ctr=true;const g=1+(str?1:0);it.p=Math.min(TB.need,it.p+g);it.pulse=30;sfx('ok');TB.msg=`A fair counteroffer. ${INT[it.k].n} +${g}. Tactic damage halved.`;await sleep(1200)}
      done=true}
-    else if(mv===2){const need=LAWI[TACLAW[tac]],os=lawOpts(need,3);const pi=await choose(os.map(e=>({t:lawLabel(e)})),{x:0,y:160,w:236,h:92,title:'Cite the paragraph',cancel:true});if(pi<0)continue;
-     TB.sp=sp;const chs=os[pi];
-     if(chs===need){ev=true;TB.res=Math.min(100,TB.res+8+(woundOwn(sp,need)?6:0));if(woundOwn(sp,need))toast('YOUR OWN PARAGRAPH: SOLIDARITY +6');const h=TB.ints.find(i=>i.hid);if(h){h.hid=false;h.pulse=30}lawUnlock(need.id);TB.msg=`${sp.name} cites ${need.ref}: ${need.t}! The tactic fails${h?' and a hidden interest is exposed':''}.`;sfx('combo');await sleep(1800);done=true}
-     else{lawUnlock(need.id);TB.msg=`${sp.name} cites ${chs.ref}, but it doesn't apply. The right one: ${need.ref}, ${need.t}.`;sfx('no');await sleep(2100);done=true}}
+    else if(mv===2){const k=evs.length>1?await choose(evs.map(c=>({t:c.nm})),{x:0,y:160,w:160,h:92,title:'Which case?',cancel:true}):0;if(k<0)continue;const cs=evs[k];
+     TB.played[cs.id]=1;TB.sp=sp;ev=true;const hit=TB.ints.find(i=>!i.hid&&i.k===cs.th&&i.p<TB.need),g=hit?12:8;TB.res=Math.min(100,TB.res+g);TB.ints.forEach(i=>i.blk=0);TB.iso=null;
+     if(hit){hit.p=Math.min(TB.need,hit.p+1);hit.pulse=30}const h=TB.ints.find(i=>i.hid);if(h){h.hid=false;h.pulse=30}
+     TB.msg=`${sp.name} lays out ${cs.nm}: ${cs.table}. The tactic falls flat. SOLIDARITY +${g}${hit?', '+INT[hit.k].n+' +1':''}${h?'. A hidden interest is exposed':''}.`;sfx('combo');await sleep(2000);done=true}
     else{const g=c.ral;TB.res=Math.min(100,TB.res+g);TB.sp=sp;TB.msg=`${sp.name} rallies the room! SOLIDARITY +${g}.`;sfx('heal');await sleep(1200);done=true}}
-   let dr=3;if(tac==='divide'&&!ev)dr+=8;if(tac==='memo'&&!ev)dr+=12;if(tac==='bad'&&!ev)dr+=5;if(ctr)dr=Math.ceil(dr/2);
+   let dr=3;if(!ev){if(tac==='divide')dr+=6;if(tac==='memo')dr+=8;if(tac==='bad')dr+=4}if(ctr)dr=Math.ceil(dr/2);
    TB.res=Math.max(0,TB.res-dr);TB.msg=`Crunch pressure: SOLIDARITY -${dr}.`;sfx('hit');await sleep(900);TB.sp=null;
    if(TB.res<=0){await say(bd.name,bd.lose);await say('','Your SOLIDARITY collapsed. Regroup and try this round of talks again.');TB.res=55;reset()}}
   sfx('lvl');TB.msg=`${ph.name}: AGREEMENT reached!`;await sleep(900);
@@ -2960,7 +3307,7 @@ function drawBattle0(){const B=G.B;bgBattle(G.floor);const tg=[];
  for(const e of [...B.en].sort((a,b)=>a.y+a.h-b.y-b.h)){if(e.gone)continue;if(e.hp<=0){if(e.fade>0){ctx.globalAlpha=e.fade/20;drawEn(e);ctx.globalAlpha=1}continue}if(e.flash>0&&(e.flash&2))continue;R(e.x+3,e.y+e.h-3,e.w-6,4,'rgba(0,0,0,.3)');R(e.x+7,e.y+e.h-4,e.w-14,1,'rgba(0,0,0,.3)');{const mv=emv(e);e.x+=mv[0];e.y+=mv[1];drawEn(e);e.x-=mv[0];e.y-=mv[1]}
   const tags=[e.st.stun>0&&'STRIKE',e.st.slow>0&&'SLOW',e.st.weak>0&&'WEAK',e.st.hacked&&'HACKED',e.st.shield>0&&'GUARD',e.st.buff>0&&'RAGE'].filter(Boolean).join(' ');if(tags)tg.push([tags,e.x,e.y+e.h+(e.k==='intern'?12:2)])}
  [...G.members].sort((a,b)=>a.y-b.y).forEach(m=>{const an=B.anim&&B.anim.m===m?B.anim:null,ox=an?aOx(an):(B.act===m?-12:0)+lgx(m),oy=an?aOy(an):0;if(m.flash>0&&(m.flash&2))return;ctx.globalAlpha=m.hp>0?1:.35;person(m.x+ox,m.y+oy,2,CH[m.id].look,'left',0,bPose(m));ctx.globalAlpha=1});
- drawWpFx(B);drawCite(B);drawFx();retro();tg.forEach(([a,x,y])=>T(a,x,y,'#ffd840',null));B.en.forEach(e=>{if(e.k==='intern'&&e.hp>0&&!e.gone)T('INTERN',e.x-2,e.y+46,'#9fe',null)});
+ drawWpFx(B);drawFx();retro();tg.forEach(([a,x,y])=>T(a,x,y,'#ffd840',null));B.en.forEach(e=>{if(e.k==='intern'&&e.hp>0&&!e.gone)T('INTERN',e.x-2,e.y+46,'#9fe',null)});
   if(OPT.lg)hudL(B);else{panel(0,160,84,92);panel(84,160,W-84,92);T('SOLIDARITY',94,166,'#ff9a9a');R(176,167,W-190,6,'#000');R(177,168,W-192,4,'#401018');R(177,168,(W-192)*G.B.meter/100,4,G.B.meter>=comboCost()&&((G.t>>3)&1)?'#fff':'#ff5a5a');
  G.members.forEach((m,i)=>{const y=181+i*14,act=B.act===m;T(m.name,94,y,act?'#ffd840':(m.hp>0?'#fff':'#ff7a7a'));T(`${m.hp}/${m.mhp}`,250,y,'#cfe');T('MP',330,y,'#6a8ab8');T(`${m.mp}`,348,y,'#8ab8ff');R(94,y+9,230,2,'#000');R(94,y+9,230*m.hp/m.mhp,2,'#6fe86f');
   let sx=388;for(const [k,c,L] of [['shield','#5ac8ff','S'],['buff','#ffb347','B'],['demor','#b07aff','D'],['taunt','#ff6060','T'],['slow','#aaa','Z']])if(m.st[k]>0){T(L,sx,y,c);sx+=7}})}
@@ -3130,6 +3477,7 @@ function loadFloor(n,sp){G.floor=n;const F=FLOORS[n],t=F.build();G.map={t,w:t[0]
  (G.doors[n]||[]).forEach(([x,y])=>{t[y][x]='.'});
  G.ents=[];F.npcs.forEach(d=>{if(d.join&&roster().some(m=>m.id===d.join))return;G.ents.push(Object.assign({},d))});
  if(F.boss&&!G.boss[F.dun])G.ents.push({boss:1,bi:F.dun,x:F.boss.x,y:F.boss.y,n:BOSSES[F.dun].name});
+ {const cs=caseAt(n);if(cs){const r=G.ents.find(e=>e.k&&!e.star&&!e.join);if(r)Object.assign(r,{n:cs.who,cs:cs.id})}}
  widenChokes(n);placeProps(n);G.lmT=G.t;if(OPT.sr&&LM[n])setTimeout(()=>SRM('Landmark: '+LM[n]+'.'),600);{const q=safeSpot(t,sp.x,sp.y,F);if(q.x!==sp.x||q.y!==sp.y){if(G.rest&&G.rest.f===n&&G.rest.x===sp.x&&G.rest.y===sp.y){G.rest.x=q.x;G.rest.y=q.y}sp={x:q.x,y:q.y,dir:sp.dir}}}
  pl.x=sp.x;pl.y=sp.y;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;pl.dir=sp.dir||'up';pl.mv=0;G.steps=0;music(floorMus(n))}
 // A save made before a floor's layout changed can point at a tile that is now furniture or wall.
@@ -3205,11 +3553,12 @@ async function talkEnt(e){
   await wipe(1);G.mode='field';music(floorMus(G.floor));await wipe(-1);UI.wipe=null;
   if(e.bi===3){await ending();return}if(e.bi===2)await clemBack();if(e.bi===0)await kajSeed();
   sfx('lvl');await say('','The way to the elevator is clear.');return}
- if(e.term){await termUse(e);return}if(e.vig){await vigUse(e);return}
+ if(e.term){await termUse(e);return}if(e.vig){await vigUse(e);return}if(e.cf){await caseFact(e);return}
  if(e.join){await joinScene(e);return}
  if(!e.k){await say(e.n||'','...');return}
  const key=G.floor+':'+e.id;
- if(G.signed[key]){await say(e.n,pick(['Solidarity!','I\'m with you. Stay strong.','Go get them. We have your back.']));return}
+ if(e.cs&&!G.signed[key]){await caseTalk(e);return}
+ if(G.signed[key]){if(e.cs){await caseTalk(e);return}await say(e.n,pick(['Solidarity!','I\'m with you. Stay strong.','Go get them. We have your back.']));return}
  if(clemOut()&&G.floor>=20&&G.floor<30&&!G.flags['afr'+key]){G.flags['afr'+key]=1;await say(e.n,pick(AFRAID))}
  {const fv=FAVS.find(v=>v.f===G.floor),fs=fv&&favG()[fv.id];
   if(fv&&fs&&fs.giver===key&&fs.st===2){fs.st=3;G.signed[key]=1;addDues(20);G.inv.coffee++;sfx('sign');await say(e.n,`My ${fv.item}! You actually went and got it. Of course I'm in. Here, have my coffee.`);toast(`FAVOUR DONE. NEW MEMBER ${cards()}/${CT}. +20 dues`);await favStory(fv);return}
@@ -3229,8 +3578,7 @@ async function talkEnt(e){
   const k=opts[i];
   await say(sp.name,argOf(sp,k));
   if(k===cur&&k2&&cur===e.k){await say(e.n,'Hm. That\'s a good point. But it isn\'t the whole story.');cur=k2;miss=0;await say(e.n,ARGCL[k2]);continue}
-  if(k===cur){G.signed[key]=1;addDues(5);sfx('sign');if(e.star!=null)G.flags['star'+e.star]=1;await say(e.n,e.star!=null?STAR[e.star].sign:pick(['You know what? Yeah. That\'s exactly it. I\'m in, sign me up.','Huh. Nobody\'s ever put it like that. Okay, count me in.','Okay, yeah, fair. I want in.']));toast(`NEW MEMBER ${cards()}/${CT}`);await say(sp.name,pick(CLOSE[sp.id]));{const le=lawPick(cur,dunOf(G.floor));await say(e.n,'One more thing. Show me where the law says that. Which paragraph?');const os=lawOpts(le,3);const j=await ask('Cite the law',`${sp.name}: which paragraph backs this up?`,[...os.map(lawLabel),'I\'ll look it up later']);
-   if(j<3){lawUnlock(le.id);if(os[j]===le){G.inv.coffee++;G.inv.donut++;await say(sp.name,`${le.ref}: ${le.t}. ${le.x}`);await say(e.n,'Right there in the law. Impressive. Take a coffee and a donut.');if(woundOwn(sp,le))await ownLaw(sp,le)}else await say(lawWho(),`Close, but no. It is ${le.ref}: ${le.t}. ${le.x}`)}}return}
+  if(k===cur){G.signed[key]=1;addDues(5);sfx('sign');if(e.star!=null)G.flags['star'+e.star]=1;await say(e.n,e.star!=null?STAR[e.star].sign:pick(['You know what? Yeah. That\'s exactly it. I\'m in, sign me up.','Huh. Nobody\'s ever put it like that. Okay, count me in.','Okay, yeah, fair. I want in.']));toast(`NEW MEMBER ${cards()}/${CT}`);await say(sp.name,pick(CLOSE[sp.id]));await caseLead(sp,e);return}
   await say(e.n,INT[k].wrong);miss++;if(miss===1)await say(e.n,ARGCL[cur]);
   if(miss>=2)await say(e.n,`Let me put it plainly: what I need is ${INT[cur].hint}.`)}}
 async function joinScene(e){sting('hero');
@@ -3255,8 +3603,8 @@ async function ending(){
   for(let bi=0;bi<BOSSES.length;bi++){const k=G.lead&&G.lead[bi];if(k&&LEADEND[k])L.push(['',LEADEND[k].replace('@',BOSSES[bi].name)])}
   if(cards()>=CT)L.push(...LEADEND_GS);
   {const ld=G.flags.leader&&roster().find(m=>m.id===G.flags.leader);if(ld)L.push(['',`${ld.name} slides the pen across the table. Kaj doesn't reach for it first.`])}L.push(['','Kaj turns his phone face down on the table. Nobody pings.'],['Kaj','Let\'s go home. All of us.']);await talk(L)}
- {const S=G.stats||{},fd=FAVS.filter(v=>(favG()[v.id]||{}).st===3).length;await say('',`UNION REPORT${G.ngp?' (NEW GAME+ '+G.ngp+')':''}. Members: ${cards()} of ${CT}${cards()>=CT?': GENERAL STRIKE!':''}. Paragraphs learned: ${Object.keys(lawG()).length} of ${LAW.length}. Correct Cites: ${S.cite||0}. Fights won: ${S.wins||0}. Dues raised: ${S.dues||0}. Favours done: ${fd} of ${FAVS.length}.`);
-  try{localStorage.setItem(NGK,JSON.stringify({lv:(G.ngp||0)+1,law:G.law,vets:Math.min(40,Math.floor(cards()/2))}))}catch(e){}
+ {const S=G.stats||{},fd=FAVS.filter(v=>(favG()[v.id]||{}).st===3).length;await say('',`UNION REPORT${G.ngp?' (NEW GAME+ '+G.ngp+')':''}. Members: ${cards()} of ${CT}${cards()>=CT?': GENERAL STRIKE!':''}. Paragraphs: ${lawCount(1)} of ${LAW.length} heard of, ${lawCount(2)} understood, ${lawCount(3)} used. Fights won: ${S.wins||0}. Dues raised: ${S.dues||0}. Favours done: ${fd} of ${FAVS.length}. Cases won: ${S.cases||0}.`);
+  try{localStorage.setItem(NGK,JSON.stringify({lv:(G.ngp||0)+1,law:G.law,luse:G.luse||{},vets:Math.min(40,Math.floor(cards()/2))}))}catch(e){}
   await say('','NEW GAME+ unlocked: start again with your Lagboken and veteran members. Bosses and foes will be tougher.')}
  await wipe(1);G.mode='end';G.end={t:0,done:0};music('end');await wipe(-1);UI.wipe=null;
  while(!G.end.done)await sleep(200);
@@ -3266,11 +3614,11 @@ async function ending(){
 
 /* ================= SAVE / START ================= */
 const SAVEK='crunchtime-last-overtime-v2';
-function save(){try{localStorage.setItem(SAVEK,JSON.stringify({v:4,dues:G.dues||0,lead:G.lead||{},wks:G.wks||{},met:G.met||{},seen:seenEnc(),kits:G.kits||[],fav:G.fav||{},stats:G.stats||{},ngp:G.ngp||0,vets:G.vets||0,law:G.law,wound:G.wound,rest:G.rest,signed:G.signed,boss:G.boss,flags:G.flags,inv:G.inv,interns:G.interns,vend:G.vend,doors:G.doors,ot:G.ot,rul:G.rul,dec:G.dec,mem:G.members.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{},kit:m.kit||null})),ben:G.bench.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{},kit:m.kit||null}))}));return true}catch(e){return false}}
+function save(){try{localStorage.setItem(SAVEK,JSON.stringify({v:4,dues:G.dues||0,lead:G.lead||{},wks:G.wks||{},met:G.met||{},seen:seenEnc(),kits:G.kits||[],fav:G.fav||{},stats:G.stats||{},ngp:G.ngp||0,vets:G.vets||0,law:G.law,luse:G.luse||{},wound:G.wound,rest:G.rest,signed:G.signed,boss:G.boss,flags:G.flags,inv:G.inv,interns:G.interns,vend:G.vend,doors:G.doors,ot:G.ot,rul:G.rul,dec:G.dec,mem:G.members.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{},kit:m.kit||null})),ben:G.bench.map(m=>({id:m.id,lv:m.lv,exp:m.exp,hp:m.hp,mp:m.mp,pk:m.pk||{},kit:m.kit||null}))}));return true}catch(e){return false}}
 function hasSave(){try{return!!localStorage.getItem(SAVEK)}catch(e){return false}}
-function loadSave(){try{const s=migrate(JSON.parse(localStorage.getItem(SAVEK)));Object.assign(G,{dues:s.dues,lead:s.lead,wks:s.wks||{},met:s.met||{},kits:s.kits||[],fav:s.fav||{},stats:s.stats||{},ngp:s.ngp||0,vets:s.vets||0,law:s.law||{},wound:s.wound||{},signed:s.signed,boss:s.boss,flags:s.flags,inv:s.inv,interns:s.interns,vend:s.vend,doors:s.doors,rest:s.rest,rul:s.rul||{},dec:s.dec||{},ot:s.ot||0});seenDec(s.seen);const lm=d=>{const m=mkM(d.id,d.lv);m.pk=d.pk||{};m.kit=d.kit||null;calc(m);m.exp=d.exp;m.hp=d.hp;m.mp=d.mp;return m};G.members=s.mem.map(lm);G.bench=(s.ben||[]).map(lm);G.bench=G.members.splice(PARTY_MAX).concat(G.bench);return true}catch(e){return false}}
+function loadSave(){try{const s=migrate(JSON.parse(localStorage.getItem(SAVEK)));Object.assign(G,{dues:s.dues,lead:s.lead,wks:s.wks||{},met:s.met||{},kits:s.kits||[],fav:s.fav||{},stats:s.stats||{},ngp:s.ngp||0,vets:s.vets||0,law:s.law||{},luse:s.luse||{},wound:s.wound||{},signed:s.signed,boss:s.boss,flags:s.flags,inv:s.inv,interns:s.interns,vend:s.vend,doors:s.doors,rest:s.rest,rul:s.rul||{},dec:s.dec||{},ot:s.ot||0});seenDec(s.seen);if(G.flags&&G.flags.used){for(const[id,n]of Object.entries(G.flags.used)){G.law[id]=3;G.luse[id]=n}delete G.flags.used}const lm=d=>{const m=mkM(d.id,d.lv);m.pk=d.pk||{};m.kit=d.kit||null;calc(m);m.exp=d.exp;m.hp=d.hp;m.mp=d.mp;return m};G.members=s.mem.map(lm);G.bench=(s.ben||[]).map(lm);G.bench=G.members.splice(PARTY_MAX).concat(G.bench);return true}catch(e){return false}}
 async function newGame(plus){G.busy=true;
- Object.assign(G,{rul:{},dec:{},ot:0,flags:{},signed:{},boss:{},law:{},wound:{},inv:{coffee:3,donut:2},interns:0,dues:0,lead:{},wks:{},met:{},kits:[],fav:{},stats:{wins:0,cite:0,dues:0},ngp:0,vets:0,vend:{},doors:{},rest:{f:0,x:0,y:0},members:[mkM('kaj',1)],bench:[]});seenDec({});if(plus){try{const P=JSON.parse(localStorage.getItem(NGK));G.law=P.law||{};G.ngp=P.lv||1;G.vets=P.vets||0}catch(e){}}const F0=FLOORS[0];F0.build();G.rest={f:0,x:F0.rest.x,y:F0.rest.y};
+ Object.assign(G,{rul:{},dec:{},ot:0,flags:{},signed:{},boss:{},law:{},luse:{},wound:{},inv:{coffee:3,donut:2},interns:0,dues:0,lead:{},wks:{},met:{},kits:[],fav:{},stats:{wins:0,dues:0},ngp:0,vets:0,vend:{},doors:{},rest:{f:0,x:0,y:0},members:[mkM('kaj',1)],bench:[]});seenDec({});if(plus){try{const P=JSON.parse(localStorage.getItem(NGK));G.law=P.law||{};G.luse=P.luse||{};G.ngp=P.lv||1;G.vets=P.vets||0}catch(e){}}const F0=FLOORS[0];F0.build();G.rest={f:0,x:F0.rest.x,y:F0.rest.y};
  await wipe(1);G.mode='field';loadFloor(0,{x:F0.dx,y:F0.mh-4,dir:'down'});const hen={id:'hen0',n:'Henrietta',x:F0.dx,y:F0.mh-2,look:CH.henrietta.look,dir:'up'};G.ents.push(hen);await wipe(-1);UI.wipe=null;G.busy=false;
  await run(async()=>{await talk([['','ACT I: Organize.'],['','Neddiscorp Exploitations Tower. Forty floors of fluorescent light, stale coffee and unpaid overtime. From the Cubicle Farm up to the Corporate Kingdom.'],['','CEO Alis Neddis has announced a "voluntary" 80-hour crunch. Again.'],['Kaj','Another weekend gone. My last raise was a pizza party.'],['Kaj','Somebody should file a bug report on this whole place. No, wait. Somebody should organize it. Like, a union. A real one, with a collective agreement and everything.'],['Kaj','...Somebody. Right. Nobody else is going to do it.'],['Henrietta','Sorry, didn\'t mean to listen in. I was doing the bins. Your fire door\'s chained shut, by the way. Was. I unchained it.'],['Kaj','You cut the chain? On your break?'],['Henrietta','Twelve years as an electrician at the shipyard. I know what a fire code is. Nobody ever asks the janitor anything.'],['Kaj','I\'m, uh. I\'m forming a union. Want in?'],['Henrietta','Ten years I\'ve waited for someone to ask me that.'],['Kaj','Great! Okay. I\'ll write the leaflets, do the sign-ups, talk to every floor... tonight, probably.'],['Henrietta','All by yourself? That\'s how they got you into the 80-hour week.'],['Henrietta','Lesson one: sit down. A worker sitting down is the strongest thing in this building.'],['Kaj','...Sit-Down Strike. Noted.']]);
   hen.gone=1;G.members.push(mkM('henrietta',1));sfx('lvl');await talk([['','Henrietta joined the party! GOAL: convince a majority of your coworkers to become union members, then win the Collective Bargaining Agreement.'],['','Talk to coworkers with A/Z and argue the case that fits what bothers them: fair wages, job security, worker influence, equal opportunity or employer transparency. Rest on couches to save. Press B/X for the menu. Bosses are won by NEGOTIATING. Allies are scattered through the tower. Look for the cyan speech bubble.']]);await lawScene('crunch')})}
@@ -3292,7 +3640,7 @@ function tick(){G.t++;srTick();ambTick();UI.fx=UI.fx.filter(f=>++f.t<40);UI.fx.f
  if(G.mode==='field'&&!G.busy)fieldUpdate();else if(G.busy)for(const k in q)q[k]=0}
 let last=0,acc=0;
 function frame(ts){const dt=Math.min(.1,(ts-last)/1000||0);last=ts;acc+=dt;while(acc>=1/60){tick();acc-=1/60}draw();requestAnimationFrame(frame)}
-if(/[?&]debug\b/.test(location.search))window.__dbg={TR,BXg:()=>BX,partyHp,negProg,sting,genFloor,SPEC,pickFloor,fRoute,routeT,FBEST,favStory,STAR,ORGL,organize,kajSeed,kajLead,clemFired,clemBack,clemEvidence,clemTable,bestiary,kitMenu,KIT,FAVS,favG,teamItem,addDues,decOn,seenEnc,NGK,itemMenu:typeof itemMenu!=='undefined'?itemMenu:null,enemyTurn,perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,citeLaw,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
+if(/[?&]debug\b/.test(location.search))window.__dbg={TR,BXg:()=>BX,partyHp,negProg,sting,genFloor,SPEC,pickFloor,fRoute,routeT,FBEST,favStory,STAR,ORGL,organize,kajSeed,kajLead,clemFired,clemBack,clemEvidence,clemTable,bestiary,kitMenu,KIT,FAVS,favG,teamItem,addDues,decOn,seenEnc,NGK,itemMenu:typeof itemMenu!=='undefined'?itemMenu:null,enemyTurn,perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,docPuzzle,caseLead,CASES,DECDOC,DRULE,lawRaise,lawLv,lawCount,bookParas,caseTalk,caseFact,rotaPuzzle,caseBuild,caseBook,CROTA,CFACTS,CASEF,caseOf,caseAt,casePuzzle,coOf,favDone,DRLAW,PIPE,FORMS,caseWon,caseList,loadFloor,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
 boot();requestAnimationFrame(frame);
 })();
 </script>
