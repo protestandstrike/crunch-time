@@ -94,6 +94,17 @@ window.addEventListener('keyup',e=>{const k=KM[e.key];if(k)onUp(k)});
 window.addEventListener('blur',()=>{for(const k in held)held[k]=0});
 document.querySelectorAll('.b').forEach(b=>{const k=b.dataset.k;b.addEventListener('pointerdown',e=>{e.preventDefault();aInit();b.classList.add('on');onDown(k)});const up=e=>{b.classList.remove('on');onUp(k)};b.addEventListener('pointerup',up);b.addEventListener('pointerleave',up);b.addEventListener('pointercancel',up)});
 window.addEventListener('pointerdown',()=>aInit());
+/* gamepad: d-pad or left stick moves (one axis at a time), A picks, B/Y/Start cancel or open the menu. Works with adaptive controllers too */
+{const GB={0:'ok',1:'cancel',3:'cancel',9:'cancel',12:'up',13:'down',14:'left',15:'right'},was={};let dir=null,rep=null,on=false;
+ const set=d=>{if(d===dir)return;if(dir)onUp(dir);clearTimeout(rep);dir=d;if(d){onDown(d);const again=()=>{rep=setTimeout(()=>{if(dir===d){onDown(d);again()}},140)};rep=setTimeout(()=>{if(dir===d){onDown(d);again()}},380)}};
+ const poll=()=>{const ps=navigator.getGamepads?navigator.getGamepads():[];let d=null,any=false;
+  for(const gp of ps){if(!gp)continue;any=true;
+   for(const b in GB){const k=GB[b],p=!!(gp.buttons[b]&&gp.buttons[b].pressed),id=gp.index+':'+b;
+    if(k==='up'||k==='down'||k==='left'||k==='right'){if(p)d=k}
+    else if(p&&!was[id]){aInit();onDown(k)}else if(!p&&was[id])onUp(k);was[id]=p}
+   if(!d){const x=gp.axes[0]||0,y=gp.axes[1]||0,ax=Math.abs(x),ay=Math.abs(y);if(Math.max(ax,ay)>.5)d=ax>ay?(x>0?'right':'left'):(y>0?'down':'up')}}
+  if(d&&!dir)aInit();set(d);if(any)requestAnimationFrame(poll);else{set(null);on=false}};
+ window.addEventListener('gamepadconnected',()=>{if(!on){on=true;requestAnimationFrame(poll)}});}
 {const st=document.getElementById('stick'),kn=document.getElementById('knob');let pid=null,dir=null,rep=null;
  const set=d=>{if(d===dir)return;if(dir)onUp(dir);clearTimeout(rep);dir=d;if(d){onDown(d);const again=()=>{rep=setTimeout(()=>{if(dir===d){onDown(d);again()}},140)};rep=setTimeout(()=>{if(dir===d){onDown(d);again()}},380)}};
  const move=e=>{const r=st.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),ax=Math.abs(dx),ay=Math.abs(dy),R=r.width/2-29;
@@ -759,7 +770,7 @@ async function bookCases(){const wg=woundG(),ids=['kaj','clementine','henrietta'
   if(LG()>1)bkChipL(st.res?'CASE CLOSED':'OPEN CASE: CONFRONT THE BOSS',x,y+6,w,st.res?'#6fe86f':'#ffb347');else if(st.res)bkChip(x,bot-24,'CASE CLOSED','#6fe86f');else bkChip(x,bot-24,'OPEN CASE: CONFRONT THE BOSS','#ffb347')}})}
 /* ---- quality of life: options, text speed, skip, key rebinding ---- */
 const OPTK='crunchtime-options';
-const OPT=(()=>{let o={};try{o=JSON.parse(localStorage.getItem(OPTK))||{}}catch(e){}return Object.assign({ts:1,keys:{},seen:{},rf:0,hc:0,lg:('ontouchstart' in window||navigator.maxTouchPoints>0)?1:0,sr:0,vm:4,vf:4,cb:0},o)})();
+const OPT=(()=>{let o={};try{o=JSON.parse(localStorage.getItem(OPTK))||{}}catch(e){}return Object.assign({ts:1,keys:{},seen:{},lg:('ontouchstart' in window||navigator.maxTouchPoints>0)?1:0,sr:0,vm:4,vf:4,cb:0,ea:0,rf:(matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)?1:0,hc:(matchMedia&&matchMedia('(prefers-contrast: more)').matches)?1:0},o)})();
 const optSave=()=>{try{localStorage.setItem(OPTK,JSON.stringify(OPT))}catch(e){}};
 const TSP=[['Slow',.45],['Normal',.9],['Fast',2],['Instant',99]];
 const ACTS=[['up','Up'],['down','Down'],['left','Left'],['right','Right'],['ok','Confirm'],['cancel','Back / Menu'],['skip','Skip seen text']];
@@ -771,7 +782,7 @@ window.addEventListener('keydown',e=>{if(capK){e.preventDefault();e.stopImmediat
 const keyName=k=>k===' '?'Space':k.length===1?k.toUpperCase():k;
 async function controlsMenu(){let sel=0;for(;;){
  const items=ACTS.map(([a,n])=>({t:n,r:keyName(OPT.keys[a]||KDEF[a])})).concat([{t:'Reset to defaults'}]);
- const i=await choose(items,{x:60,y:20,w:180,vis:8,sel,title:'CONTROLS',foot:()=>'Arrows still work. Z/Enter picks.'});if(i<0)return;sel=i;
+ const i=await choose(items,{x:60,y:20,w:180,vis:8,sel,title:'CONTROLS',foot:()=>'Arrows still work. Z/Enter picks. Gamepads work too.'});if(i<0)return;sel=i;
  if(i===ACTS.length){OPT.keys={};applyKeys();optSave();toast('Controls reset');continue}
  UI.ban='Press a key for: '+ACTS[i][1]+'  (Esc cancels)';const k=await new Promise(r=>{capK=r});UI.ban=null;
  if(k==='Escape')continue;if(['m','M','h','H','l','L'].includes(k)||k.length>1&&!/^(Tab|Shift)$/.test(k)&&!/^F\d+$/.test(k)){toast('That key is reserved');continue}
@@ -779,7 +790,7 @@ async function controlsMenu(){let sel=0;for(;;){
  OPT.keys[ACTS[i][0]]=k;applyKeys();optSave();sfx('ok')}}
 async function optionsMenu(){let sel=0;for(;;){
  const its=[[muted?'Sound: OFF':'Sound: ON',async()=>toggleMute()],['Music volume: '+VOLS[OPT.vm]*100+'%',async()=>{OPT.vm=(OPT.vm+4)%5;optSave();applyVol();aInit();if(muted)toggleMute()}],['Effects volume: '+VOLS[OPT.vf]*100+'%',async()=>{OPT.vf=(OPT.vf+4)%5;optSave();applyVol();aInit();if(muted)toggleMute();sfx('ok')}],[PX>1?'Pixels: CHUNKY':'Pixels: SMOOTH',async()=>{PX=PX>1?1:2}],
-  ['Text speed: '+TSP[OPT.ts][0],async()=>{OPT.ts=(OPT.ts+1)%TSP.length;optSave()}],[OPT.rf?'Reduce flashing/shake: ON':'Reduce flashing/shake: OFF',async()=>{OPT.rf^=1;optSave()}],[OPT.hc?'High-contrast text box: ON':'High-contrast text box: OFF',async()=>{OPT.hc^=1;optSave()}],[OPT.lg?'Large text: ON':'Large text: OFF',async()=>toggleLG()],[OPT.sr?'Screen reader: ON':'Screen reader: OFF',async()=>toggleSR()],[OPT.cb?'Colour-blind aids: ON':'Colour-blind aids: OFF',async()=>{OPT.cb^=1;optSave();SR('Colour-blind aids '+(OPT.cb?'on':'off'))}],['Controls',controlsMenu]];
+  ['Text speed: '+TSP[OPT.ts][0]+(OPT.ts===0?' (battles too)':''),async()=>{OPT.ts=(OPT.ts+1)%TSP.length;optSave()}],[OPT.rf?'Reduce flashing/shake: ON':'Reduce flashing/shake: OFF',async()=>{OPT.rf^=1;optSave()}],[OPT.hc?'High-contrast text box: ON':'High-contrast text box: OFF',async()=>{OPT.hc^=1;optSave()}],[OPT.lg?'Large text: ON':'Large text: OFF',async()=>toggleLG()],[OPT.sr?'Screen reader: ON':'Screen reader: OFF',async()=>toggleSR()],[OPT.cb?'Colour-blind aids: ON':'Colour-blind aids: OFF',async()=>{OPT.cb^=1;optSave();SR('Colour-blind aids '+(OPT.cb?'on':'off'))}],[OPT.ea?'Gentle battles: ON':'Gentle battles: OFF',async()=>{OPT.ea^=1;optSave();toast(OPT.ea?'Your team takes half damage':'Normal damage')}],['Controls',controlsMenu]];
  const i=await choose(its.map(x=>({t:x[0]})),{x:60,y:14,w:230,sel});if(i<0)return;sel=i;await its[i][1]()}}
 const hs=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36)};
 let SKIPNOW=false,SKIPOK=false;
@@ -1516,10 +1527,6 @@ const NTS=[FARM,NEO,HELL,KING];
 
 /* ================= DUNGEON RULES, FLOOR SCENES, AMBIENCE ================= */
 const OTCAP=8;
-const LM=['The grain silo and windmill through the windows','A maze of felt cubicle walls with seedlings on every desk','The mail chute and the sorting wall','The water cooler and the notice board','Rows of tall archive shelves','The blinking server racks','Towers of stacked supplies','Water pooling across the carpet','The one flickering lamp','The long executive corridor',
-'The sealed lead gate and kanban wall','Funnel kiosks and territory tables','The pit of stalled deal cards','Rows of key-account desks','The big brass closing bell','The round vault door with its key lock','The forecast wall with its hockey-stick chart','Stacks of approval trays','The quota board glowing red','The Sales Director\'s eleven blazers',
-'The red rubber stamp on the intake desk','The sad fruit basket','The glowing compliance seal','The scented candle and yoga mat','The two facing chairs','The padlocked filing cabinets','The burning wall of personal files','The pink-slip press','The pizza banner over the arena','The Garglr\'s eggplant throne',
-'The iron-barred cells','The racks of company swords','The barrel-lined cellar','The long scribe desks','The great loom','The banquet table under chandeliers','The chapel altar with its compliance seal','The vault of gold coins','The wall of woven tapestries','The throne on its gold-ringed dais'];
 /* [prop kind, name, text, optional law id] */
 const VIG=[
 ['lunch','Half-eaten lunch','A sandwich with one bite taken, and a sticky note: "Back in 5." The note is dated Tuesday.','atl15'],
@@ -1599,7 +1606,7 @@ function ruleHud(){const f=G.floor,D=dunOf(f);if(f>=NF-1)return;let s=null,c='#9
  if(!s)return;const lg=OPT.lg,w=s.length*(lg?12:6)+8,y=lg?20:13,h=lg?18:11+(bar!=null?3:0);
  R(W-w,y,w,h,'rgba(0,0,0,.6)');if(lg)TS(s,W-w+4,y+2,c,2,null);else T(s,W-w+4,y+2,c,null);
  if(bar!=null&&!lg){R(W-w+4,y+10,w-8,2,'rgba(255,255,255,.2)');R(W-w+4,y+10,Math.round((w-8)*Math.min(1,bar)),2,c)}
- if(lg&&G.t-(G.lmT||0)<300){wrap('Landmark: '+LM[f],Math.floor((W-10)/12)).slice(0,2).forEach((ln,i)=>{const tw=ln.length*12+8;R(0,40+i*18,tw,18,'rgba(0,0,0,.6)');TS(ln,3,42+i*18,'#cfe',2,null)})}}
+}
 /* ---- props: placement, drawing, interaction ---- */
 function ruleSpots(n){const F=FLOORS[n],M=G.map,w=M.w,h=M.h,st=F.start;
  const bfs=()=>{const dist=new Int16Array(w*h).fill(-1),q=[];if(M.t[st.y][st.x]!=='.')return{dist,q};const blk=new Set(G.ents.filter(e=>!e.gone).map(e=>e.x+','+e.y));dist[st.y*w+st.x]=0;q.push([st.x,st.y]);
@@ -1786,8 +1793,16 @@ async function favStory(fv){const st=FAVST[fv.id];if(!st)return;const sp=st.who.
 const favG=()=>G.fav||(G.fav={});
 const favSt=v=>['','ASKED','FOUND','DONE'][(favG()[v.id]||{}).st||0]||'';
 const LEADEND_GS=[['','Alis reaches for her tea instead of the pen. At noon, every worker in the tower stands up and walks out. Ninety out of ninety. The lights stay on, but nobody\'s there to be told what to do.'],['Alis','...All of you?'],['Kaj','All of us. Until there\'s an agreement. That\'s what a general strike is for.']];
+function goalText(){const f=G.floor,L=[];const pend=G.ents.filter(e=>e.join&&!e.gone);
+ if(pend.length)L.push(pend[0].join==='joan'?'Someone is behind the locked server room door. Henrietta can open it.':pend[0].n+' is somewhere on this floor. Look for the cyan speech bubble.');
+ const rg=ruleGate();if(rg)L.push(rg);
+ if(f<NF-1){const nd=NEED[f];if(cards()<nd)L.push(`The elevator needs ${nd} union members. You've got ${cards()}. Talk to co-workers and argue the thing that bugs them.`);else if(!pend.length&&!rg)L.push('The elevator is ready. Head up when you are.')}
+ if(dunOf(f)===0&&(G.ot||0)>=OTCAP)L.push('Your team is exhausted. Rest on a couch.');
+ const oc=CASES.filter(c=>csS(c)&&csS(c).st<3);if(oc.length)L.push('Open cases: '+oc.map(c=>c.nm+' ('+(c.f+1)+'F)').join(', ')+'.');
+ return L.length?L:['Talk to people and look around.']}
 async function fieldMenu(){let sel=0;for(;;){
  const its=[
+  ['What now?',async()=>{await talk(goalText().map(t=>['',t]))}],
   ['Status',async()=>{for(;;){const R=roster(),n=G.members.length;const j=await choose(R.map((m,k)=>({t:m.name,r:(k<n?'':'bench ')+'LV'+m.lv})),{x:100,y:14,w:150});if(j<0)break;const m=R[j],c=CH[m.id];await say(m.name,`${c.cls}. LV ${m.lv}. HP ${m.hp}/${m.mhp}  MP ${m.mp}/${m.mmp}. ATK ${m.atk} DEF ${m.def} MAG ${m.mag} SPD ${m.spd}. Strong arguments: ${c.str.join(', ')}. EXP to next: ${need(m.lv)-m.exp}.${Object.keys(m.pk||{}).length?' Focus: '+Object.entries(m.pk).map(([t,i])=>PERK[m.id][t][i].n).join(', ')+'.':''}`)}}],
   ['Party',partyMenu],
   ['Union',unionPage],
@@ -2639,7 +2654,8 @@ async function choose(items,o){o=o||{};const m={items,x:o.x===undefined?8:o.x,y:
   else if(k==='cancel'&&o.cancel!==false)return -1}}
  finally{const i=UI.menus.indexOf(m);if(i>=0)UI.menus.splice(i,1)}}
 async function pickTarget(list){if(!list.length)return null;let i=0;UI.cursor=list[0];try{for(;;){const k=await key();if(k==='left'||k==='up')i=(i-1+list.length)%list.length;else if(k==='right'||k==='down')i=(i+1)%list.length;else if(k==='ok'){sfx('ok');return list[i]}else if(k==='cancel')return null;UI.cursor=list[i];sfx('blip')}}finally{UI.cursor=null}}
-async function ban(s,ms){UI.ban=s;await sleep(ms||650);if(FXQ){const q=FXQ;FXQ=null;await fx(q.k,q.a,q.t,q.o)}if(UI.ban===s&&!G.B)UI.ban=null}
+const BANF=[2.2,1,1,1];
+async function ban(s,ms){UI.ban=s;await sleep((ms||650)*Math.max(BANF[OPT.ts]||1,OPT.sr?2:1));if(FXQ){const q=FXQ;FXQ=null;await fx(q.k,q.a,q.t,q.o)}if(UI.ban===s&&!G.B)UI.ban=null}
 function pop(b,text,color){srPop(b,text);UI.fx.push({x:b.x+(b.w||24)/2-String(text).length*3,y:b.y+4,s:String(text),c:color,t:0})}
 function wipe(dir){return new Promise(r=>{UI.wipe={p:0,dir,r}})}
 const toast=(s)=>{UI.toast={s,t:150}};
@@ -2648,7 +2664,7 @@ const toast=(s)=>{UI.toast={s,t:150}};
 const effAtk=b=>b.atk*(b.st.demor>0?.5:1)*(b.st.buff>0?1.4:1)*(b.st.hacked?.5:1);
 const effDef=b=>b.def*(b.st.hacked?.5:1);
 const effSpd=b=>b.spd*(b.st.slow>0?.5:1);
-function applyDmg(t,d){if(t.st.shield>0)d*=.5;if(t.isP&&t.st.taunt>0)d*=.6;if(!t.isP&&t.st.weak>0)d*=1.5;d=Math.max(1,Math.round(d));t.hp=Math.max(0,t.hp-d);t.flash=14;pop(t,d,'#fff');sfx('hit');
+function applyDmg(t,d){if(t.st.shield>0)d*=.5;if(t.isP&&OPT.ea)d*=.5;if(t.isP&&t.st.taunt>0)d*=.6;if(!t.isP&&t.st.weak>0)d*=1.5;d=Math.max(1,Math.round(d));t.hp=Math.max(0,t.hp-d);t.flash=14;pop(t,d,'#fff');sfx('hit');
  if(t.hp<=0){t.st={};if(t.isP)G.B.meter=Math.max(0,G.B.meter-10);else t.fade=20}return d}
 const WKI=['kaj','clementine','henrietta','joan','ken','marl'];
 const WKO={ghost:['henrietta','joan'],bootlicker:['ken','kaj'],spineless:['joan','marl'],broker:['clementine','ken'],intern:['marl','kaj'],micro:['kaj','henrietta'],hydra:['clementine','marl'],copier:['joan','henrietta'],cultist:['ken','clementine'],socio:['henrietta','kaj']};
@@ -3528,7 +3544,7 @@ function loadFloor(n,sp){G.floor=n;const F=FLOORS[n],t=F.build();G.map={t,w:t[0]
  G.ents=[];F.npcs.forEach(d=>{if(d.join&&roster().some(m=>m.id===d.join))return;G.ents.push(Object.assign({},d))});
  if(F.boss&&!G.boss[F.dun])G.ents.push({boss:1,bi:F.dun,x:F.boss.x,y:F.boss.y,n:BOSSES[F.dun].name});
  {const cs=caseAt(n);if(cs){const r=G.ents.find(e=>e.k&&!e.star&&!e.join);if(r)Object.assign(r,{n:cs.who,cs:cs.id})}}
- widenChokes(n);placeProps(n);G.lmT=G.t;if(OPT.sr&&LM[n])setTimeout(()=>SRM('Landmark: '+LM[n]+'.'),600);{const q=safeSpot(t,sp.x,sp.y,F);if(q.x!==sp.x||q.y!==sp.y){if(G.rest&&G.rest.f===n&&G.rest.x===sp.x&&G.rest.y===sp.y){G.rest.x=q.x;G.rest.y=q.y}sp={x:q.x,y:q.y,dir:sp.dir}}}
+ widenChokes(n);placeProps(n);{const q=safeSpot(t,sp.x,sp.y,F);if(q.x!==sp.x||q.y!==sp.y){if(G.rest&&G.rest.f===n&&G.rest.x===sp.x&&G.rest.y===sp.y){G.rest.x=q.x;G.rest.y=q.y}sp={x:q.x,y:q.y,dir:sp.dir}}}
  pl.x=sp.x;pl.y=sp.y;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;pl.dir=sp.dir||'up';pl.mv=0;G.steps=0;music(floorMus(n))}
 // A save made before a floor's layout changed can point at a tile that is now furniture or wall.
 // Move to the nearest open tile that connects to the way in, so the player is never stuck.
@@ -3689,7 +3705,7 @@ function tick(){G.t++;srTick();ambTick();UI.fx=UI.fx.filter(f=>++f.t<40);UI.fx.f
  if(G.mode==='field'&&!G.busy)fieldUpdate();else if(G.busy)for(const k in q)q[k]=0}
 let last=0,acc=0;
 function frame(ts){const dt=Math.min(.1,(ts-last)/1000||0);last=ts;acc+=dt;while(acc>=1/60){tick();acc-=1/60}draw();requestAnimationFrame(frame)}
-if(/[?&]debug\b/.test(location.search))window.__dbg={TR,BXg:()=>BX,partyHp,negProg,sting,genFloor,SPEC,pickFloor,fRoute,routeT,FBEST,favStory,STAR,ORGL,organize,kajSeed,kajLead,clemFired,clemBack,clemEvidence,clemTable,bestiary,kitMenu,KIT,FAVS,favG,teamItem,addDues,decOn,seenEnc,NGK,itemMenu:typeof itemMenu!=='undefined'?itemMenu:null,enemyTurn,perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,docPuzzle,caseLead,CASES,DECDOC,DRULE,lawRaise,lawLv,lawCount,bookParas,caseTalk,caseFact,rotaPuzzle,caseBuild,caseBook,CROTA,CFACTS,CASEF,caseOf,caseAt,casePuzzle,coOf,favDone,DRLAW,PIPE,FORMS,caseWon,caseList,loadFloor,decOf,OTCAP,otAdd,VIG,LM,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
+if(/[?&]debug\b/.test(location.search))window.__dbg={TR,BXg:()=>BX,partyHp,negProg,sting,genFloor,SPEC,pickFloor,fRoute,routeT,FBEST,favStory,STAR,ORGL,organize,kajSeed,kajLead,clemFired,clemBack,clemEvidence,clemTable,bestiary,kitMenu,KIT,FAVS,favG,teamItem,addDues,decOn,seenEnc,NGK,itemMenu:typeof itemMenu!=='undefined'?itemMenu:null,enemyTurn,perkCheck,tierCheck,shopMenu,unionPage,grievLog,cards,TIERS,LEADEND,SAVEK,G,pl,UI,onDown,tick,draw,negotiate,battle,newGame,boot,cards,CH,loadFloor,mkM,ending,talkEnt,interact,useElevator,joinScene,burnout,person,drawEn,R,FLOORS,BOSSES,CHs:CH,roster,PARTY_MAX,save,loadSave,afterStep,tile,woundScene,confront,closeCases,WOUND,searchSpot,wkOf,buildPortrait,drawPortrait,say,UI,EMH,EMA,EXPF,balEN,aInit,sfx,ambTick,SEENF,optionsMenu,OPT,tipOnce,tipBan,drawFMap,VOLS,otAdd,rideTo,drawElev,paLine,standTogether,standLabel,drawProp,widenChokes,ruleGate,termUse,vigUse,placeProps,docPuzzle,caseLead,CASES,DECDOC,DRULE,lawRaise,lawLv,lawCount,bookParas,caseTalk,caseFact,rotaPuzzle,caseBuild,caseBook,CROTA,CFACTS,CASEF,caseOf,caseAt,casePuzzle,coOf,favDone,DRLAW,PIPE,FORMS,caseWon,caseList,loadFloor,decOf,OTCAP,otAdd,VIG,goalText,applyDmg,BANF,G0:()=>G,waiters,choose,partyTurn,bookParas,bookCases,bookLib,bookGloss,floorMap,optionsMenu,fieldMenu,ask,OPT,SR,srLook,srStatus,srTick,SRS,srA,srP,toggleLG,toggleSR,drawMenus,bPose,FXL,FXF,FXD,fx,fxPos,EACTS,EN,SK,CB,drawFx,FGL,CT,NEED,NF,INT,LAW,LAWI,lawG,lawScene,lawUnlock,bookParas,bookLib,bookGloss,dunOf,cn,need,onUp,held};
 boot();requestAnimationFrame(frame);
 })();
 </script>
