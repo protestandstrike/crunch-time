@@ -10,20 +10,37 @@ html,body{margin:0;height:100%;background:#07070d;overflow:hidden;color:#fff;fon
 #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 #c{image-rendering:pixelated;image-rendering:crisp-edges;background:#000;display:block;flex:none}
 #pad{display:none;width:100%;max-width:520px;height:150px;position:relative;flex:none}
-body.touch #pad{display:block;margin-top:auto;margin-bottom:max(12px,env(safe-area-inset-bottom))}
+body.touch #pad{display:block;position:fixed;left:50%;transform:translateX(-50%);bottom:max(10px,env(safe-area-inset-bottom));margin:0;pointer-events:none;z-index:1}
+body.touch #pad .b{pointer-events:auto}
 body.touch #app{justify-content:flex-start;padding-top:env(safe-area-inset-top)}
-.b{position:absolute;border-radius:50%;background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.35);color:#fff;font:bold 18px monospace;display:flex;align-items:center;justify-content:center;touch-action:none}
-.b.on{background:rgba(255,255,255,.4)}
+.b{position:absolute;border-radius:50%;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);text-shadow:0 0 3px #000;font:bold 18px monospace;display:flex;align-items:center;justify-content:center;touch-action:none}
+.b.on{background:rgba(255,255,255,.28);color:#fff}
+/* movement stick: free to drag, but it only ever picks up, down, left or right */
+#stick{position:absolute;border-radius:50%;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.18);touch-action:none;pointer-events:auto}
+#knob{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.3);transition:transform .06s}
+#stick.on #knob{background:rgba(255,255,255,.3);transition:none}
+#stick .ar{position:absolute;font:12px monospace;color:rgba(255,255,255,.35);pointer-events:none}
+/* phones held sideways: the picture fills the screen and the buttons float over it */
+body.touch.land #app{justify-content:center;padding:0}
+body.touch.land #pad{left:env(safe-area-inset-left);right:env(safe-area-inset-right);transform:none;width:auto;max-width:none}
+#c2{display:none;image-rendering:pixelated;image-rendering:crisp-edges;background:#07070d;flex:none;border-top:2px solid #1c2040}
+body.duo #c2{display:block}
+body.duo #hint{display:none!important}
+#hint{display:none;margin:auto 0;padding:0 24px;text-align:center;color:#7a86c8;font:13px monospace;line-height:1.5}
+body.touch:not(.land) #hint{display:block}
+#fs{display:none;position:fixed;bottom:max(14px,env(safe-area-inset-bottom));left:50%;margin-left:-17px;width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);font:bold 16px monospace;align-items:center;justify-content:center;z-index:2}
+body.touch.canfs:not(.isfs) #fs{display:flex}
+body.touch.land #fs{bottom:auto;top:max(6px,env(safe-area-inset-top))}
 </style>
 </head>
 <body>
 <div id="app">
 <canvas id="c"></canvas>
+<canvas id="c2" width="448" height="252"></canvas>
+<div id="hint">Turn your phone sideways for a bigger screen.</div>
+<div id="fs" role="button" aria-label="Full screen">&#x26F6;</div>
 <div id="pad">
- <div class="b" data-k="up" style="left:58px;top:4px;width:46px;height:46px">&#9650;</div>
- <div class="b" data-k="down" style="left:58px;top:100px;width:46px;height:46px">&#9660;</div>
- <div class="b" data-k="left" style="left:10px;top:52px;width:46px;height:46px">&#9664;</div>
- <div class="b" data-k="right" style="left:106px;top:52px;width:46px;height:46px">&#9654;</div>
+ <div id="stick" aria-label="Move" style="left:6px;top:4px;width:142px;height:142px"><div id="knob"></div><span class="ar" style="left:63px;top:6px">&#9650;</span><span class="ar" style="left:63px;bottom:6px">&#9660;</span><span class="ar" style="left:8px;top:62px">&#9664;</span><span class="ar" style="right:8px;top:62px">&#9654;</span></div>
  <div class="b" data-k="ok" style="right:16px;top:44px;width:64px;height:64px">A</div>
  <div class="b" data-k="cancel" style="right:92px;top:84px;width:54px;height:54px">B</div>
  <div class="b" data-k="skip" aria-label="Skip seen text" style="right:92px;top:4px;width:34px;height:34px;font-size:11px">SK</div>
@@ -77,8 +94,24 @@ window.addEventListener('keyup',e=>{const k=KM[e.key];if(k)onUp(k)});
 window.addEventListener('blur',()=>{for(const k in held)held[k]=0});
 document.querySelectorAll('.b').forEach(b=>{const k=b.dataset.k;b.addEventListener('pointerdown',e=>{e.preventDefault();aInit();b.classList.add('on');onDown(k)});const up=e=>{b.classList.remove('on');onUp(k)};b.addEventListener('pointerup',up);b.addEventListener('pointerleave',up);b.addEventListener('pointercancel',up)});
 window.addEventListener('pointerdown',()=>aInit());
+{const st=document.getElementById('stick'),kn=document.getElementById('knob');let pid=null,dir=null,rep=null;
+ const set=d=>{if(d===dir)return;if(dir)onUp(dir);clearTimeout(rep);dir=d;if(d){onDown(d);const again=()=>{rep=setTimeout(()=>{if(dir===d){onDown(d);again()}},140)};rep=setTimeout(()=>{if(dir===d){onDown(d);again()}},380)}};
+ const move=e=>{const r=st.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),ax=Math.abs(dx),ay=Math.abs(dy),R=r.width/2-29;
+  let d=null;if(Math.max(ax,ay)>14){const horiz=dir==='left'||dir==='right'?ax*1.25>=ay:dir==='up'||dir==='down'?ax>ay*1.25:ax>ay;d=horiz?(dx>0?'right':'left'):(dy>0?'down':'up')}
+  set(d);const m=Math.min(R,Math.max(ax,ay));kn.style.transform=d==='left'?`translateX(${-m}px)`:d==='right'?`translateX(${m}px)`:d==='up'?`translateY(${-m}px)`:d==='down'?`translateY(${m}px)`:''};
+ const end=e=>{if(e.pointerId!==pid)return;pid=null;st.classList.remove('on');kn.style.transform='';set(null)};
+ st.addEventListener('pointerdown',e=>{e.preventDefault();aInit();pid=e.pointerId;st.setPointerCapture(pid);st.classList.add('on');move(e)});
+ st.addEventListener('pointermove',e=>{if(e.pointerId===pid)move(e)});
+ st.addEventListener('pointerup',end);st.addEventListener('pointercancel',end);
+ window.addEventListener('blur',()=>{if(pid!==null){pid=null;st.classList.remove('on');kn.style.transform='';set(null)}})}
 if('ontouchstart' in window||navigator.maxTouchPoints>0)document.body.classList.add('touch');
-function fit(){const t=document.body.classList.contains('touch'),ph=t?150:0,d=window.devicePixelRatio||1;const sc=Math.min(innerWidth*d/W,(innerHeight-ph)*d/H);const p=t||sc<1?sc:Math.floor(sc);cv.style.width=(W*p/d)+'px';cv.style.height=(H*p/d)+'px'}
+let DUOPAD=0;const BC=document.body.classList,fsEl=document.documentElement;
+if(fsEl.requestFullscreen||fsEl.webkitRequestFullscreen)BC.add('canfs');
+document.getElementById('fs').addEventListener('click',()=>{const r=fsEl.requestFullscreen||fsEl.webkitRequestFullscreen;try{const q=r.call(fsEl);if(q&&q.then)q.then(()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch(e){}}).catch(()=>{})}catch(e){}});
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{BC.toggle('isfs',!!(document.fullscreenElement||document.webkitFullscreenElement));fit()}));
+function fit(){const t=BC.contains('touch'),land=t&&innerWidth>innerHeight;BC.toggle('land',land);const ph=0,d=window.devicePixelRatio||1;const cw=Math.min(innerWidth,700),duo=t&&!land&&cw*9/16*2+8<=innerHeight;BC.toggle('duo',duo);
+ if(duo){const c2=document.getElementById('c2'),hh=Math.round(cw*9/16),lh=Math.max(hh,innerHeight-hh-4);const L=Math.round(lh*448/cw);if(c2.height!==L)c2.height=L;DUOPAD=Math.round(170*448/cw);cv.style.width=cw+'px';cv.style.height=hh+'px';c2.style.width=cw+'px';c2.style.height=Math.round(L*cw/448)+'px';return}
+ const sc=Math.min(innerWidth*d/W,(innerHeight-ph)*d/H);const p=t||sc<1?sc:Math.floor(sc);cv.style.width=(W*p/d)+'px';cv.style.height=(H*p/d)+'px'}
 window.addEventListener('resize',fit);fit();
 
 /* ================= AUDIO ================= */
@@ -689,10 +722,10 @@ const CLEMEV=[['las7','Under a pile of HR forms: Clem\'s performance review from
 const AFRAID=['(They glance at the door.) If they can fire Clem, they can fire me. Make it quick.','I heard about Clem. Fired by email. Is that what happens to union people?','Clem ran my onboarding. If she\'s gone, who\'s safe? ...Go on. I\'m listening.','(Whispering.) HR reads the badge logs. Don\'t stand too long at my desk.'];
 const clemOut=()=>!!(G.flags.fired&&!G.flags.rein);
 async function clemFired(){if(G.flags.fired||!roster().some(m=>m.id==='clementine'))return;sting('sad');
- await talk([['','Friday, 4:58 p.m. Every phone in the party buzzes at once.'],['Email','From: Alis Neddis. Subject: Exciting changes! Clementine Piruetti\'s role has been made redundant, effective immediately. Thank you for your passion!'],['Clem','...Again. By email. At 4:58.'],['Kaj','Redundant? That isn\'t a reason. That\'s an error message. This is about the union.'],['Clem','Security\'s on the way up. I need to hand in my badge.'],['Kaj','Nobody may be punished for joining a union. MBL 8 §. And a dismissal needs a valid reason. LAS 7 §.'],['Clem','Then prove it. Find out why they really did it.'],['Clem','And tell people I\'m not scared. ...Tell them anyway.'],['','Clem leaves with a cardboard box. Behind her, the badge reader beeps red.'],['Kaj','This is my fault. I put her name on the sign-up sheet. I should have...'],['Henrietta','It\'s Alis\'s fault. And it\'s all of ours to fix. Not yours alone.']]);
+ await talk([['','Friday, 4:58 p.m. Every phone in the party buzzes at once.'],['Email','From: Alis Neddis. Subject: Exciting changes! Clementine Piruetti\'s role has been made redundant, effective immediately. Thank you for your passion!'],['Clem','...Again. By email. At 4:58.'],['Kaj','Redundant? That isn\'t a reason. That\'s an error message. This is about the union.'],['Clem','Security\'s on the way up. I need to hand in my badge.'],['Kaj','Nobody may be punished for joining a union. MBL 8 §. And a dismissal needs a valid reason. LAS 7 §.'],['Kaj','And you want it declared void, right? Then we tell HR in writing. Tonight. We\'ve only got two weeks (LAS 40 §).'],['Clem','Do it. Then prove it. Find out why they really did it.'],['Clem','And tell people I\'m not scared. ...Tell them anyway.'],['','Clem leaves with a cardboard box. Behind her, the badge reader beeps red.'],['','At 4:59 the union\'s written objection lands in HR\'s inbox. Inside the deadline. Now it needs proof.'],['Kaj','This is my fault. I put her name on the sign-up sheet. I should have...'],['Henrietta','It\'s Alis\'s fault. And it\'s all of ours to fix. Not yours alone.']]);
  const i=G.members.findIndex(m=>m.id==='clementine'),j=G.bench.findIndex(m=>m.id==='clementine'),m=i>=0?G.members.splice(i,1)[0]:G.bench.splice(j,1)[0];
  if(i>=0&&G.bench.length)G.members.push(G.bench.shift());
- G.flags.fired={lv:m.lv,pk:m.pk||{}};G.flags.ev=0;['mbl8','las7'].forEach(lawUnlock);sfx('sting');toast('CLEM WAS FIRED');
+ G.flags.fired={lv:m.lv,pk:m.pk||{}};G.flags.ev=0;['mbl8','las7','las40'].forEach(lawUnlock);sfx('sting');toast('CLEM WAS FIRED');
  await say('','GOAL: get Clem reinstated. Search the furniture in HR for proof that she was fired for organizing, then raise it at the next table.')}
 async function clemEvidence(){if(!clemOut()||G.floor<20||(G.flags.ev||0)>=CLEMEV.length||G.flags['ev'+G.floor])return false;
  G.flags['ev'+G.floor]=1;const [lid,txt]=CLEMEV[G.flags.ev++];lawUnlock(lid);sfx('lvl');await say('',txt);toast(`EVIDENCE FOR CLEM ${G.flags.ev}/${CLEMEV.length}`);return true}
@@ -1045,15 +1078,19 @@ function drawMenus(){const K=LG();
   for(const it of m.items){const rr=it.r!==undefined&&it.r!==''?tW(String(it.r))+12:0;need=Math.max(need,32+tW(it.t)+rr+(it.ic?it.ic.length*10:0))}
   if(m.title)need=Math.max(need,tW(m.title)+16);
   const w=Math.min(444,need),ctr=Math.abs(m.x+m.w/2-224)<24,right=m.x+m.w>=430;
-  const fl=m.foot?wrap(m.foot(m.sel),Math.floor((w-14)/12)):[],fh=fl.length?fl.length*16+4:0,th=m.title?18:0;
+  /* rows too wide for large text get cut with "..."; the selected one is shown in full above the footer */
+  const avail=it=>w-20-(it.r!==undefined&&it.r!==''?tW(String(it.r))+12:0)-(it.ic?it.ic.length*10:0);
+  const fit=it=>{let s=String(it.t);if(tW(s)<=avail(it))return s;while(s.length>1&&tW(s+'...')>avail(it))s=s.slice(0,-1);return s.replace(/\s+$/,'')+'...'};
+  const si=m.items[m.sel],full=si&&tW(String(si.t))>avail(si)?wrap(String(si.t),Math.floor((w-14)/12)):[];
+  const fl=full.concat(m.foot?wrap(m.foot(m.sel),Math.floor((w-14)/12)):[]),fh=fl.length?fl.length*16+4:0,th=m.title?18:0;
   const vis=Math.max(2,Math.min(m.vis,Math.floor((244-th-fh-10)/RH))),hh=vis*RH+10+th+fh;
   const x=ctr?Math.round(224-w/2):right?446-w:clamp(m.x,2,446-w),y=m.above?Math.max(2,176-hh):Math.min(m.y,248-hh);
   panel(x,y,w,hh);let oy=y+5;if(m.title){LT(m.title,x+8,oy,'#ffd840');oy+=18}
   const top=clamp(m.sel-(vis>>1),0,Math.max(0,n-vis));
-  for(let i=0;i<vis&&top+i<n;i++){const it=m.items[top+i],yy=oy+i*RH,c=it.dis?'#7a7a9a':(it.col||'#fff');if(top+i===m.sel)hand(x+1+((G.t>>4)&1),yy+3);LT(it.t,x+14,yy,c);
+  for(let i=0;i<vis&&top+i<n;i++){const it=m.items[top+i],yy=oy+i*RH,c=it.dis?'#7a7a9a':(it.col||'#fff');if(top+i===m.sel)hand(x+1+((G.t>>4)&1),yy+3);LT(fit(it),x+14,yy,c);
    if(it.ic)it.ic.forEach((k,j)=>ico(k,x+w-11-j*10,yy+2));if(it.r!==undefined&&it.r!=='')LT(String(it.r),x+w-6-tW(String(it.r)),yy,c)}
   if(top>0){R(x+w-9,y+3,5,1,'#ffd840');R(x+w-8,y+2,3,1,'#ffd840')}if(top+vis<n){R(x+w-9,y+hh-4,5,1,'#ffd840');R(x+w-8,y+hh-3,3,1,'#ffd840')}
-  fl.forEach((l,i)=>LT(l,x+8,y+hh-fh+2+i*16,'#9fd8ff'))}}
+  fl.forEach((l,i)=>LT(l,x+8,y+hh-fh+2+i*16,i<full.length?'#fff':'#9fd8ff'))}}
 /* ---- dialogue ---- */
 function drawDlg(){const d=UI.d,K=LG();if(d.who)drawPortrait(d);panel(4,180,440,68);
  if(K===1){if(d.who){const w=d.who.length*6+14;panel(10,169,w,16);T(d.who,17,173,'#ffd840')}let rem=Math.floor(d.n);d.lines.forEach((l,i)=>{const s=l.slice(0,Math.max(0,rem));rem-=l.length;T(s,12,192+i*10)});if(d.skip&&SKIPOK)T('Q: skip',394,172,'#9aa4d8');if(d.n>=d.tot&&d.tot&&((G.t>>4)&1))T('v',432,236,'#ffd840');return}
@@ -1748,7 +1785,7 @@ async function favStory(fv){const st=FAVST[fv.id];if(!st)return;const sp=st.who.
  await talk(st.L.map(([n,t])=>[n==='@'?sp.name:n,t]));if(st.law)lawUnlock(st.law)}
 const favG=()=>G.fav||(G.fav={});
 const favSt=v=>['','ASKED','FOUND','DONE'][(favG()[v.id]||{}).st||0]||'';
-const LEADEND_GS=[['','At noon, every worker in the tower stands up and walks out. Ninety out of ninety. The lights stay on, but nobody is there to be told what to do.'],['Alis','...All of you?'],['Kaj','All of us. That\'s what a general strike is.']];
+const LEADEND_GS=[['','Alis reaches for her tea instead of the pen. At noon, every worker in the tower stands up and walks out. Ninety out of ninety. The lights stay on, but nobody\'s there to be told what to do.'],['Alis','...All of you?'],['Kaj','All of us. Until there\'s an agreement. That\'s what a general strike is for.']];
 async function fieldMenu(){let sel=0;for(;;){
  const its=[
   ['Status',async()=>{for(;;){const R=roster(),n=G.members.length;const j=await choose(R.map((m,k)=>({t:m.name,r:(k<n?'':'bench ')+'LV'+m.lv})),{x:100,y:14,w:150});if(j<0)break;const m=R[j],c=CH[m.id];await say(m.name,`${c.cls}. LV ${m.lv}. HP ${m.hp}/${m.mhp}  MP ${m.mp}/${m.mmp}. ATK ${m.atk} DEF ${m.def} MAG ${m.mag} SPD ${m.spd}. Strong arguments: ${c.str.join(', ')}. EXP to next: ${need(m.lv)-m.exp}.${Object.keys(m.pk||{}).length?' Focus: '+Object.entries(m.pk).map(([t,i])=>PERK[m.id][t][i].n).join(', ')+'.':''}`)}}],
@@ -2104,7 +2141,7 @@ async function docPuzzle(o){const m=o.rows.map(()=>0);let sel=0,tries=0;if(o.tip
  for(;;){const its=o.rows.map(([d,t],k)=>({t:d+'  '+t,r:m[k]?'X':'',col:m[k]?'#ffd840':undefined}));its.push({t:'Done',col:'#9fff9f'});
   const j=await choose(its,{x:70,y:24,w:500,vis:9,sel,title:o.title,foot:k=>k<o.rows.length?(m[k]?'Marked: '+o.rules[m[k]]:'Select to mark a broken rule'):'Hand in your marks'});
   if(j<0)return false;sel=j;
-  if(j<o.rows.length){const r=await choose(o.rules.map(t=>({t})),{x:180,y:50,w:260,vis:9,sel:m[j],title:o.rows[j][0]+': which rule?'});if(r>=0)m[j]=r;continue}
+  if(j<o.rows.length){const ln=o.rows[j][0]+' '+o.rows[j][1],pw=Math.min(440,Math.max(260,ln.length*6+16));const r=await choose(o.rules.map(t=>({t})),{x:Math.max(4,Math.min(180,444-pw)),y:50,w:pw,vis:9,sel:m[j],title:'Which rule does it break?',foot:()=>ln});if(r>=0)m[j]=r;continue}
   const bad=o.rows.map((x,k)=>m[k]!==x[2]?k:-1).filter(k=>k>=0);tries++;
   if(!bad.length){sfx('combo');return true}
   sfx('no');if(tries<2)await say('',`Not quite. ${bad.length} of the ${o.rows.length} rows don't add up. ${o.hint}`);
@@ -2343,13 +2380,13 @@ const BOSSES=[
  intro:[['Alis','Oh, HELLO! Alis Neddis, Chief Executive Officer. Chief of Everything. I\'m the CEO, and I have eleven minutes for you. Please, sit! Can I get you a tea? Of course I can. I\'m lovely.'],['Kaj','We\'re here to bargain in good faith, Alis. It\'s the law.'],['Alis','The law! What a thoughtful point! ...SIT DOWN AND LISTEN TO ME WHEN I AM TALKING TO YOU!! ...Sorry. Where were we? Tea?'],['Kaj','Alis, before any change that hits our members you have to negotiate with us (MBL 13 §), and keep us informed about the business (MBL 19 a §).'],['Alis','OF COURSE! Lovely! ...HOW DARE YOU READ THE LAW AT ME?! ...Tea?']],
  ph:[
   {name:'STONEWALLING',need:5,tn:2,ints:[{k:'VOICE'},{k:'EQUAL'},{k:'SECURITY',hid:1}],tac:['stone','stone','memo','divide'],slip:'...People were afraid. I suppose that was the point. I just never knew how to stop shouting once I started.',react:['What a LOVELY idea! Truly! ...WHO TOLD YOU THAT?!','Mm, I hear you. I really do. ...NO YOU DO NOT HEAR ME!','Wonderful, wonderful. Do go on. (twitch)'],
-   post:[['Alis','Fine. I recognize you. *smiles* Now let\'s talk money, which you won\'t like. *keeps smiling*']]},
+   post:[['Alis','Fine. I\'ll talk to you. *smiles* Now let\'s talk money, which you won\'t like. *keeps smiling*']]},
   {name:'BAD-FAITH OFFER',need:5,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL',hid:1}],tac:['bad','bad','memo'],slip:'You want EQUAL OPPORTUNITY? ...I was passed over four times myself. Nobody ever gave me a fair shot either.',react:['Fascinating! Really! ...THAT IS EXCESSIVE!!','You\'re being SO constructive. ...STOP BEING REASONABLE AT ME!','Your demands are... a fair starting point! (a vein pulses)'],
    pre:[['Alis','Here\'s my offer, friends! A one percent raise, and a pizza party! Is that not generous? ...TAKE IT OR LEAVE IT!!'],['Joan','That\'s a bad-faith offer. Every word of it.']],
    post:[['Alis','...*breathes deeply* Very well. A FINAL offer. Gently.']]},
   {name:'THE FINAL OFFER',need:4,tn:2,ints:[{k:'WAGES'},{k:'OPEN'},{k:'EQUAL'},{k:'SECURITY'}],tac:['stone','bad','divide','memo'],react:['Gah! Reasonable, damn you!','Oh, that\'s airtight. How exciting for you! ...HOW DARE YOU!','Everyone in this room is standing together, huh. ...Lovely.'],
    pre:[['Alis','Final offer! You get everything you wanted, or nothing. Every point, settled NOW. *calmly* Take your time. ...NOW!!']]}],
- win:[['Alis','...*wipes her chin* Fine. Fair wages, job security, equal opportunity, worker influence and transparency. Where do I sign? Sorry about the, ah, moisture.'],['Kaj','Right here, Alis.']],lose:'Talks over! Come back when you can afford my time! ...TEA?'}];
+ win:[['Alis','...*wipes her chin* Fine. FINE. Somebody bring me the paper. Sorry about the, ah, moisture.']],lose:'Talks over! Come back when you can afford my time! ...TEA?'}];
 
 BOSSES.splice(1,0,BOSSES.splice(2,1)[0]);BOSSES[1].arena='vault';
 /* ================= FLOORS: 40 floors in 4 dungeons ================= */
@@ -3458,14 +3495,27 @@ async function playIntro(){G.mode='intro';G.intro={t:0,th:{}};music('intro');let
  const i=waiters.indexOf(wf);if(i>=0)waiters.splice(i,1);
  await wipe(1);G.intro=null;G.mode='title';await wipe(-1);UI.wipe=null}
 
+/* phones held upright: menus, dialogue and books go on a second screen under the game (body.duo) */
+const cv2=document.getElementById('c2'),ctx2=cv2.getContext('2d');
+function drawLower(){const K=LG(),LH=cv2.height;R(0,0,448,LH,'#07070d');
+ if(G.mode==='field'&&G.fl){const f=G.floor;LT((f+1)+'F  '+DUNL[dunOf(f)].toUpperCase(),12,10,'#ffd840');LT(G.fl.name,12,10+11*K,'#c8d0ff');
+  const nd=NEED[f],c=cards();LT('MEMBERS '+c+'/'+CT,12,18+22*K,'#9fff9f');if(f<NF-1)LT(c>=nd?'Elevator: open':'Elevator needs '+nd,12,18+33*K,c>=nd?'#9fff9f':'#ffb080');
+  roster().slice(0,G.members.length).forEach((m,i)=>{const y=34+(44+i*13)*K;LT(m.name,12,y,'#fff');const bw=110,bx=448-bw-14;R(bx,y+2,bw,5,'#2a2a44');R(bx,y+2,Math.round(bw*Math.max(0,m.hp)/m.mhp),5,'#6fe86f')});
+  T('B: menu   A: talk / search',12,Math.max(240,LH-DUOPAD-12),'#5a6490')}
+ else T('CRUNCH TIME',190,(LH>>1)-4,'#2a3060')}
 function drawUI(){
+ const duo=document.body.classList.contains('duo');
  ctx.save();if(OPT.lg&&G.mode==='field')ctx.scale(W/448,H/252);else ctx.translate((W-448)>>1,H-252);
- if(UI.book)drawBook(UI.book);if(UI.fmap)drawFMap();
- drawMenus();
+ if(!duo){if(UI.book)drawBook(UI.book);if(UI.fmap)drawFMap();drawMenus()}
  for(const f of UI.fx)LT(f.s,f.x-(LG()-1)*f.s.length*3,f.y,f.c);
  if(UI.ban)drawBan();
- if(UI.d)drawDlg();
+ if(!duo&&UI.d)drawDlg();
  ctx.restore();
+ if(duo){const c0=ctx,W0=W,H0=H,LH=cv2.height;ctx=ctx2;W=448;H=252;try{ctx.imageSmoothingEnabled=false;
+   if(UI.book||UI.fmap||UI.menus.length||UI.d)R(0,0,448,LH,'#07070d');else drawLower();
+   if(UI.book)drawBook(UI.book);if(UI.fmap)drawFMap();drawMenus();
+   /* dialogue sits at the bottom of the second screen, menus at the top, so they never cover each other */
+   if(UI.d){ctx.save();ctx.translate(0,Math.max(0,LH-252-DUOPAD));drawDlg();ctx.restore()}}finally{ctx=c0;W=W0;H=H0}}
  if(UI.toast){UI.toast.t--;const K=LG(),ts=K>1?fitS(UI.toast.s,Math.floor((W-24)/12)):UI.toast.s,w=ts.length*6*K+14,tx=Math.round((W-w)/2);panel(tx,16,w,K>1?21:17);LT(ts,tx+7,K>1?19:21,'#9fff9f');if(UI.toast.t<=0)UI.toast=null}
  const w=UI.wipe;if(w){const f0=w.p;const NB=Math.ceil(H/8);for(let b=0;b<NB;b++){const f=clamp(f0*1.6-b/NB*.6,0,1),cw=W*(w.dir===1?f:1-f);if(cw<=0)continue;if(b&1)R(W-cw,b*8,cw,8,'#000');else R(0,b*8,cw,8,'#000')}}}
 function draw(){if(G.mode==='field')setRes(FW,FH);else setRes(448,252);ctx.imageSmoothingEnabled=false;R(0,0,W,H,'#000');
@@ -3506,7 +3556,7 @@ async function interact(){const [dx,dy]=DV[pl.dir],tx=pl.x+dx,ty=pl.y+dy;const e
 async function useElevator(){const f=G.floor,nd=NEED[f];const pend=G.ents.filter(e=>e.join&&!e.gone);if(pend.length){await say('',pend[0].join==='joan'?'Something is humming behind the locked server room door. Someone in there\'s worth meeting before you leave. Henrietta can open it.':`${pend[0].n} is still somewhere on this floor, and you'll want them with you. Look for the cyan speech bubble.`);return}
  {const rg=ruleGate();if(rg){await say('',rg);return}}
  if(cards()<nd){await say('',`The elevator roll call needs ${nd} union members. You have ${cards()}. Keep making your case!`);return}
- if(f===29){await talk([['Kaj',`That is ${cards()} members. A clear majority.`],['Clem','Filing with the Labour Board... stamp, stamp, STAMP!'],['','The Board recognizes your union. Alis must now bargain in good faith.'],['','ACT I COMPLETE: Win the Argument.  ACT II: Bargain in Good Faith.']])}
+ if(f===29){await talk([['Kaj',`That's ${cards()} members. Most of the tower's with us now.`],[roster().some(m=>m.id==='clementine')?'Clem':'Henrietta','So we write to Alis. Today. "The union demands to negotiate a collective agreement." Stamp, stamp, STAMP!'],[lawWho(),'Nobody has to approve us first. We\'ve got members, so we\'ve got the right to negotiate (MBL 10 §).'],['','The letter goes up to the top floor. For once, the tower has to answer the people who keep it running.']])}
  await rideTo(f+1,'up')}
 const ARRIVE={10:'THE SALES CITADEL. Floors 11-20. A fortress of glass and neon built around the sales pipeline, guarded by key accounts. Every floor is a stage in the deal. Everyone here sells, and everyone is measured.',20:'ACT II: Stand Together. THE HR HELLSCAPE. Floors 21-30. Human Resources found a darker budget. Red tape, chained filing cabinets, and a floor that\'s one giant form. Mind the lava.',30:'ACT III: Bargain in Good Faith. THE CORPORATE KINGDOM. Floors 31-40. Stone halls, stained glass and banners woven from unpaid overtime. Alis Neddis holds court at the very top.',39:'The Throne Room. Alis Neddis waits on her throne, the clock ticking behind her.'};
 
@@ -3590,9 +3640,9 @@ async function joinScene(e){sting('hero');
  await say('',`${m.name} (${CH[m.id].cls}) joined the party!`);if(!onTeam&&!G.flags.benchTip){G.flags.benchTip=1;await say('','Three fight at a time. The others wait on the bench. Swap them in the PARTY menu, or with SWAP in battle.')}}
 /* ================= ENDING ================= */
 async function ending(){
- {const has=id=>roster().some(m=>m.id===id),L=[['Alis','...Fine. Fair wages, job security, equal opportunity, worker influence and transparency. Where do I sign?']];
+ {const has=id=>roster().some(m=>m.id===id),L=cards()>=CT?LEADEND_GS.slice():[];L.push(['Alis','...Fair wages, job security, equal opportunity, worker influence and transparency. Where do I sign?']);
   if(has('joan'))L.push(['Joan','Not yet.'],['','Joan reads the Agreement aloud. Page one. Page two. Page forty. Alis shifts in her chair. Nobody interrupts.'],['Joan','Now. Sign.']);
-  L.push(['','The Collective Bargaining Agreement is signed. Overtime is voluntary and paid. Weekends are weekends.'],['Alis','...Eleven minutes. That took four hours.'],['Alis','It\'s very quiet in here when nobody is shouting.']);
+  L.push(['','The Collective Bargaining Agreement is signed. Overtime is voluntary and paid. Weekends are weekends.'],['Alis','...Eleven minutes. That took four hours.'],['Alis','It\'s very quiet in here when nobody is shouting.']);if(cards()>=CT)L.push(['','The next morning everyone walks back in. With an agreement signed, the strike\'s over. That\'s the deal: peace for as long as it holds.']);
   {const c=cards();if(c<CT*.6)L.push(['','It\'s a thin agreement. Barely half the tower signed, and Alis knows exactly which half.'],['Alis','See you at the next round. I\'ll be ready.']);else if(c<CT)L.push(['','Most of the tower signed. Enough to make it stick, and enough to come back for the rest.'])}
   if(has('ken'))L.push(['Ken','Bro. I used to think it was just vibes. Now I say it out loud, in the room.'],['Ken','...We did it. Equally.']);
   if(has('henrietta'))L.push(['Henrietta','For Marit. Harness. Twice.'],['Henrietta','I\'ll still mop. But on the clock.']);
@@ -3601,7 +3651,6 @@ async function ending(){
   if(has('joan'))L.push(['Joan','Redistribute v1.0 ships Monday.']);
   {const M=[];if(has('marl'))M.push(['','Down in Accounts, the CONSULTANT nameplate is gone. The pen holder says "M. Bjorn" again.']);if(has('henrietta'))M.push(['','The hard hat by the stairs has a name written on it now: "Henrietta. Safety Rep."']);for(const f in STAR)if(G.flags['star'+f])M.push(['',STAR[f].end]);if(M.length)L.push(['','One month later.'],...M)}
   for(let bi=0;bi<BOSSES.length;bi++){const k=G.lead&&G.lead[bi];if(k&&LEADEND[k])L.push(['',LEADEND[k].replace('@',BOSSES[bi].name)])}
-  if(cards()>=CT)L.push(...LEADEND_GS);
   {const ld=G.flags.leader&&roster().find(m=>m.id===G.flags.leader);if(ld)L.push(['',`${ld.name} slides the pen across the table. Kaj doesn't reach for it first.`])}L.push(['','Kaj turns his phone face down on the table. Nobody pings.'],['Kaj','Let\'s go home. All of us.']);await talk(L)}
  {const S=G.stats||{},fd=FAVS.filter(v=>(favG()[v.id]||{}).st===3).length;await say('',`UNION REPORT${G.ngp?' (NEW GAME+ '+G.ngp+')':''}. Members: ${cards()} of ${CT}${cards()>=CT?': GENERAL STRIKE!':''}. Paragraphs: ${lawCount(1)} of ${LAW.length} heard of, ${lawCount(2)} understood, ${lawCount(3)} used. Fights won: ${S.wins||0}. Dues raised: ${S.dues||0}. Favours done: ${fd} of ${FAVS.length}. Cases won: ${S.cases||0}.`);
   try{localStorage.setItem(NGK,JSON.stringify({lv:(G.ngp||0)+1,law:G.law,luse:G.luse||{},vets:Math.min(40,Math.floor(cards()/2))}))}catch(e){}
