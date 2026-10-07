@@ -2864,7 +2864,8 @@ async function negotiate(bi){
 async function chooseSpeaker(TB){for(;;){const i=await choose(G.members.map(m=>({t:m.name,dis:TB.iso===m,ic:CH[m.id].str.map(k=>INT[k].ic)})),{x:0,y:160,w:116,h:92,title:'Who speaks?',cancel:false,foot:i=>CH[G.members[i].id].cls});return G.members[i]}}
 
 /* ================= DRAWING ================= */
-const TZ=32;
+const TZ=32,WALK=10;// frames per tile (was 16)
+
 const hh=(a,b,c)=>(((a*73856093)^(b*19349663)^(c*83492791))>>>0)%1000;
 function tex(w,h,fn){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d'),o=ctx;ctx=g;try{fn()}finally{ctx=o}return c}
 function disc2(cx,cy,r,c){for(let y=-r;y<=r;y++){const w=Math.floor(Math.sqrt(r*r-y*y));R(cx-w,cy+y,2*w+1,1,c)}}
@@ -3206,7 +3207,7 @@ function drawField(){const M=G.map,th=G.fl.th,D=dunOf(G.floor),f=G.floor;const c
  {const lc=['rgba(205,225,255,.09)','rgba(120,220,255,.10)','rgba(255,70,30,.10)','rgba(255,190,100,.07)'][D],N=M.t;for(let gx=Math.max(1,x0-4);gx<=Math.min(M.w-2,x1+1);gx++){if(!isWin(wkind(gx,D)))continue;const wide=D===1||D===0?TZ-4:D===2?TZ-6:10;for(let yy=0;yy<130;yy+=2){const wx=gx*TZ+yy*.55+(TZ-wide>>1),wy=TZ+yy,tx=Math.floor((wx+14)/TZ),ty=Math.floor(wy/TZ);if(!N[ty]||N[ty][tx]!=='.')continue;R(wx-cx,wy-cy,wide,2,lc)}}}
  const L=G.ents.filter(e=>!e.gone).map(e=>({y:e.y*TZ,f:()=>{const sx=e.x*TZ-cx,sy=e.y*TZ-cy;
   if(e.boss){const bd=BOSSES[e.bi];if(bd.sprite==='hydra')drawEn({k:'hydra',x:sx-8,y:sy-14,sc:.9});else{person(sx,sy-10,2,bd.look,'down',0);if(bd.eggplant)eggp(sx+14,sy-2,2)}if((G.t>>4)&1)T('!',sx+13,sy-24,'#ff6060')}
-  else if(e.prop)drawProp(e,sx,sy);else{person(sx,sy-10,2,e.look,e.dir||'down',0,idleO(G.t+(e.x*37+e.y*91)));if(G.signed[G.floor+':'+e.id]){R(sx+11,sy-18,10,8,'#15101c');R(sx+12,sy-17,8,6,'#6fe86f');R(sx+14,sy-15,1,2,'#143a1c');R(sx+15,sy-14,3,1,'#143a1c')}}}})).concat([{y:pl.ry,f:()=>person(pl.rx-cx,pl.ry-cy-10,2,CH.kaj.look,pl.dir,pl.mv?1+(((16-pl.mv)>>3)+((pl.x+pl.y)&1)*2):0,pl.mv?{pin:pinOn()}:Object.assign(idleO(G.t),{pin:pinOn()}))}]);
+  else if(e.prop)drawProp(e,sx,sy);else{person(sx,sy-10,2,e.look,e.dir||'down',0,idleO(G.t+(e.x*37+e.y*91)));if(G.signed[G.floor+':'+e.id]){R(sx+11,sy-18,10,8,'#15101c');R(sx+12,sy-17,8,6,'#6fe86f');R(sx+14,sy-15,1,2,'#143a1c');R(sx+15,sy-14,3,1,'#143a1c')}}}})).concat([{y:pl.ry,f:()=>person(Math.round(pl.rx)-cx,Math.round(pl.ry)-cy-10,2,CH.kaj.look,pl.dir,pl.mv?1+((((WALK-pl.mv)*2/WALK)|0)+((pl.x+pl.y)&1)*2):0,pl.mv?{pin:pinOn()}:Object.assign(idleO(G.t),{pin:pinOn()}))}]);
  L.sort((a,b)=>a.y-b.y).forEach(o=>o.f());hintMarks(cx,cy,x0,x1,y0,y1);
  const c=cn(),t=G.t;
  if(D===0){ctx.fillStyle='rgba(60,255,120,'+Math.max(0,.15-c*.008)+')';ctx.fillRect(0,0,W,H)}
@@ -3591,9 +3592,9 @@ function safeSpot(t,x,y,F){const h=t.length,w=t[0].length,open=(X,Y)=>t[Y]&&(t[Y
  const ok=reachFrom(t,F.start.x,F.start.y);if(open(x,y)&&ok[y*w+x])return{x,y};
  let best=null,bd=1e9;for(let Y=1;Y<h-1;Y++)for(let X=1;X<w-1;X++)if(ok[Y*w+X]&&open(X,Y)){const d=Math.abs(X-x)+Math.abs(Y-y);if(d<bd){bd=d;best={x:X,y:Y}}}return best||{x:F.start.x,y:F.start.y}}
 function fieldUpdate(){
- if(pl.mv){pl.rx+=pl.dx*2;pl.ry+=pl.dy*2;if(--pl.mv===0){pl.x+=pl.dx;pl.y+=pl.dy;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;afterStep()}return}
+ if(pl.mv){pl.rx+=pl.dx*TZ/WALK;pl.ry+=pl.dy*TZ/WALK;if(--pl.mv===0){pl.x+=pl.dx;pl.y+=pl.dy;pl.rx=pl.x*TZ;pl.ry=pl.y*TZ;afterStep()}return}
  const d=held.up?'up':held.down?'down':held.left?'left':held.right?'right':null;
- if(d){pl.dir=d;const [dx,dy]=DV[d];if(passable(pl.x+dx,pl.y+dy)){pl.dx=dx;pl.dy=dy;pl.mv=16}else if(OPT.sr)srBlock(dx,dy)}
+ if(d){pl.dir=d;const [dx,dy]=DV[d];if(passable(pl.x+dx,pl.y+dy)){pl.dx=dx;pl.dy=dy;pl.mv=WALK}else if(OPT.sr)srBlock(dx,dy)}
  if(q.ok){q.ok=0;run(interact)}else if(q.cancel){q.cancel=0;run(fieldMenu)}}
 function afterStep(){G.flags.stp=(G.flags.stp||0)+1;markSeen();srStep();if(G.floor>=NF-1)return;const jn=G.ents.find(e=>e.join&&e.join!=='joan'&&!e.gone&&Math.max(Math.abs(e.x-pl.x),Math.abs(e.y-pl.y))<=3&&clearLine(pl.x,pl.y,e.x,e.y));if(jn&&!G.busy){run(()=>joinScene(jn));return}if(++G.steps>14&&Math.random()<.055){G.steps=0;run(encounter)}}
 async function run(fn){if(G.busy)return;G.busy=true;try{await fn()}catch(e){console.error(e)}finally{G.busy=false;for(const k in q)q[k]=0;if(UI.wipe&&UI.wipe.done&&UI.wipe.dir===1)UI.wipe=null;if(G.mode==='elev'&&!G.el)G.mode='field'}}
