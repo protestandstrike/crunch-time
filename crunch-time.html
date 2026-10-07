@@ -2515,13 +2515,20 @@ const free=(m,x,y)=>m[y]&&m[y][x]==='.';
 const put=(m,x,y,c)=>{if(free(m,x,y)){m[y][x]=c;return 1}return 0};
 function bankFill(m,rng,x0,y0,x1,y1,ch,pair,sx,sy,skip,st){for(let y=y0,r=0;y<=y1;y+=sy,r++)for(let x=x0+(st&&(r&1)?(sx>>1):0);x+(pair?1:0)<=x1;x+=sx){if(rng()<skip)continue;if(pair&&!(free(m,x,y)&&free(m,x+1,y)))continue;put(m,x,y,ch);if(pair)put(m,x+1,y,ch)}}
 function wallFill(m,rng,x0,y0,x1,y1,chars,dens){const pk=()=>chars[(rng()*chars.length)|0];for(let x=x0;x<=x1;x++)if(rng()<dens)put(m,x,y0,pk());for(let y=y0+1;y<=y1;y++){if(rng()<dens*.35)put(m,x0,y,pk());if(rng()<dens*.35)put(m,x1,y,pk())}}
+// Furniture goes down in groups, not single tiles: a short row of the same piece (desks, cabinets, bins) with an optional accent at the end,
+// set against a wall where possible, so the room reads as an office and not as scattered clutter.
+function grp(m,rng,cx,cy,chars){const main=chars[(rng()*chars.length)|0],acc=chars[(rng()*chars.length)|0],L=2+((rng()*2)|0),vert=rng()<.25,dx=vert?0:1,dy=vert?1:0;
+ let k=0;for(let i=0;i<L;i++)k+=put(m,cx+dx*i,cy+dy*i,main);if(k&&rng()<.4)put(m,cx+dx*L,cy+dy*L,acc);return k}
+function groupFill(m,rng,x0,y0,x1,y1,chars,n){if(!chars)return;const wallish=(x,y)=>[[1,0],[-1,0],[0,1],[0,-1]].some(([a,b])=>m[y+b]&&m[y+b][x+a]==='#');
+ for(let i=0;i<n;i++){let bx=0,by=0,bs=-1;for(let t=0;t<5;t++){const x=x0+((rng()*(x1-x0+1))|0),y=y0+((rng()*(y1-y0+1))|0);if(!free(m,x,y))continue;const sc=wallish(x,y)?1:0;if(sc>bs){bs=sc;bx=x;by=y}}
+  if(bs>=0)grp(m,rng,bx,by,chars)}}
 function scatFill(m,rng,x0,y0,x1,y1,chars,n){if(!chars)return;for(let i=0;i<n;i++)put(m,x0+((rng()*(x1-x0+1))|0),y0+((rng()*(y1-y0+1))|0),chars[(rng()*chars.length)|0])}
 function roomFill(m,rng,x0,y0,x1,y1,kind,o){if(x1<x0+1||y1<y0+1)return;const area=(x1-x0+1)*(y1-y0+1);
  switch(kind){
  case'bank':bankFill(m,rng,x0+1,y0+1,x1-1,y1-1,o.b||'d',o.pair!==0&&o.b!=='o',4,3,.15);wallFill(m,rng,x0,y0,x1,y1,o.w||'p',.35);break;
  case'shelf':wallFill(m,rng,x0,y0,x1,y1,o.w||'B',.8);for(let x=x0+1;x<x1;x+=3)if(rng()<.7){put(m,x,y0+3,(o.w||'B')[(rng()*(o.w||'B').length)|0]);put(m,x+1,y0+3,'B')}scatFill(m,rng,x0,y0,x1,y1,o.s,Math.round(area/18));break;
  case'cells':bankFill(m,rng,x0+1,y0+1,x1-1,y1-1,'G',false,3,3,.2);wallFill(m,rng,x0,y0,x1,y1,o.w||'G',.5);break;
- default:scatFill(m,rng,x0,y0,x1,y1,o.s,Math.round(area/9));wallFill(m,rng,x0,y0,x1,y1,o.w||'p',.3)}}
+ default:groupFill(m,rng,x0,y0,x1,y1,o.s,Math.round(area/17));wallFill(m,rng,x0,y0,x1,y1,o.w||'p',.3)}}
 function closet(m,x0,y0){for(let y=y0;y<=y0+4;y++)for(let x=x0;x<=x0+6;x++)m[y][x]='#';for(let y=y0+1;y<=y0+3;y++)for(let x=x0+1;x<=x0+5;x++)m[y][x]='.';m[y0+4][x0+3]='L';m[y0+1][x0+1]='s';m[y0+1][x0+2]='s';m[y0+1][x0+4]='s';m[y0+1][x0+5]='s';m[y0+3][x0+1]='s';m[y0+3][x0+5]='s'}
 function reachFrom(m,sx,sy){const h=m.length,w=m[0].length,seen=new Uint8Array(w*h),q=[sx,sy];seen[sy*w+sx]=1;for(let i=0;i<q.length;i+=2){const x=q[i],y=q[i+1];for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=w||ny>=h)continue;const c=m[ny][nx];if((c==='.'||c==='L')&&!seen[ny*w+nx]){seen[ny*w+nx]=1;q.push(nx,ny)}}}return seen}
 const BANKI=SPEC.map((s,i)=>s[7]==='bank'?i:-1).filter(i=>i>=0);
@@ -2544,7 +2551,7 @@ function genFloor(n,att){
  if(lay==='bank'){const bs=o.bs||[4,3],pair=o.pair!==0&&o.b!=='o';
   if(o.b)bankFill(m,rng,2,3,w-3,h-4,o.b,pair,bs[0],bs[1],o.skip===undefined?.12:o.skip,o.st!==0);
   if(o.c)bankFill(m,rng,3,4,w-4,h-5,o.c,false,o.cs[0],o.cs[1],0);
-  wallFill(m,rng,1,1,w-2,3,o.w||'p',.18);scatFill(m,rng,2,3,w-3,h-4,o.s,Math.round(w*h/60));
+  wallFill(m,rng,1,1,w-2,3,o.w||'p',.18);groupFill(m,rng,2,3,w-3,h-4,o.s,Math.round(w*h/110));
   const cw=(w>>1)-1;if(o.rug&&o.rug!=='rose'&&o.rug!=='pent')for(let y=1;y<h-1;y++)for(let x=cw;x<=cw+2;x++)if(m[y][x]!=='.'&&m[y][x]!=='#'&&!(o.closet&&x<10&&y<9))m[y][x]='.';
   if(o.rug==='rose')rugs.push({x:(w>>1)-4,y:(h>>1)-3,w:8,h:7,k:'rose'});else if(o.rug==='pent')rugs.push({x:(w>>1)-4,y:(h>>1)-3,w:8,h:7,k:'pent'});else if(o.rug)rugs.push({x:cw,y:2,w:3,h:h-4,k:o.rug})}
  else if(lay==='rooms'){const cols=w>=36?4:3,rows=h>=24?3:2,xs=[],ys=[];
@@ -2576,7 +2583,7 @@ function genFloor(n,att){
    if(D===1){m[(h>>1)][(w>>1)]='S';rugs.push({x:bx0+1,y:by0+1,w:bx1-bx0-1,h:by1-by0-1,k:'rose'})}else{m[h>>1][w>>1]='h';m[(h>>1)-1][(w>>1)-1]='l';m[(h>>1)-1][(w>>1)+1]='l';m[(h>>1)+1][(w>>1)-1]='l';m[(h>>1)+1][(w>>1)+1]='l';rugs.push({x:bx0+1,y:by0+1,w:bx1-bx0-1,h:by1-by0-1,k:'pent'})}}
   else{for(let y=by0;y<=by1;y++)for(let x=bx0;x<=bx1;x++)m[y][x]=(x===bx0||x===bx1||y===by0||y===by1)?'#':'.';const gx=RI(bx0+2,bx1-3);m[by1][gx]='.';m[by1][gx+1]='.';
    for(let x=bx0+1;x<bx1;x+=2){put(m,x,by0+1,(o.w||'f')[(x>>1)%(o.w||'f').length]);put(m,x,by1-1,(o.s||'x')[(x>>1)%(o.s||'x').length])}put(m,bx0+1,by0+2,'B');put(m,bx1-1,by0+2,'B')}
-  wallFill(m,rng,1,1,w-2,3,o.w||'p',.3);wallFill(m,rng,1,h-4,w-2,h-2,o.s||'p',.08);scatFill(m,rng,2,3,w-3,h-4,o.s||'p',Math.round(w*h/50))}
+  wallFill(m,rng,1,1,w-2,3,o.w||'p',.3);wallFill(m,rng,1,h-4,w-2,h-2,o.s||'p',.08);groupFill(m,rng,2,3,w-3,h-4,o.s||'p',Math.round(w*h/90))}
  else if(lay==='throne'){ex=-9;dx=w>>1;const cx=w>>1;
   for(let x=cx-3;x<=cx+3;x++)m[1][x]=(x===cx)?'Q':'.';
   for(const y of [7,11]){for(let x=4;x<=10;x++)m[y][x]='T';for(let x=w-11;x<=w-5;x++)m[y][x]='T'}
@@ -2601,7 +2608,7 @@ function genFloor(n,att){
  // perimeter props and clusters for open layouts
  if(lay==='bank'||lay==='ring'||lay==='corr'){const pm=o.pm||o.w||'p';for(let y=4;y<h-3;y++){if(rng()<.3)put(m,1,y,pm[(rng()*pm.length)|0]);if(rng()<.3)put(m,w-2,y,pm[(rng()*pm.length)|0])}
   for(let x=2;x<w-2;x++)if(Math.abs(x-dx)>2&&rng()<.22)put(m,x,h-2,pm[(rng()*pm.length)|0])}
- if(lay!=='throne'){const cs=(o.s||o.w||'p'),nc=Math.round(w*h/95);for(let i=0;i<nc;i++){const cx=RI(3,w-4),cy=RI(4,h-5);if(!free(m,cx,cy))continue;put(m,cx,cy,cs[(rng()*cs.length)|0]);for(let q=0;q<2;q++){const a=[[1,0],[-1,0],[0,1],[0,-1],[1,1]][(rng()*5)|0];if(rng()<.6)put(m,cx+a[0],cy+a[1],cs[(rng()*cs.length)|0])}}}
+ if(lay!=='throne'){const cs=(o.s||o.w||'p'),nc=Math.round(w*h/95);for(let i=0;i<nc;i++){const cx=RI(3,w-4),cy=RI(4,h-5);if(!free(m,cx,cy))continue;grp(m,rng,cx,cy,cs)}}
  // elevator + descent doors
  if(!last)m[0][ex]='E';m[h-1][dx]='D';
  for(let y=1;y<=3;y++)for(let x=ex-1;x<=ex+1;x++)if(!last&&x>0&&x<w-1&&m[y][x]!=='.')m[y][x]='.';
